@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogo Solar — Blueprint OS</title>
+<meta name="description" content="Kits de energia solar con respaldo, listos para instalar en Republica Dominicana y Cuba.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+</head>
+<body class="power-off flicker-target">
+
+<div class="cell-grid" aria-hidden="true"></div>
+<div class="power-veil" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="#" class="brand"><span class="dot"></span>BLUEPRINT&nbsp;OS</a>
+    <div class="header-meta" id="header-meta"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="eyebrow">Catalogo comercial · Kits activos</p>
+    <h1>Nunca más un <span class="glow">apagón</span> te tome por sorpresa</h1>
+    <p class="lede">Sistemas solares con respaldo, armados y listos para cotizar. Cada kit que ves aqui viene directo del catalogo interno — nada escrito a mano para esta pagina.</p>
+    <div class="hero-stats" id="hero-stats"></div>
+  </section>
+
+  <section class="section wrap" id="kits">
+    <div class="section-head">
+      <div>
+        <h2>Elige tu kit</h2>
+        <p class="desc">Filtra por mercado. Los precios son el precio sugerido de reventa; no incluyen instalacion salvo que se indique.</p>
+      </div>
+      <div class="market-tabs" id="market-tabs"></div>
+    </div>
+    <div class="kit-grid" id="kit-grid">
+      <div class="state-msg">Cargando catalogo…</div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="tecnologia">
+    <div class="section-head">
+      <div>
+        <h2>Tecnología dentro de cada kit</h2>
+        <p class="desc">Paneles, inversores y baterías que componen los sistemas — specs directo de la ficha técnica interna.</p>
+      </div>
+    </div>
+    <div class="tech-grid" id="tech-grid"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Blueprint OS — catálogo generado desde Excel, cero datos inventados en esta página.</span>
+    <span>Datos: /data/*.json</span>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

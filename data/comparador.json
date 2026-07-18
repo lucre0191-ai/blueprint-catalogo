@@ -1,0 +1,116 @@
+{
+  "inversores": [
+    {
+      "SKU": "SUNARK-INV-3KW-001",
+      "Marca": "SunArk",
+      "Modelo": "HSI 3000U",
+      "Potencia_W": 3000,
+      "Voltaje": "110/220Vdc",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Split Phase Off-Grid, Output 3kW, Rated Input 110/220Vdc"
+    },
+    {
+      "SKU": "SUNARK-INV-5KW-001",
+      "Marca": "SunArk",
+      "Modelo": "HSI 5000U",
+      "Potencia_W": 5000,
+      "Voltaje": "110/220Vdc",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Split Phase Off-Grid, Output 5kW, Rated Input 110/220Vdc"
+    },
+    {
+      "SKU": "SOLIS-INV-5KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P5K02-SV-YD-L",
+      "Potencia_W": 5000,
+      "Voltaje": "40-60V bateria",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "Hibrido, Output 5kW, Battery 40-60V, MPPT 90-435V, Input 110/220Vdc"
+    },
+    {
+      "SKU": "SOLIS-INV-10KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P10K03-SV-YD-L-US",
+      "Potencia_W": 10000,
+      "Voltaje": "40-60V bateria",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Hibrido con WiFi, Output 10kW, MPPT 100-450Vdc, Battery 40-60V, AC Output 120/240V"
+    },
+    {
+      "SKU": "SUNARK-INV-10KW-001",
+      "Marca": "SunArk",
+      "Modelo": "SPI-10K-UP",
+      "Potencia_W": 10000,
+      "Voltaje": "40-60V bateria",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Off-Grid con WiFi, Output 10kW, MPPT 125-425Vdc, Battery 40-60V, AC Output 120/240V"
+    },
+    {
+      "SKU": "INHNRG-INV-10KW-001",
+      "Marca": "INHENERGY",
+      "Modelo": "HI-10K-DL",
+      "Potencia_W": 10000,
+      "Voltaje": "40-60V bateria",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Hibrido con WiFi, Output 10kW, MPPT 80-500Vdc, Battery 40-60V, AC Output 120/240V"
+    }
+  ],
+  "baterias": [
+    {
+      "SKU": "SUNARK-BAT-512-001",
+      "Marca": "SunArk",
+      "Modelo": "5.12kWh Lithium Pack",
+      "Potencia_W": 0,
+      "Voltaje": "51.2V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "51.2V 100Ah - 5.12kWh, DOD recomendado 80% @ 0.5C"
+    },
+    {
+      "SKU": "SUNARK-BAT-512-002",
+      "Marca": "SunArk",
+      "Modelo": "5.12kWh Lithium Pack 25.6V",
+      "Potencia_W": 0,
+      "Voltaje": "25.6V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "25.6V 200Ah - 5.12kWh, DOD recomendado 80% @ 0.5C"
+    },
+    {
+      "SKU": "SUNARK-BAT-1024-001",
+      "Marca": "SunArk",
+      "Modelo": "WallArk-10240",
+      "Potencia_W": 0,
+      "Voltaje": "51.2V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "51.2V 200Ah - 10.24kWh, DOD recomendado 80% @ 0.5C"
+    },
+    {
+      "SKU": "SUNARK-BAT-1600-001",
+      "Marca": "SunArk",
+      "Modelo": "WallArk-16076",
+      "Potencia_W": 0,
+      "Voltaje": "51.2V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "51.2V 314Ah - 16kWh, DOD recomendado 80% @ 0.5C"
+    }
+  ],
+  "paneles_solares": [
+    {
+      "SKU": "SUNEVO-PAN-590W-001",
+      "Marca": "SunEvo",
+      "Modelo": "SE5N-72HBD-590W",
+      "Potencia_W": 590,
+      "Voltaje": "-",
+      "Garantia_Anios": 25,
+      "Descripcion_Tecnica": "590W, N-Type Bifacial Double Glass, Half Cell, 2278x1134x30mm, 6S1P"
+    },
+    {
+      "SKU": "SUNEVO-PAN-590W-002",
+      "Marca": "SunEvo",
+      "Modelo": "SE5N-72H-590W",
+      "Potencia_W": 590,
+      "Voltaje": "-",
+      "Garantia_Anios": 25,
+      "Descripcion_Tecnica": "590W, Mono N-Type Bifacial Dual Glass, Half Cell, 9pcs/string x 2 strings"
+    }
+  ]
+}

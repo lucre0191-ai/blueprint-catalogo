@@ -1,0 +1,513 @@
+[
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "SUNEVO-PAN-590W-001",
+    "Cantidad": 6,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W HBD"
+  },
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "SUNARK-INV-5KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "SunArk HSI 5000U"
+  },
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "SUNARK-BAT-512-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk 5.12kWh 51.2V"
+  },
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 20,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "GEN-EST-3KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 3kW"
+  },
+  {
+    "Kit_ID": "K3-OFFGRID",
+    "SKU": "SUNEVO-PKG-STD-001",
+    "Cantidad": 1,
+    "Categoria": "Empaque",
+    "Descripcion": "SunEvo Safe Package"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "SUNEVO-PAN-590W-001",
+    "Cantidad": 9,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W HBD"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "SOLIS-INV-5KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "Solis Hibrido 5kW"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "SUNARK-BAT-512-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk 5.12kWh 51.2V"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 20,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "GEN-EST-5KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 5kW Hibrido"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "SUNEVO-PKG-STD-001",
+    "Cantidad": 1,
+    "Categoria": "Empaque",
+    "Descripcion": "SunEvo Safe Package"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "SUNEVO-PAN-590W-002",
+    "Cantidad": 18,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W 72H"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "SOLIS-INV-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "Solis Hibrido 10kW WiFi"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "SUNARK-BAT-1024-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk WallArk 10.24kWh"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 20,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "GEN-EST-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 10kW (A)"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "SUNARK-EVC-7KW-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador EV",
+    "Descripcion": "SunArk AC EV Charger 7kW"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "SUNEVO-PAN-590W-001",
+    "Cantidad": 6,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W HBD"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "SUNARK-INV-3KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "SunArk HSI 3000U"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "SUNARK-BAT-512-002",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk 5.12kWh 25.6V"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 10,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "GEN-EST-3KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 3kW"
+  },
+  {
+    "Kit_ID": "K3-OFF-5KWINV",
+    "SKU": "SUNEVO-PAN-590W-001",
+    "Cantidad": 6,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W HBD"
+  },
+  {
+    "Kit_ID": "K3-OFF-5KWINV",
+    "SKU": "SUNARK-INV-5KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "SunArk HSI 5000U"
+  },
+  {
+    "Kit_ID": "K3-OFF-5KWINV",
+    "SKU": "SUNARK-BAT-512-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk 5.12kWh 51.2V"
+  },
+  {
+    "Kit_ID": "K3-OFF-5KWINV",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K3-OFF-5KWINV",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 10,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K3-OFF-5KWINV",
+    "SKU": "GEN-EST-3KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 3kW"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "SUNEVO-PAN-590W-001",
+    "Cantidad": 10,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W HBD"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "SUNARK-INV-5KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "SunArk HSI 5000U"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "SUNARK-BAT-512-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk 5.12kWh 51.2V"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 10,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "GEN-EST-5KW-002",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 5kW Off-Grid"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "SUNEVO-PAN-590W-002",
+    "Cantidad": 18,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W 72H"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "SUNARK-INV-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "SunArk Off-Grid 10kW WiFi"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "SUNARK-BAT-1024-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk WallArk 10.24kWh"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 20,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "GEN-EST-10KW-002",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 10kW (B)"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "SUNEVO-PAN-590W-002",
+    "Cantidad": 18,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W 72H"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "INHNRG-INV-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "INHENERGY Hibrido 10kW WiFi"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "SUNARK-BAT-1600-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk WallArk 16kWh"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 20,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "GEN-EST-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 10kW (A)"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH",
+    "SKU": "SUNARK-EVC-7KW-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador EV",
+    "Descripcion": "SunArk AC EV Charger 7kW"
+  },
+  {
+    "Kit_ID": "K-PORT-A1",
+    "SKU": "SUNARK-STA-200W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk A1 200W"
+  },
+  {
+    "Kit_ID": "K-PORT-A1",
+    "SKU": "SUNEVO-CHG-100W-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 100W"
+  },
+  {
+    "Kit_ID": "K-PORT-A5",
+    "SKU": "SUNARK-STA-500W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk A5 500W"
+  },
+  {
+    "Kit_ID": "K-PORT-A5",
+    "SKU": "SUNEVO-CHG-100W-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 100W"
+  },
+  {
+    "Kit_ID": "K-PORT-A6",
+    "SKU": "SUNARK-STA-600W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk A6 600W"
+  },
+  {
+    "Kit_ID": "K-PORT-A6",
+    "SKU": "SUNEVO-CHG-100W-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 100W"
+  },
+  {
+    "Kit_ID": "K-PORT-T11",
+    "SKU": "SUNARK-STA-1200W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk T11 1200W"
+  },
+  {
+    "Kit_ID": "K-PORT-T11",
+    "SKU": "SUNEVO-CHG-200W-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 200W"
+  },
+  {
+    "Kit_ID": "K-PORT-T20",
+    "SKU": "SUNARK-STA-2400W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk T20 2400W"
+  },
+  {
+    "Kit_ID": "K-PORT-T20",
+    "SKU": "SUNEVO-CHG-300W-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 300W"
+  },
+  {
+    "Kit_ID": "K-PORT-T30",
+    "SKU": "SUNARK-STA-3000W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk T30 3000W"
+  },
+  {
+    "Kit_ID": "K-PORT-T30",
+    "SKU": "SUNEVO-CHG-300W-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 300W"
+  },
+  {
+    "Kit_ID": "K-PORT-T50",
+    "SKU": "SUNARK-STA-5376W-001",
+    "Cantidad": 1,
+    "Categoria": "Estacion Portatil",
+    "Descripcion": "SunArk T50 5376W"
+  },
+  {
+    "Kit_ID": "K-PORT-T50",
+    "SKU": "SUNEVO-CHG-300W-001",
+    "Cantidad": 2,
+    "Categoria": "Cargador Solar Plegable",
+    "Descripcion": "SunEvo Foldable 300W"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "SUNEVO-PAN-590W-002",
+    "Cantidad": 18,
+    "Categoria": "Panel Solar",
+    "Descripcion": "Panel SunEvo 590W 72H"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "INHNRG-INV-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Inversor",
+    "Descripcion": "INHENERGY Hibrido 10kW WiFi"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "SUNARK-BAT-1024-001",
+    "Cantidad": 1,
+    "Categoria": "Bateria",
+    "Descripcion": "SunArk WallArk 10.24kWh"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "GEN-CAB-4MM-001",
+    "Cantidad": 100,
+    "Categoria": "Cable",
+    "Descripcion": "Cable Solar 4mm2"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "GEN-CON-30A-001",
+    "Cantidad": 20,
+    "Categoria": "Conector",
+    "Descripcion": "Conector MC4 30A"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "GEN-EST-10KW-001",
+    "Cantidad": 1,
+    "Categoria": "Estructura",
+    "Descripcion": "Estructura 10kW (A)"
+  },
+  {
+    "Kit_ID": "K10-HYBRID-INH-10",
+    "SKU": "SUNARK-EVC-7KW-001",
+    "Cantidad": 1,
+    "Categoria": "Cargador EV",
+    "Descripcion": "SunArk AC EV Charger 7kW"
+  }
+]

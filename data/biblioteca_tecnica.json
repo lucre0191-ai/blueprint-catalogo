@@ -1,0 +1,219 @@
+[
+  {
+    "SKU": "SUNEVO-PAN-590W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNEVO-PAN-590W-002",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-INV-3KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-INV-5KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-5KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-10KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-INV-10KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "INHNRG-INV-10KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-512-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-512-002",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-1024-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-1600-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-CAB-4MM-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-CON-30A-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNEVO-PKG-STD-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-EST-3KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-EST-5KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-EST-5KW-002",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-EST-10KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "GEN-EST-10KW-002",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-EVC-7KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-200W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-500W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-600W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-1200W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-2400W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-3000W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-STA-5376W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNEVO-CHG-100W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNEVO-CHG-200W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNEVO-CHG-300W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  }
+]

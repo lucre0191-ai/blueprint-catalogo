@@ -1,0 +1,100 @@
+[
+  {
+    "Block_ID": "IDEAL-RESP-RESID-ES",
+    "Block_Group": "IDEAL_RESPALDO_RESIDENCIAL",
+    "Categoria": "Ideal_Para",
+    "Idioma": "Espanol",
+    "Texto": "Ideal para hogares que sufren apagones frecuentes y quieren mantener sus equipos esenciales funcionando."
+  },
+  {
+    "Block_ID": "IDEAL-RESP-RESID-EN",
+    "Block_Group": "IDEAL_RESPALDO_RESIDENCIAL",
+    "Categoria": "Ideal_Para",
+    "Idioma": "Ingles",
+    "Texto": "Ideal for homes that experience frequent power outages and want to keep essential appliances running."
+  },
+  {
+    "Block_ID": "IDEAL-OPER-COMERCIAL-ES",
+    "Block_Group": "IDEAL_OPERACION_COMERCIAL",
+    "Categoria": "Ideal_Para",
+    "Idioma": "Espanol",
+    "Texto": "Ideal para comercios y pequenas empresas que no pueden permitirse detener su operacion durante un apagon."
+  },
+  {
+    "Block_ID": "IDEAL-OPER-COMERCIAL-EN",
+    "Block_Group": "IDEAL_OPERACION_COMERCIAL",
+    "Categoria": "Ideal_Para",
+    "Idioma": "Ingles",
+    "Texto": "Ideal for businesses and small companies that cannot afford to stop operating during a power outage."
+  },
+  {
+    "Block_ID": "IDEAL-PORTATIL-ES",
+    "Block_Group": "IDEAL_PORTATIL",
+    "Categoria": "Ideal_Para",
+    "Idioma": "Espanol",
+    "Texto": "Ideal para quienes necesitan respaldo de energia inmediato, sin instalacion fija ni electricista."
+  },
+  {
+    "Block_ID": "PUEDE-ALIM-BASICO-ES",
+    "Block_Group": "PUEDE_ALIMENTAR_BASICO",
+    "Categoria": "Que_Puede_Alimentar",
+    "Idioma": "Espanol",
+    "Texto": "Puede alimentar nevera, luces, TV, router y ventiladores durante un apagon."
+  },
+  {
+    "Block_ID": "PUEDE-ALIM-BASICO-EN",
+    "Block_Group": "PUEDE_ALIMENTAR_BASICO",
+    "Categoria": "Que_Puede_Alimentar",
+    "Idioma": "Ingles",
+    "Texto": "Can power a refrigerator, lights, TV, router and fans during a blackout."
+  },
+  {
+    "Block_ID": "PUEDE-ALIM-COMERCIAL-ES",
+    "Block_Group": "PUEDE_ALIMENTAR_COMERCIAL",
+    "Categoria": "Que_Puede_Alimentar",
+    "Idioma": "Espanol",
+    "Texto": "Puede alimentar la carga completa de un comercio pequeno, incluyendo aire acondicionado y equipos de oficina."
+  },
+  {
+    "Block_ID": "GARANTIA-STD-ES",
+    "Block_Group": "GARANTIA_ESTANDAR",
+    "Categoria": "Garantia_Comercial",
+    "Idioma": "Espanol",
+    "Texto": "Garantia de fabrica: hasta 25 anos en paneles solares, 5 a 10 anos en inversor y bateria segun el fabricante."
+  },
+  {
+    "Block_ID": "GARANTIA-STD-EN",
+    "Block_Group": "GARANTIA_ESTANDAR",
+    "Categoria": "Garantia_Comercial",
+    "Idioma": "Ingles",
+    "Texto": "Factory warranty: up to 25 years on solar panels, 5 to 10 years on inverter and battery depending on manufacturer."
+  },
+  {
+    "Block_ID": "DISCLAIMER-DISP-ES",
+    "Block_Group": "DISCLAIMER_DISPONIBILIDAD",
+    "Categoria": "Disclaimer",
+    "Idioma": "Espanol",
+    "Texto": "Los componentes pueden variar segun disponibilidad del proveedor al momento de la compra."
+  },
+  {
+    "Block_ID": "DISCLAIMER-DISP-EN",
+    "Block_Group": "DISCLAIMER_DISPONIBILIDAD",
+    "Categoria": "Disclaimer",
+    "Idioma": "Ingles",
+    "Texto": "Components may vary based on supplier availability at the time of purchase."
+  },
+  {
+    "Block_ID": "CTA-EVAL-ES",
+    "Block_Group": "CTA_EVALUACION",
+    "Categoria": "Llamado_a_la_Accion",
+    "Idioma": "Espanol",
+    "Texto": "Solicite una evaluacion gratuita de su consumo electrico antes de comprar."
+  },
+  {
+    "Block_ID": "CTA-EVAL-EN",
+    "Block_Group": "CTA_EVALUACION",
+    "Categoria": "Llamado_a_la_Accion",
+    "Idioma": "Ingles",
+    "Texto": "Request a free electricity consumption assessment before purchasing."
+  }
+]
