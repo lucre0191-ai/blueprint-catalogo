@@ -251,5 +251,170 @@
     "Tipo_Cliente_Recomendado": "Cliente de las estaciones T20, T30 o T50, incluyendo negocios moviles.",
     "Garantia_Anios": 10,
     "Caracteristicas_Principales": "300W, 13.6kg, se pliega a 607x785x55mm, 10 anos de garantia."
+  },
+  {
+    "SKU": "SOLIS-INV-6KW-001",
+    "Imagen_Principal": null,
+    "Nombre_Comercial": "Inversor Hibrido 6kW Solis",
+    "Categoria": "Inversor",
+    "Beneficios": "Un paso mas de potencia sobre el 5kW Solis, misma marca reconocida y garantia extendida, para cargas ligeramente mayores.",
+    "Problema_que_Resuelve": "El cliente necesita un poco mas de capacidad que el tier 5kW pero no llega a justificar el salto a 8kW.",
+    "Tipo_Cliente_Recomendado": "Residencial de consumo medio-alto o comercio pequeno.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "6kW hibrido, MPPT 90-435Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOLIS-INV-8KW-001",
+    "Imagen_Principal": null,
+    "Nombre_Comercial": "Inversor Hibrido 8kW Solis",
+    "Categoria": "Inversor",
+    "Beneficios": "Capacidad intermedia para negocios en crecimiento que quieren margen de potencia sin llegar al tier de 10kW.",
+    "Problema_que_Resuelve": "El cliente tiene una carga comercial que un sistema de 5-6kW se queda corto para cubrir.",
+    "Tipo_Cliente_Recomendado": "Comercio pequeno-mediano con equipos de mayor consumo.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "8kW hibrido, MPPT 90-435Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOLIS-INV-12KW-001",
+    "Imagen_Principal": null,
+    "Nombre_Comercial": "Inversor Hibrido 12kW Solis",
+    "Categoria": "Inversor",
+    "Beneficios": "Potencia superior al tier estandar de 10kW para operaciones que necesitan margen adicional de carga simultanea.",
+    "Problema_que_Resuelve": "El cliente tiene una operacion critica con picos de consumo por encima de 10kW.",
+    "Tipo_Cliente_Recomendado": "Comercio establecido o instalacion con multiples equipos pesados.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "12kW hibrido, MPPT 150-450Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOLIS-INV-14KW-001",
+    "Imagen_Principal": "media_blueprint/SOLIS-INV-14KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Hibrido 14kW Solis",
+    "Categoria": "Inversor",
+    "Beneficios": "Uno de los inversores hibridos de mayor capacidad del catalogo, para instalaciones de alta demanda.",
+    "Problema_que_Resuelve": "El cliente necesita cubrir una carga industrial o comercial grande sin dividir en varios inversores.",
+    "Tipo_Cliente_Recomendado": "Comercio grande o instalacion industrial ligera.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "14kW hibrido, MPPT 150-450Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOLIS-INV-16KW-001",
+    "Imagen_Principal": "media_blueprint/SOLIS-INV-16KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Hibrido 16kW Solis",
+    "Categoria": "Inversor",
+    "Beneficios": "La opcion de mayor potencia de la linea Solis, tope del catalogo para proyectos de gran escala.",
+    "Problema_que_Resuelve": "El cliente tiene la mayor demanda energetica del catalogo y busca la marca premium.",
+    "Tipo_Cliente_Recomendado": "Instalacion comercial o industrial de gran escala.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "16kW hibrido, MPPT 150-450Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOSEN-INV-8KW-001",
+    "Imagen_Principal": "media_blueprint/SOSEN-INV-8KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Hibrido 8kW SoSen WiFi",
+    "Categoria": "Inversor",
+    "Beneficios": "Alternativa de marca al tier 8kW, con monitoreo WiFi incluido y precio competitivo.",
+    "Problema_que_Resuelve": "El cliente busca capacidad de 8kW hibrido con presupuesto mas flexible que las marcas premium.",
+    "Tipo_Cliente_Recomendado": "Comercio pequeno-mediano sensible al precio.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "8kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOSEN-INV-10KW-001",
+    "Imagen_Principal": "media_blueprint/SOSEN-INV-10KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Hibrido 10kW SoSen WiFi",
+    "Categoria": "Inversor",
+    "Beneficios": "Tercera opcion de marca para el tier 10kW hibrido (junto a Solis e INHENERGY), con rango MPPT mas amplio.",
+    "Problema_que_Resuelve": "El cliente quiere comparar marcas en el tier 10kW hibrido antes de decidir.",
+    "Tipo_Cliente_Recomendado": "Comercio con consumo alto que evalua varias marcas.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "10kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOSEN-INV-12KW-001",
+    "Imagen_Principal": "media_blueprint/SOSEN-INV-12KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Hibrido 12kW SoSen WiFi",
+    "Categoria": "Inversor",
+    "Beneficios": "Capacidad de 12kW con monitoreo remoto y precio mas accesible que la linea Solis equivalente.",
+    "Problema_que_Resuelve": "El cliente necesita 12kW hibrido con presupuesto mas ajustado.",
+    "Tipo_Cliente_Recomendado": "Comercio establecido sensible al precio.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "12kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SOSEN-INV-15KW-001",
+    "Imagen_Principal": "media_blueprint/SOSEN-INV-15KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Hibrido 15kW SoSen WiFi",
+    "Categoria": "Inversor",
+    "Beneficios": "La opcion de mayor potencia de la marca SoSen, para instalaciones grandes con presupuesto controlado.",
+    "Problema_que_Resuelve": "El cliente tiene una demanda alta y busca la opcion mas economica en ese rango de potencia.",
+    "Tipo_Cliente_Recomendado": "Instalacion comercial grande sensible al precio.",
+    "Garantia_Anios": 5,
+    "Caracteristicas_Principales": "15kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+  },
+  {
+    "SKU": "SUNARK-INV-5KW-002",
+    "Imagen_Principal": "media_blueprint/SUNARK-INV-5KW-002/principal.jpg",
+    "Nombre_Comercial": "Inversor Off-Grid 5kW SunArk (paralelizable)",
+    "Categoria": "Inversor",
+    "Beneficios": "Misma capacidad que el HSI 5000U pero con opcion de conectar hasta 6 unidades en paralelo para crecer a futuro.",
+    "Problema_que_Resuelve": "El cliente podria necesitar mas potencia mas adelante y quiere un sistema que pueda escalar.",
+    "Tipo_Cliente_Recomendado": "Residencial o comercio que planea crecer su consumo con el tiempo.",
+    "Garantia_Anios": 3,
+    "Caracteristicas_Principales": "5kW off-grid, parallel 1-6 unidades, 3 anos de garantia."
+  },
+  {
+    "SKU": "SUNARK-INV-6500W-001",
+    "Imagen_Principal": "media_blueprint/SUNARK-INV-6500W-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Off-Grid 6.5kW SunArk",
+    "Categoria": "Inversor",
+    "Beneficios": "Un tier intermedio entre 5kW y 8kW para cargas que no encajan exactamente en los tamanos estandar.",
+    "Problema_que_Resuelve": "El cliente tiene una carga que el tier de 5kW no cubre pero el de 8kW le queda grande en presupuesto.",
+    "Tipo_Cliente_Recomendado": "Residencial de consumo alto o comercio pequeno.",
+    "Garantia_Anios": 3,
+    "Caracteristicas_Principales": "6.5kW off-grid, doble MPPT, split-phase, 3 anos de garantia."
+  },
+  {
+    "SKU": "SUNARK-INV-8KW-001",
+    "Imagen_Principal": "media_blueprint/SUNARK-INV-8KW-001/principal.jpg",
+    "Nombre_Comercial": "Inversor Off-Grid 8kW SunArk",
+    "Categoria": "Inversor",
+    "Beneficios": "Mayor potencia off-grid antes de saltar al tier de 10kW, con doble MPPT y capacidad de paralelo.",
+    "Problema_que_Resuelve": "El cliente en zona sin red estable necesita mas de 6.5kW pero no llega a requerir 10kW.",
+    "Tipo_Cliente_Recomendado": "Comercio o vivienda en zona rural con consumo alto.",
+    "Garantia_Anios": 3,
+    "Caracteristicas_Principales": "8kW off-grid, doble MPPT, parallel 1-6 unidades, 3 anos de garantia."
+  },
+  {
+    "SKU": "SUNARK-BAT-256-001",
+    "Imagen_Principal": "media_blueprint/SUNARK-BAT-256-001/principal.jpg",
+    "Nombre_Comercial": "Banco de Baterias de Litio 2.56kWh",
+    "Categoria": "Bateria",
+    "Beneficios": "La entrada mas economica de almacenamiento para complementar sistemas pequenos o ampliar autonomia por modulos.",
+    "Problema_que_Resuelve": "El cliente quiere anadir autonomia de forma incremental sin comprar una bateria grande de una vez.",
+    "Tipo_Cliente_Recomendado": "Residencial con sistema de entrada que quiere sumar autonomia paso a paso.",
+    "Garantia_Anios": 10,
+    "Caracteristicas_Principales": "25.6V 100Ah, 2.56kWh, formato rack mount, 10 anos de garantia."
+  },
+  {
+    "SKU": "SUNARK-BAT-480-001",
+    "Imagen_Principal": "media_blueprint/SUNARK-BAT-480-001/principal.jpg",
+    "Nombre_Comercial": "Banco de Baterias de Litio 4.8kWh (48V)",
+    "Categoria": "Bateria",
+    "Beneficios": "Formato rack mount de 48V para instalaciones que prefieren voltaje de bus mas alto y apilamiento en rack.",
+    "Problema_que_Resuelve": "El cliente tiene o planea un sistema en formato rack (rack mount) en vez de wall mount.",
+    "Tipo_Cliente_Recomendado": "Comercio con sala tecnica o instalacion tipo rack.",
+    "Garantia_Anios": 10,
+    "Caracteristicas_Principales": "48V 100Ah, 4.8kWh, formato rack mount, 10 anos de garantia."
+  },
+  {
+    "SKU": "SUNARK-BAT-960-001",
+    "Imagen_Principal": "media_blueprint/SUNARK-BAT-960-001/principal.jpg",
+    "Nombre_Comercial": "Banco de Baterias de Litio 9.6kWh (48V)",
+    "Categoria": "Bateria",
+    "Beneficios": "Capacidad casi equivalente a la bateria de 10.24kWh estandar, en formato rack mount de 48V.",
+    "Problema_que_Resuelve": "El cliente necesita autonomia alta en formato rack en vez de wall mount.",
+    "Tipo_Cliente_Recomendado": "Comercio con instalacion tipo rack y consumo alto.",
+    "Garantia_Anios": 10,
+    "Caracteristicas_Principales": "48V 200Ah, 9.6kWh, formato rack mount, 10 anos de garantia."
   }
 ]

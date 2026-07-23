@@ -53,6 +53,114 @@
       "Voltaje": "40-60V bateria",
       "Garantia_Anios": 5,
       "Descripcion_Tecnica": "Hibrido con WiFi, Output 10kW, MPPT 80-500Vdc, Battery 40-60V, AC Output 120/240V"
+    },
+    {
+      "SKU": "SOLIS-INV-6KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P6K02-SV-YD-L",
+      "Potencia_W": 6000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 6kW, MPPT 90-435Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOLIS-INV-8KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P8K02-SV-YD-L",
+      "Potencia_W": 8000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 8kW, MPPT 90-435Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOLIS-INV-12KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P12K03-SV-YD-L-US",
+      "Potencia_W": 12000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 12kW, MPPT 150-450Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOLIS-INV-14KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P14K03-SV-YD-L-US",
+      "Potencia_W": 14000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 14kW, MPPT 150-450Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOLIS-INV-16KW-001",
+      "Marca": "Solis",
+      "Modelo": "S6-EH2P16K03-SV-YD-L-US",
+      "Potencia_W": 16000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 16kW, MPPT 150-450Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOSEN-INV-8KW-001",
+      "Marca": "SoSen",
+      "Modelo": "SSE-HL8K-P2US",
+      "Potencia_W": 8000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 8kW, MPPT 100-500Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOSEN-INV-10KW-001",
+      "Marca": "SoSen",
+      "Modelo": "SSE-HL10K-P2US",
+      "Potencia_W": 10000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 10kW, MPPT 100-500Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOSEN-INV-12KW-001",
+      "Marca": "SoSen",
+      "Modelo": "SSE-HL12K-P2US",
+      "Potencia_W": 12000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 12kW, MPPT 100-500Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SOSEN-INV-15KW-001",
+      "Marca": "SoSen",
+      "Modelo": "SSE-HL15K-P2US",
+      "Potencia_W": 15000,
+      "Voltaje": "120/240V",
+      "Garantia_Anios": 5,
+      "Descripcion_Tecnica": "Output Power 15kW, MPPT 100-500Vdc, Bateria 40-60V, AC 120/240V, con modulo WiFi y DC switch"
+    },
+    {
+      "SKU": "SUNARK-INV-5KW-002",
+      "Marca": "SunArk",
+      "Modelo": "SYP 5K-U",
+      "Potencia_W": 5000,
+      "Voltaje": "110Vac",
+      "Garantia_Anios": 3,
+      "Descripcion_Tecnica": "Rated Output 5,000W, Bateria 48Vdc, Max PV 500Vdc, AC 110Vac, MPPT:1, Parallel 1-6 unidades"
+    },
+    {
+      "SKU": "SUNARK-INV-6500W-001",
+      "Marca": "SunArk",
+      "Modelo": "SPI-6.5K-UP",
+      "Potencia_W": 6500,
+      "Voltaje": "120/240Vac",
+      "Garantia_Anios": 3,
+      "Descripcion_Tecnica": "Max Peak Power 13,000VA, AC 120/240Vac split-phase, Parallel 1-6 unidades, 2 MPPT, MPPT 150-450Vdc, Max Input 18A+18A"
+    },
+    {
+      "SKU": "SUNARK-INV-8KW-001",
+      "Marca": "SunArk",
+      "Modelo": "SPI-8K-UP",
+      "Potencia_W": 8000,
+      "Voltaje": "120/240Vac",
+      "Garantia_Anios": 3,
+      "Descripcion_Tecnica": "Rated Output 8,000W, Bateria 48Vdc, Max PV 500Vdc+500Vdc, AC 120/240Vac split/three-phase, 2 MPPT, Parallel 1-6 unidades"
     }
   ],
   "baterias": [
@@ -91,6 +199,33 @@
       "Voltaje": "51.2V",
       "Garantia_Anios": 10,
       "Descripcion_Tecnica": "51.2V 314Ah - 16kWh, DOD recomendado 80% @ 0.5C"
+    },
+    {
+      "SKU": "SUNARK-BAT-256-001",
+      "Marca": "SunArk",
+      "Modelo": "SunArk Rack Mount 2.56KWH",
+      "Potencia_W": 0,
+      "Voltaje": "25.6V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "25.6V 100Ah, 2.56kWh, formato rack mount"
+    },
+    {
+      "SKU": "SUNARK-BAT-480-001",
+      "Marca": "SunArk",
+      "Modelo": "SunArk Rack Mount 4.8KWH",
+      "Potencia_W": 0,
+      "Voltaje": "48V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "48V 100Ah, 4.8kWh, formato rack mount"
+    },
+    {
+      "SKU": "SUNARK-BAT-960-001",
+      "Marca": "SunArk",
+      "Modelo": "SunArk Rack Mount 9.6KWH",
+      "Potencia_W": 0,
+      "Voltaje": "48V",
+      "Garantia_Anios": 10,
+      "Descripcion_Tecnica": "48V 200Ah, 9.6kWh, formato rack mount"
     }
   ],
   "paneles_solares": [

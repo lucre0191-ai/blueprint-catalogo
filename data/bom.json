@@ -509,5 +509,40 @@
     "Cantidad": 1,
     "Categoria": "Cargador EV",
     "Descripcion": "SunArk AC EV Charger 7kW"
+  },
+  {
+    "Kit_ID": "K3-OFF-3KWINV",
+    "SKU": "GEN-CMB-2IN2O-001",
+    "Cantidad": 1,
+    "Categoria": "Caja Combinadora",
+    "Descripcion": "Caja Combinadora PV 2 Strings In / 2 Out"
+  },
+  {
+    "Kit_ID": "K5-OFFGRID",
+    "SKU": "GEN-CMB-2IN2O-001",
+    "Cantidad": 1,
+    "Categoria": "Caja Combinadora",
+    "Descripcion": "Caja Combinadora PV 2 Strings In / 2 Out"
+  },
+  {
+    "Kit_ID": "K5-HYBRID",
+    "SKU": "GEN-CMB-2IN2O-001",
+    "Cantidad": 1,
+    "Categoria": "Caja Combinadora",
+    "Descripcion": "Caja Combinadora PV 2 Strings In / 2 Out"
+  },
+  {
+    "Kit_ID": "K10-OFFGRID",
+    "SKU": "GEN-CMB-2IN2O-001",
+    "Cantidad": 1,
+    "Categoria": "Caja Combinadora",
+    "Descripcion": "Caja Combinadora PV 2 Strings In / 2 Out"
+  },
+  {
+    "Kit_ID": "K10-HYBRID",
+    "SKU": "GEN-CMB-2IN2O-001",
+    "Cantidad": 1,
+    "Categoria": "Caja Combinadora",
+    "Descripcion": "Caja Combinadora PV 2 Strings In / 2 Out"
   }
 ]

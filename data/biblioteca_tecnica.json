@@ -215,5 +215,117 @@
     "Manual_URL": null,
     "Certificados_URL": null,
     "Video_URL": null
+  },
+  {
+    "SKU": "GEN-CMB-2IN2O-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-6KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-8KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-12KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-14KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOLIS-INV-16KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOSEN-INV-8KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOSEN-INV-10KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOSEN-INV-12KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SOSEN-INV-15KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-INV-5KW-002",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-INV-6500W-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-INV-8KW-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-256-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-480-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
+  },
+  {
+    "SKU": "SUNARK-BAT-960-001",
+    "Datasheet_URL": null,
+    "Manual_URL": null,
+    "Certificados_URL": null,
+    "Video_URL": null
   }
 ]
