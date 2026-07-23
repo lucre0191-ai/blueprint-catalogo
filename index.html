@@ -7,7 +7,7 @@
 <meta name="description" content="Soluciones de energia solar con respaldo para tu casa o tu negocio en Cuba: elegi cuanto necesitas segun lo que queres mantener andando cuando se va la corriente.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 </head>
@@ -20,13 +20,16 @@
      Se repite en cada carga del sitio a proposito: es parte del
      mensaje, no solo una intro. Ver assets/app.js (wireBlackout). -->
 <div class="blackout" id="blackout" role="button" tabindex="0" aria-label="Toca o presiona Enter para restaurar la luz">
+  <img class="blackout-scene" src="assets/img/blackout-cuba.jpg" alt="" aria-hidden="true">
+  <div class="blackout-scrim" aria-hidden="true"></div>
   <div class="blackout-inner">
     <p class="blackout-eyebrow">Apagon</p>
     <h2 class="blackout-msg">¿Otra vez sin corriente?</h2>
     <span class="power-switch" id="power-switch">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+      Encender mi futuro
     </span>
-    <p class="blackout-hint" id="blackout-hint">Toca para encender</p>
+    <p class="blackout-hint" id="blackout-hint">Toca o presioná Enter</p>
   </div>
 </div>
 

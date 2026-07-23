@@ -167,12 +167,47 @@ export function renderHome(ctx) {
     .flatMap((t) => t.split(".").map((s) => s.trim()).filter(Boolean));
   const beneficios = [...new Set(beneficiosRaw)].slice(0, 4);
 
+  const benefitIcons = [
+    ["shield", "Soluciones confiables"],
+    ["bolt", "Ahorro inteligente"],
+    ["panel", "Energía sostenible"],
+    ["store", "Soporte local"],
+    ["house", "Para hogares y negocios"],
+  ];
+  const valueProps = [
+    ["house", "Entiende tu realidad", "Hablamos tu idioma, entendemos tus apagones, tus necesidades y tu contexto."],
+    ["bolt", "Soluciones inteligentes", "No solo vendemos productos, recomendamos lo que realmente necesitás."],
+    ["scale", "Transparencia total", "Precios claros, cotizaciones detalladas, sin letra pequeña."],
+    ["book", "Educación continua", "Aprendé sobre energía solar de forma simple, práctica y gratuita."],
+    ["store", "Soporte local", "Estamos con vos antes, durante y después de tu compra."],
+    ["layers", "Tecnología con propósito", "Usamos tecnología para hacer tu vida más fácil y tu hogar más seguro."],
+  ];
+
   ctx.container.innerHTML = `
+    <section class="warm-return">
+      <div class="warm-return-bg" aria-hidden="true">
+        <img class="wr-slide" src="assets/img/scene-hogar.jpg" alt="">
+        <img class="wr-slide" src="assets/img/scene-restaurante.jpg" alt="">
+        <img class="wr-slide" src="assets/img/scene-industrial.jpg" alt="">
+      </div>
+      <div class="warm-return-scrim" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2>La energía vuelve. Y con ella, tu tranquilidad.</h2>
+        <p class="desc">${escapeHtml(heroLede)}</p>
+        <div class="benefit-icons-row">
+          ${benefitIcons.map(([ic, label]) => `
+            <div class="benefit-icon-item">
+              <span class="icon-circle">${icon(ic)}</span>
+              <span class="label">${escapeHtml(label)}</span>
+            </div>`).join("")}
+        </div>
+      </div>
+    </section>
+
     <section class="hero">
       <div class="wrap hero-inner">
         <p class="eyebrow">${icon("bolt")}Energia solar explicada sin vueltas</p>
         <h1>${escapeHtml(heroTitle)}</h1>
-        <p class="lede">${escapeHtml(heroLede)}</p>
         <form class="search-bar" id="home-search">
           <span class="sb-icon">${icon("search")}</span>
           <input type="search" placeholder="¿Que necesitas mantener prendido? Ej: nevera, ventilador, negocio..." aria-label="Buscar soluciones">
@@ -213,11 +248,23 @@ export function renderHome(ctx) {
 
     ${beneficios.length ? `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Por que elegir Blueprint</h2></div></div>
+      <div class="section-head"><div><h2>Por que elegir esta solucion</h2></div></div>
       <div class="benefit-grid">
         ${beneficios.map((b) => `<div class="benefit"><span class="icon-circle sm">${icon("check")}</span><p>${escapeHtml(b)}.</p></div>`).join("")}
       </div>
     </section>` : ""}
+
+    <section class="section wrap">
+      <div class="section-head"><div><h2>Por que elegir Blueprint</h2><p class="desc">No se trata solo de energia. Se trata de tranquilidad, de familia, de sueños que no se apagan.</p></div></div>
+      <div class="value-grid">
+        ${valueProps.map(([ic, title, desc]) => `
+          <div class="value-card">
+            <span class="icon-circle">${icon(ic)}</span>
+            <h3>${escapeHtml(title)}</h3>
+            <p>${escapeHtml(desc)}</p>
+          </div>`).join("")}
+      </div>
+    </section>
 
     <section class="quickband wrap">
       <a href="#/biblioteca">${icon("book")}Manuales y fichas tecnicas</a>

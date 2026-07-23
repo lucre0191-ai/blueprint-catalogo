@@ -7,23 +7,41 @@
    ====================================================================== */
 
 :root {
-  --bg-blackout: #0a0f1c;
-  --bg-surface: #121a2e;
-  --bg-surface-2: #1a2440;
-  --bg-surface-3: #202c4d;
-  --line: #232e4a;
-  --line-bright: #34426b;
+  /* ---------- Plano 5 · Design System — Blueprint OS ----------
+     Paleta oficial: Verde Energia (accion/CTA), Azul Confianza
+     (info/secundario), Amarillo Solar (destacados/badges), Morado
+     Innovacion (IA/asistente). Fondo se mantiene oscuro (Gris Oscuro)
+     porque es donde vive la ceremonia apagon->luz — el plano usa el
+     mismo fondo navy en sus propias pantallas. */
+  --verde-energia: #22c55e;
+  --verde-energia-dim: #16a34a;
+  --azul-confianza: #0ea5e9;
+  --amarillo-solar: #fbbf24;
+  --morado-innovacion: #8b5cf6;
+  --gris-oscuro: #0f172a;
+  --gris-claro: #f1f5f9;
+  --blanco: #ffffff;
 
-  --accent-power: #ffb020;
-  --accent-power-dim: #a86f1c;
-  --accent-cell: #35d0b8;
+  --bg-blackout: var(--gris-oscuro);
+  --bg-surface: #16213a;
+  --bg-surface-2: #1c2a47;
+  --bg-surface-3: #243356;
+  --line: #263252;
+  --line-bright: #3a4a72;
 
-  --text-primary: #f3efe6;
-  --text-muted: #8b93a8;
-  --text-faint: #5a6580;
+  --accent-power: var(--verde-energia);
+  --accent-power-dim: var(--verde-energia-dim);
+  --accent-cell: var(--azul-confianza);
+  --accent-warm: var(--amarillo-solar);
+  --accent-innovacion: var(--morado-innovacion);
 
-  --font-display: "Big Shoulders Display", sans-serif;
+  --text-primary: var(--gris-claro);
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+
+  --font-display: "Poppins", sans-serif;
   --font-body: "Inter", sans-serif;
+  --font-ui: "DM Sans", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 
   --radius: 4px;
@@ -68,25 +86,39 @@ body.blackout-active { overflow: hidden; }
   cursor: pointer; opacity: 1; visibility: visible; transition: opacity .7s ease, visibility .7s ease;
 }
 body:not(.blackout-active) .blackout { opacity: 0; visibility: hidden; pointer-events: none; }
-.blackout-inner { text-align: center; padding: 24px; max-width: 380px; }
+/* Escena de fondo: Cuba, isla y bandera vistas desde el espacio de
+   noche — la escala del pais entero sin corriente. Es la razon de ser
+   del sitio. El scrim de abajo garantiza que el texto se lea sobre
+   cualquier foto, sin depender de que la imagen traiga sus propias
+   vinetas. */
+.blackout-scene { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; opacity: .8; filter: saturate(.95) brightness(.85); }
+.blackout-scrim {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(4,6,10,.86) 0%, rgba(4,6,10,.58) 42%, rgba(4,6,10,.22) 72%),
+    linear-gradient(180deg, rgba(4,6,10,.4) 0%, rgba(4,6,10,.1) 35%, rgba(4,6,10,.65) 100%);
+}
+.blackout-inner { position: relative; z-index: 2; text-align: center; padding: 24px; max-width: 380px; }
 .blackout-eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 16px; }
 .blackout-msg { font-family: var(--font-display); font-size: clamp(24px, 6vw, 34px); color: var(--text-primary); margin: 0 0 36px; line-height: 1.15; }
 .power-switch {
-  width: 92px; height: 92px; border-radius: 50%; border: 1px solid var(--line-bright); background: var(--bg-surface);
-  color: var(--text-faint); display: flex; align-items: center; justify-content: center; margin: 0 auto;
-  animation: switch-breathe 2.6s ease-in-out infinite; transition: color .2s, border-color .2s;
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 auto;
+  padding: 16px 30px; border-radius: 999px; border: 1.5px solid var(--verde-energia);
+  background: rgba(34,197,94,.1); color: var(--verde-energia);
+  font-family: var(--font-ui); font-weight: 700; font-size: 15px; letter-spacing: .01em;
+  animation: switch-breathe 2.6s ease-in-out infinite; transition: background .2s, color .2s, transform .2s;
 }
-.power-switch svg { width: 32px; height: 32px; }
-body.blackout-pressed .power-switch { color: var(--accent-power); border-color: var(--accent-power); animation: none; }
+.power-switch svg { width: 22px; height: 22px; flex: none; }
+body.blackout-pressed .power-switch { background: var(--verde-energia); color: #052e12; animation: none; transform: scale(1.04); }
 @keyframes switch-breathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,176,32,.28); }
-  50% { box-shadow: 0 0 0 16px rgba(255,176,32,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,.28); }
+  50% { box-shadow: 0 0 0 16px rgba(34,197,94,0); }
 }
 .blackout-hint { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .1em; margin-top: 20px; }
 body.blackout-pressed .blackout { animation: blackout-flash .45s ease-out; }
 @keyframes blackout-flash {
   0% { background: radial-gradient(circle at 50% 42%, #131a28 0%, #05070a 68%); }
-  35% { background: #fff2d1; }
+  35% { background: #f0fdf4; }
   100% { background: radial-gradient(circle at 50% 42%, #131a28 0%, #05070a 68%); }
 }
 
@@ -103,7 +135,7 @@ body.revealing { animation: power-on 900ms ease-out both; }
 .site-header { position: sticky; top: 0; z-index: 100; background: rgba(10,15,28,.9); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .header-row { display: flex; align-items: center; justify-content: space-between; height: 60px; }
 .brand { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: .02em; }
-.brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-power); box-shadow: 0 0 10px 2px rgba(255,176,32,.55); }
+.brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-power); box-shadow: 0 0 10px 2px rgba(34,197,94,.55); }
 .main-nav { display: none; gap: 22px; font-size: 13.5px; color: var(--text-muted); }
 .main-nav a.active { color: var(--accent-power); }
 .nav-toggle { background: none; border: 1px solid var(--line-bright); border-radius: var(--radius); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); }
@@ -119,7 +151,7 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 /* ---------- botones / chips / pills ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; padding: 11px 16px; border-radius: var(--radius); border: 1px solid var(--line-bright); background: var(--bg-surface-2); cursor: pointer; transition: filter .15s ease, background .15s ease; }
 .btn .ic svg { width: 15px; height: 15px; }
-.btn-primary { background: var(--accent-power); color: #171008; border-color: var(--accent-power); }
+.btn-primary { background: var(--accent-power); color: #052e12; border-color: var(--accent-power); }
 .btn-primary:hover { filter: brightness(1.06); }
 .btn-ghost { background: transparent; }
 .btn-ghost:hover { background: var(--bg-surface-2); }
@@ -133,11 +165,11 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 
 .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip { font-family: var(--font-mono); font-size: 12px; background: var(--bg-surface); border: 1px solid var(--line); color: var(--text-muted); padding: 8px 13px; border-radius: 100px; cursor: pointer; }
-.chip.on { background: var(--accent-power); color: #171008; border-color: var(--accent-power); font-weight: 600; }
+.chip.on { background: var(--accent-power); color: #052e12; border-color: var(--accent-power); font-weight: 600; }
 
-.icon-circle { width: 42px; height: 42px; border-radius: 11px; background: var(--bg-surface-2); border: 1px solid var(--line-bright); display: flex; align-items: center; justify-content: center; color: var(--accent-power); font-size: 18px; flex: none; box-shadow: 0 0 0 0 rgba(255,176,32,0); transition: box-shadow .2s; }
+.icon-circle { width: 42px; height: 42px; border-radius: 11px; background: var(--bg-surface-2); border: 1px solid var(--line-bright); display: flex; align-items: center; justify-content: center; color: var(--accent-power); font-size: 18px; flex: none; box-shadow: 0 0 0 0 rgba(34,197,94,0); transition: box-shadow .2s; }
 .icon-circle.sm { width: 34px; height: 34px; font-size: 15px; }
-.cat-card:hover .icon-circle, .kit-card:hover .icon-circle { box-shadow: 0 0 22px -4px rgba(255,176,32,.45); }
+.cat-card:hover .icon-circle, .kit-card:hover .icon-circle { box-shadow: 0 0 22px -4px rgba(34,197,94,.45); }
 
 /* ---------- glosario: "?" junto a terminos tecnicos ----------
    Pensado para quien nunca trabajo con paneles solares: un toque (no
@@ -160,7 +192,7 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 /* ---------- hero ---------- */
 .hero {
   position: relative; z-index: 1; padding: 60px 0 44px; border-bottom: 1px solid var(--line); overflow: hidden;
-  background: radial-gradient(circle at 88% -12%, rgba(255,176,32,.14), transparent 45%);
+  background: radial-gradient(circle at 88% -12%, rgba(34,197,94,.14), transparent 45%);
 }
 .hero-inner { max-width: 720px; }
 .eyebrow { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-cell); display: flex; align-items: center; gap: 9px; margin-bottom: 18px; }
@@ -190,6 +222,57 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .two-col { display: grid; gap: 34px; }
 @media (min-width: 760px) { .two-col { grid-template-columns: 1fr 1fr; } }
 
+/* ---------- "la energia vuelve" (home, post-apagon) ----------
+   Plano 2: primer bloque que ve el visitante ya con la luz encendida.
+   Contraste calido a proposito frente al azul-oscuro general — es el
+   respiro despues del apagon. */
+.warm-return {
+  position: relative; z-index: 1; padding: 64px 0 48px; text-align: center;
+  overflow: hidden; border-bottom: 1px solid var(--line);
+}
+/* Carrusel de fondo: hogar / negocio / instalacion mas grande — los
+   tres escenarios reales que Blueprint atiende. Crossfade 100% CSS
+   (sin JS, sin timers que limpiar en cada cambio de ruta) usando
+   animation-delay negativo para desfasar cada foto dentro del mismo
+   ciclo. prefers-reduced-motion (regla global arriba) colapsa la
+   animacion a 1 sola iteracion: queda una foto fija, no parpadeo. */
+.warm-return-bg { position: absolute; inset: 0; z-index: 0; }
+.wr-slide {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; animation: wr-cycle 18s infinite;
+}
+.wr-slide:nth-child(1) { animation-delay: 0s; }
+.wr-slide:nth-child(2) { animation-delay: -6s; }
+.wr-slide:nth-child(3) { animation-delay: -12s; }
+@keyframes wr-cycle {
+  0%, 27% { opacity: 1; }
+  33%, 97% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.warm-return-scrim {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,.68) 0%, rgba(15,23,42,.78) 55%, rgba(15,23,42,.9) 100%),
+    radial-gradient(circle at 50% -10%, rgba(251,191,36,.14), transparent 55%);
+}
+.warm-return .wrap { position: relative; z-index: 2; }
+.warm-return h2 { font-size: clamp(24px, 5vw, 36px); max-width: 18ch; margin: 0 auto 12px; }
+.warm-return .desc { color: var(--text-muted); max-width: 52ch; margin: 0 auto; font-size: 15px; }
+.benefit-icons-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-top: 36px; }
+@media (min-width: 700px) { .benefit-icons-row { grid-template-columns: repeat(5, 1fr); } }
+.benefit-icon-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.benefit-icon-item .icon-circle { width: 50px; height: 50px; border-radius: 14px; font-size: 20px; }
+.benefit-icon-item span.label { font-family: var(--font-ui); font-size: 12.5px; color: var(--text-muted); font-weight: 600; max-width: 12ch; }
+
+/* ---------- propuesta de valor (home) ---------- */
+.value-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 640px) { .value-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .value-grid { grid-template-columns: repeat(3, 1fr); } }
+.value-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+.value-card .icon-circle { color: var(--azul-confianza); }
+.value-card h3 { font-size: 15.5px; font-family: var(--font-ui); font-weight: 700; }
+.value-card p { color: var(--text-muted); font-size: 13.5px; margin: 0; line-height: 1.55; }
+
 /* ---------- categorias (home) ---------- */
 .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 @media (min-width: 760px) { .cat-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -206,12 +289,18 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .kit-card, .prod-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
 .kit-card:hover, .prod-card:hover { border-color: var(--line-bright); transform: translateY(-2px); }
 .kit-media, .prod-media { position: relative; aspect-ratio: 16/10; background: var(--bg-surface-2); overflow: hidden; display: block; }
-.kit-media img, .prod-media img, .media-ph { width: 100%; height: 100%; }
+.media-ph { width: 100%; height: 100%; }
+/* Fotos reales: siempre se ven completas, nunca estiradas ni recortadas.
+   object-fit: contain + fondo de la superficie = la foto se enmarca
+   entera, aunque su proporcion no coincida con la del recuadro. */
+.kit-media img, .prod-media img, .gallery-main img, .gallery-strip img {
+  width: 100%; height: 100%; object-fit: contain; object-position: center; display: block;
+}
 .media-ph {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-faint);
   position: relative; overflow: hidden;
   background:
-    radial-gradient(circle at 72% 20%, rgba(255,176,32,.16), transparent 55%),
+    radial-gradient(circle at 72% 20%, rgba(34,197,94,.16), transparent 55%),
     linear-gradient(150deg, var(--bg-surface-2) 0%, var(--bg-blackout) 75%);
 }
 .media-ph::before {
@@ -270,7 +359,7 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .filter-bar .count { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
 .market-tabs { display: flex; gap: 6px; border: 1px solid var(--line-bright); border-radius: var(--radius); padding: 4px; background: var(--bg-surface); width: fit-content; }
 .market-tabs button { font-family: var(--font-mono); font-size: 12.5px; background: none; border: none; color: var(--text-muted); padding: 8px 14px; border-radius: 2px; cursor: pointer; }
-.market-tabs button.active { background: var(--accent-power); color: #171008; font-weight: 600; }
+.market-tabs button.active { background: var(--accent-power); color: #052e12; font-weight: 600; }
 @media (min-width: 900px) { .filter-bar { flex-direction: row; align-items: center; flex-wrap: wrap; } }
 
 /* ---------- state / empty ---------- */
@@ -286,9 +375,9 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .kit-top { display: grid; grid-template-columns: 1fr; gap: 26px; padding: 20px 0; }
 @media (min-width: 900px) { .kit-top { grid-template-columns: 1.2fr .8fr; } }
 .gallery-main { aspect-ratio: 4/3; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-surface-2); }
-.gallery-main img, .gallery-main .media-ph { width: 100%; height: 100%; }
+.gallery-main .media-ph { width: 100%; height: 100%; }
 .gallery-strip { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
-.gallery-strip > * { width: 64px; height: 64px; flex: none; border-radius: 8px; overflow: hidden; }
+.gallery-strip > * { width: 64px; height: 64px; flex: none; border-radius: 8px; overflow: hidden; background: var(--bg-surface-2); }
 
 .buy-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; gap: 14px; align-self: start; }
 @media (min-width: 900px) { .buy-card { position: sticky; top: 76px; } }
