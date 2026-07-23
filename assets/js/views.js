@@ -7,12 +7,12 @@
    ====================================================================== */
 
 import {
-  clean, firstOf, fmtUSD, fmtNum, whatsappLink, slug, escapeHtml, img,
+  clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
   kitWarrantyYears, state,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
-import { downloadAsImage, downloadAsPDF, shareElement } from "./exporters.js";
+import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
 
 const LINEA_ICON = {
   "Respaldo": "shield", "Continuidad": "bolt", "Autonomia": "battery",
@@ -331,7 +331,7 @@ export function renderKitDetail(ctx, params) {
   ctx.container.innerHTML = `
     <div class="crumb wrap"><a href="#/kits">Kits</a> ${icon("chevronRight")} <span>${escapeHtml(kit.Linea || "")}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(name)}</span></div>
 
-    <div class="wrap kit-top" id="kit-capture">
+    <div class="wrap kit-top">
       <div class="gallery">
         <div class="gallery-main">${mediaImage(mainImage, name, "cover")}</div>
         ${gallery.length ? `<div class="gallery-strip">${gallery.map((g) => mediaImage(g, name, "cover")).join("")}</div>` : ""}
@@ -347,10 +347,10 @@ export function renderKitDetail(ctx, params) {
           <div class="spec-item"><span class="k">${icon("shield")}Garantia</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
         </div>
         <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
-        <div class="actions-col" data-export-hide>
+        <div class="actions-col">
           ${waButton(config, buildInquiryText(name, market, price), "Solicitar por WhatsApp")}
-          <button class="btn btn-ghost" id="btn-pdf">${icon("pdf")}Descargar ficha PDF</button>
-          <button class="btn btn-ghost" id="btn-img">${icon("image")}Descargar como imagen</button>
+          <button class="btn btn-ghost" id="btn-pdf-comercial">${icon("pdf")}Descargar Ficha Comercial (PDF)</button>
+          <button class="btn btn-ghost" id="btn-pdf-tecnica">${icon("layers")}Descargar Especificacion Tecnica (PDF)</button>
           <button class="btn btn-ghost" id="btn-share">${icon("share")}Compartir</button>
         </div>
       </aside>
@@ -399,13 +399,41 @@ export function renderKitDetail(ctx, params) {
     </section>
   `;
 
-  const captureEl = ctx.container.querySelector("#kit-capture");
-  const btnPdf = ctx.container.querySelector("#btn-pdf");
-  const btnImg = ctx.container.querySelector("#btn-img");
+  const btnPdfComercial = ctx.container.querySelector("#btn-pdf-comercial");
+  const btnPdfTecnica = ctx.container.querySelector("#btn-pdf-tecnica");
   const btnShare = ctx.container.querySelector("#btn-share");
-  if (btnPdf) btnPdf.addEventListener("click", () => downloadAsPDF(captureEl, `${slug(name)}.pdf`));
-  if (btnImg) btnImg.addEventListener("click", () => downloadAsImage(captureEl, `${slug(name)}.png`));
-  if (btnShare) btnShare.addEventListener("click", () => shareElement(captureEl, `${slug(name)}.png`, buildInquiryText(name, market, price), name));
+
+  // Genera cada PDF en el momento a partir de los JSON — nunca es una
+  // captura de pantalla, asi que un cambio futuro en el Excel se ve
+  // reflejado automaticamente sin tocar este codigo.
+  async function withBusyLabel(btn, busyText, task) {
+    if (!btn) return;
+    const original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = busyText;
+    try {
+      await task();
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  }
+
+  if (btnPdfComercial) {
+    btnPdfComercial.addEventListener("click", () =>
+      withBusyLabel(btnPdfComercial, "Generando…", () => generateCommercialPDF(idx, data, kit.Kit_ID, market))
+    );
+  }
+  if (btnPdfTecnica) {
+    btnPdfTecnica.addEventListener("click", () =>
+      withBusyLabel(btnPdfTecnica, "Generando…", () => generateTechnicalPDF(idx, data, kit.Kit_ID, market))
+    );
+  }
+  if (btnShare) {
+    btnShare.addEventListener("click", () =>
+      withBusyLabel(btnShare, "Preparando…", () => shareCommercialPDF(idx, data, kit.Kit_ID, market))
+    );
+  }
 }
 
 /* =======================================================================
