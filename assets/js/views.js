@@ -267,7 +267,6 @@ export function renderHome(ctx) {
     </section>
 
     <section class="quickband wrap">
-      <a href="#/biblioteca">${icon("book")}Manuales y fichas tecnicas</a>
       <a href="#/comparador">${icon("scale")}Comparar equipos</a>
       <a href="#/catalogo">${icon("layers")}Ver todos los equipos</a>
       ${waButton(config, "Hola, no se cual solucion me conviene. ¿Me pueden ayudar a elegir?", "No se cual elegir — ayudenme")}
@@ -579,17 +578,13 @@ export function renderProductDetail(ctx, params) {
   }
   const media = idx.mediaBySku.get(product.SKU);
   const showcase = idx.showcaseBySku.get(product.SKU);
-  const biblio = idx.bibliotecaBySku.get(product.SKU);
   const gallery = [media && media.Imagen_principal, media && media.Imagen_2, media && media.Imagen_3].map(clean).filter(Boolean);
   const related = idx.products.filter((p) => p.Categoria === product.Categoria && p.SKU !== product.SKU).slice(0, 4);
 
-  const docs = [];
-  [["Datasheet", media && media.Datasheet], ["Manual", media && media.Manual], ["Catalogo", media && media.Catalogo],
-   ["Certificados", media && media.Certificados], ["Video", media && media.Video],
-   ["Datasheet", biblio && biblio.Datasheet_URL], ["Manual", biblio && biblio.Manual_URL],
-   ["Certificados", biblio && biblio.Certificados_URL], ["Video", biblio && biblio.Video_URL]]
-    .forEach(([label, url]) => { const u = clean(url); if (u) docs.push({ label, url: u }); });
-
+  // Nota: a proposito no hay descarga de ficha tecnica/datasheet aca —
+  // decision explicita de la propietaria: esa info ya se muestra en la
+  // Ficha de Kit (seccion "Documentos"), no hace falta duplicarla por
+  // producto suelto.
   const specs = [
     ["Marca", product.Marca], ["Fabricante", product.Fabricante], ["Modelo", product.Modelo],
     ["Potencia", product.Potencia_W ? product.Potencia_W + " W" : null],
@@ -622,7 +617,6 @@ export function renderProductDetail(ctx, params) {
       <div>
         ${showcase && showcase.Problema_que_Resuelve ? `<h3>Que problema resuelve</h3><p class="muted">${escapeHtml(showcase.Problema_que_Resuelve)}</p>` : ""}
         ${showcase && showcase.Tipo_Cliente_Recomendado ? `<h3 style="margin-top:20px">Recomendado para</h3><p class="muted">${escapeHtml(showcase.Tipo_Cliente_Recomendado)}</p>` : ""}
-        ${docs.length ? `<h3 style="margin-top:20px">Documentos</h3><div class="doc-list">${docs.map((d) => `<a class="doc-row" href="${escapeHtml(d.url)}" target="_blank" rel="noopener">${icon("file")}<span>${escapeHtml(d.label)}</span>${icon("download")}</a>`).join("")}</div>` : ""}
       </div>
     </section>
 
@@ -736,47 +730,11 @@ export function renderComparador(ctx) {
   });
 }
 
-/* =======================================================================
-   BIBLIOTECA TECNICA (#/biblioteca — biblioteca_tecnica.json + media.json)
-   ======================================================================= */
-export function renderBiblioteca(ctx) {
-  const { idx, data } = ctx;
-  const config = data.config || {};
-  const docs = [];
-  idx.products.forEach((p) => {
-    const m = idx.mediaBySku.get(p.SKU);
-    const b = idx.bibliotecaBySku.get(p.SKU);
-    [["Datasheet", "file", m && m.Datasheet], ["Manual", "book", m && m.Manual], ["Catalogo", "pdf", m && m.Catalogo],
-     ["Certificados", "shield", m && m.Certificados], ["Video", "share", m && m.Video],
-     ["Datasheet", "file", b && b.Datasheet_URL], ["Manual", "book", b && b.Manual_URL],
-     ["Certificados", "shield", b && b.Certificados_URL], ["Video", "share", b && b.Video_URL]]
-      .forEach(([label, ic, url]) => {
-        const u = clean(url);
-        if (u) docs.push({ label, ic, url: u, sku: p.SKU, name: p.Nombre_Comercial_Tecnico || p.Modelo });
-      });
-  });
-  const groups = [...new Set(docs.map((d) => d.label))];
-
-  ctx.container.innerHTML = `
-    <section class="section wrap">
-      <div class="section-head"><div><h2>Manuales y certificados</h2><p class="desc">Para el que quiere revisar la letra chica antes de decidir: fichas tecnicas, manuales y certificados reales de cada equipo.</p></div></div>
-      ${docs.length ? `
-        <div class="chip-row">${groups.map((g) => `<span class="chip">${escapeHtml(g)} (${docs.filter((d) => d.label === g).length})</span>`).join("")}</div>
-        <div class="doc-list" style="margin-top:20px">
-          ${docs.map((d) => `<a class="doc-row" href="${escapeHtml(d.url)}" target="_blank" rel="noopener">${icon(d.ic)}<span>${escapeHtml(d.label)} — ${escapeHtml(d.name)}</span>${icon("download")}</a>`).join("")}
-        </div>
-      ` : `
-        <div class="state-msg">
-          Todavia no tenemos documentos cargados aca. En cuanto esten listos los datasheets, manuales o certificados, van a aparecer automaticamente.
-        </div>
-        <div class="cta-band" style="margin-top:24px">
-          <div><h3>¿Buscas una ficha especifica?</h3><p class="muted">Pedila directo y te la enviamos.</p></div>
-          ${waButton(config, "Hola, estoy buscando la ficha tecnica de un producto Blueprint que no encuentro en la biblioteca.", "Pedir documento")}
-        </div>
-      `}
-    </section>
-  `;
-}
+/* Nota: se retiro la pantalla "Biblioteca" (listado de fichas tecnicas
+   descargables por producto) — decision explicita de la propietaria:
+   esa informacion ya se muestra en la Ficha de Kit (seccion
+   "Documentos"), no hace falta una pantalla aparte para descargarla
+   producto por producto. */
 
 /* =======================================================================
    CONTACTO

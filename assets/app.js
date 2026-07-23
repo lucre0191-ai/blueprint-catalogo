@@ -14,7 +14,7 @@
 import { loadAll, buildIndices, initRouter, makeRoute, state } from "./js/core.js";
 import {
   renderHome, renderKits, renderKitDetail, renderCatalogo,
-  renderProductDetail, renderComparador, renderBiblioteca,
+  renderProductDetail, renderComparador,
   renderContacto, renderNotFound,
 } from "./js/views.js";
 import { initGlossary } from "./js/glossary.js";
@@ -42,7 +42,6 @@ function initApp(data, idx) {
     makeRoute(["catalogo"], () => { setActiveNav("catalogo"); renderCatalogo(ctx); }),
     makeRoute(["producto", ":sku"], (p) => { setActiveNav("catalogo"); renderProductDetail(ctx, p); }),
     makeRoute(["comparador"], () => { setActiveNav("comparador"); renderComparador(ctx); }),
-    makeRoute(["biblioteca"], () => { setActiveNav("biblioteca"); renderBiblioteca(ctx); }),
     makeRoute(["contacto"], () => { setActiveNav("contacto"); renderContacto(ctx); }),
   ];
 
