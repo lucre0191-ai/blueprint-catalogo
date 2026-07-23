@@ -150,6 +150,30 @@ export function marketsFrom(catalogs) {
   return [...new Set((catalogs || []).map((c) => c.Mercado).filter(Boolean))];
 }
 
+/** ---------------------------------------------------------------------
+ *  Imagen propia del kit — NUNCA la de un componente.
+ *  ---------------------------------------------------------------------
+ *  Fuente unica: catalogs.json -> Imagen_Principal. Es el unico campo
+ *  del contrato pensado para representar al KIT como producto
+ *  comercial (ver README del exportador).
+ *
+ *  Regla dura: esta funcion jamas cae en Imagen_Panel / Imagen_Inversor
+ *  / Imagen_Bateria ni en la foto del primer componente del BOM. Esos
+ *  campos son honestos para mostrar "que trae el kit" (una galeria de
+ *  piezas), pero no son una fotografia del kit en si. Usarlos como
+ *  imagen principal hace que kits distintos que comparten el mismo
+ *  panel o inversor se vean identicos entre si — ese fue el bug
+ *  reportado ("todos los kits muestran la misma imagen").
+ *
+ *  Estrategia de fallback (documentada, no silenciosa): si el kit no
+ *  tiene Imagen_Principal asignada en el Excel, esta funcion devuelve
+ *  null. La vista (mediaImage() en views.js, o el generador de PDF)
+ *  debe entonces mostrar un estado "Imagen pendiente" explicito —
+ *  nunca inventar ni tomar prestada una imagen que no pertenece al kit. */
+export function kitImage(catalog) {
+  return catalog ? clean(catalog.Imagen_Principal) : null;
+}
+
 /** Componentes NO opcionales de un kit (lo que siempre viene incluido). */
 export function includedComponents(idx, kitId) {
   return (idx.kitComponents[kitId] || []).filter((c) => !c.Opcional);

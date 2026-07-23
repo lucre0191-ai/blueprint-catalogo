@@ -9,7 +9,7 @@
 import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
-  kitWarrantyYears, state,
+  kitWarrantyYears, kitImage, state,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -63,7 +63,8 @@ function kitCard(idx, kit, catalogEntry, config) {
   const name = firstOf(catalogEntry && catalogEntry.Nombre_Comercial, kit.Nombre_Comercial);
   const title = firstOf(catalogEntry && catalogEntry.Titulo, name);
   const subtitle = firstOf(catalogEntry && catalogEntry.Subtitulo, catalogEntry && catalogEntry.Descripcion_Corta, kit.Cliente_Objetivo);
-  const image = firstOf(catalogEntry && catalogEntry.Imagen_Principal, catalogEntry && catalogEntry.Imagen_Panel);
+  // Imagen propia del kit, nunca la de un componente (ver kitImage() en core.js).
+  const image = kitImage(catalogEntry);
   const feedRaw = firstOf(catalogEntry && catalogEntry.Que_Puede_Alimentar, kit.Aplicaciones) || "";
   const feed = feedRaw.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 4);
   const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
@@ -311,7 +312,10 @@ export function renderKitDetail(ctx, params) {
   const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
   const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
   const tagline = firstOf(catalog && catalog.Subtitulo, catalog && catalog.Descripcion_Corta, kit.Cliente_Objetivo);
-  const mainImage = firstOf(catalog && catalog.Imagen_Principal, catalog && catalog.Imagen_Panel, included[0] && included[0].Imagen);
+  // Imagen propia del kit, nunca la de un componente (ver kitImage() en core.js).
+  const mainImage = kitImage(catalog);
+  // La galeria SI puede mostrar fotos de componentes: aqui es honesto,
+  // porque es literalmente "que trae el kit", no "una foto del kit".
   const gallery = [catalog && catalog.Imagen_Panel, catalog && catalog.Imagen_Inversor, catalog && catalog.Imagen_Bateria, ...included.map((c) => c.Imagen)]
     .map((p) => clean(p)).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).slice(0, 5);
   const feedText = firstOf(catalog && catalog.Que_Puede_Alimentar, kit.Aplicaciones);
