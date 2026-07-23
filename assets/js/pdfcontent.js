@@ -9,7 +9,7 @@
 
 import {
   clean, firstOf, fmtUSD, catalogFor, includedComponents, optionalComponents,
-  kitWarrantyYears, kitImage,
+  kitWarrantyYears, kitVisual,
 } from "./core.js";
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
@@ -51,14 +51,19 @@ function baseContent(idx, data, kitId, market) {
   const optional = optionalComponents(idx, kitId);
   const warranty = kitWarrantyYears(idx, kitId);
   const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
-  // Imagen propia del kit, nunca la de un componente (ver kitImage() en
-  // core.js — misma regla que usan las tarjetas y la ficha del kit).
-  // Si es null, pdfgen.js simplemente omite el bloque de imagen: el PDF
-  // sigue siendo un documento completo y honesto sin ella.
-  const heroImage = kitImage(catalog);
+  // Imagen propia del kit, nunca la de un componente en solitario (ver
+  // kitVisual() en core.js — misma regla que usan las tarjetas y la
+  // ficha del kit). Si no hay foto propia, heroMosaic trae hasta 3
+  // fotos de componentes para que pdfgen.js las dibuje como una
+  // pequeña grilla rotulada "Componentes principales", nunca como si
+  // fuera LA foto del kit. Si tampoco hay eso, ambos quedan vacios y
+  // el PDF simplemente omite el bloque de imagen.
+  const visual = kitVisual(catalog);
+  const heroImage = visual.image;
+  const heroMosaic = visual.mosaic;
 
   return {
-    kitId, kit, catalog, included, optional, warranty, name, heroImage,
+    kitId, kit, catalog, included, optional, warranty, name, heroImage, heroMosaic,
     market: market || (catalog && catalog.Mercado) || null,
     contact: contactInfo(config),
     generatedAt: new Date(),

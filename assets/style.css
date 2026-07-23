@@ -149,6 +149,17 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .media-ph svg { width: 26px; height: 26px; opacity: .6; }
 .media-ph span { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; }
 
+/* Mosaico de componentes: fallback cuando el kit no tiene foto propia
+   (kitVisual() en core.js). Se ve deliberadamente como una grilla de
+   piezas, nunca como una sola foto a pantalla completa. */
+.media-mosaic { position: relative; width: 100%; height: 100%; display: grid; gap: 2px; background: var(--line); }
+.media-mosaic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.media-mosaic.count-1 { grid-template-columns: 1fr; }
+.media-mosaic.count-2 { grid-template-columns: 1fr 1fr; }
+.media-mosaic.count-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.media-mosaic.count-3 img:first-child { grid-row: 1 / 3; }
+.media-mosaic-tag { position: absolute; left: 10px; bottom: 10px; z-index: 2; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; background: rgba(10,14,19,.78); color: var(--text-muted); padding: 4px 8px; border-radius: 6px; }
+
 .kit-body, .prod-body { padding: 18px 18px 20px; display: flex; flex-direction: column; flex: 1; gap: 4px; }
 .kit-title, .prod-title { font-size: 19px; line-height: 1.1; margin-bottom: 4px; }
 .kit-sub, .prod-sub { color: var(--text-muted); font-size: 13.5px; margin-bottom: 10px; }

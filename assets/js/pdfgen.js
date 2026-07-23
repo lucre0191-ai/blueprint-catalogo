@@ -233,6 +233,46 @@ class DocWriter {
       return false;
     }
   }
+
+  /** Grilla de hasta 3 fotos de componentes — el mismo fallback que usa
+   *  la web (kitVisual() en core.js) cuando el kit no tiene foto propia:
+   *  mejor mostrar sus piezas principales que dejar el documento sin
+   *  imagen, pero siempre como una grilla rotulada, nunca como si una
+   *  sola de esas fotos fuera "la foto del kit". */
+  async imageMosaic(urls, maxW, maxH, caption) {
+    const tiles = urls.slice(0, 3);
+    if (!tiles.length) return false;
+    const gap = 4;
+    const tileW = (maxW - gap * (tiles.length - 1)) / tiles.length;
+    this.ensure(maxH + 22);
+    const startY = this.y;
+    let drew = false;
+    for (let i = 0; i < tiles.length; i++) {
+      const x = MARGIN + i * (tileW + gap);
+      try {
+        const dataUrl = await fetchAsDataURL(tiles[i]);
+        const format = /png/i.test(tiles[i]) ? "PNG" : "JPEG";
+        this.doc.addImage(dataUrl, format, x, startY, tileW, maxH);
+        drew = true;
+      } catch (err) {
+        console.warn("No se pudo incrustar imagen del mosaico:", tiles[i], err);
+        this.doc.setDrawColor(...LINE);
+        this.doc.setFillColor(...PANEL);
+        this.doc.rect(x, startY, tileW, maxH, "FD");
+      }
+    }
+    this.y = startY + maxH;
+    if (caption) {
+      this.doc.setFont("helvetica", "normal");
+      this.doc.setFontSize(7.5);
+      this.doc.setTextColor(...MUTED);
+      this.doc.text(caption.toUpperCase(), MARGIN, this.y + 10);
+      this.y += 18;
+    } else {
+      this.y += 8;
+    }
+    return drew;
+  }
 }
 
 function fetchAsDataURL(url) {
@@ -320,6 +360,8 @@ export async function buildCommercialDoc(idx, data, kitId, market) {
 
   if (content.heroImage) {
     await w.image(content.heroImage, CONTENT_W, 180);
+  } else if (content.heroMosaic.length) {
+    await w.imageMosaic(content.heroMosaic, CONTENT_W, 140, "Componentes principales");
   }
 
   if (content.price) {
@@ -391,6 +433,8 @@ export async function buildTechnicalDoc(idx, data, kitId, market) {
 
   if (content.heroImage) {
     await w.image(content.heroImage, 240, 160);
+  } else if (content.heroMosaic.length) {
+    await w.imageMosaic(content.heroMosaic, 240, 120, "Componentes principales");
   }
 
   if (content.specs.length) {

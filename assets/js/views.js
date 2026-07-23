@@ -9,7 +9,7 @@
 import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
-  kitWarrantyYears, kitImage, state,
+  kitWarrantyYears, kitVisual, state,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -31,6 +31,29 @@ function mediaImage(path, label, sizeClass = "") {
   const fallback = PLACEHOLDER_ICON.replace(/"/g, "&quot;");
   return `<img class="${sizeClass}" src="${safe}" alt="${escapeHtml(label || "")}" loading="lazy"
     onerror="this.outerHTML = '<div class=&quot;media-ph ${sizeClass}&quot;>${fallback}<span>Imagen pendiente</span></div>'">`;
+}
+
+/** Grilla de 2-3 fotos de componentes, para cuando el kit no tiene foto
+ *  propia (ver kitVisual() en core.js). Siempre se ve como una grilla,
+ *  nunca como una sola imagen a pantalla completa — la diferencia
+ *  visual deja claro que son piezas del kit, no una foto oficial de el. */
+function mediaMosaic(images, label, compact = false) {
+  const tiles = images
+    .map((src) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(label || "")}" loading="lazy" onerror="this.style.visibility='hidden'">`)
+    .join("");
+  const tag = compact ? "" : `<span class="media-mosaic-tag">Componentes principales</span>`;
+  return `<div class="media-mosaic count-${images.length}">${tiles}${tag}</div>`;
+}
+
+/** Elige entre foto propia, mosaico de componentes o placeholder — ver
+ *  kitVisual() en core.js para la logica de que se muestra y por que.
+ *  `compact` omite el rotulo del mosaico en tarjetas pequenas donde no
+ *  entra con claridad (el listado de kits, por ejemplo). */
+function kitMedia(catalog, label, sizeClass = "", compact = false) {
+  const visual = kitVisual(catalog);
+  if (visual.image) return mediaImage(visual.image, label, sizeClass);
+  if (visual.mosaic.length) return mediaMosaic(visual.mosaic, label, compact);
+  return mediaImage(null, label, sizeClass);
 }
 
 function buildInquiryText(name, market, price) {
@@ -63,8 +86,6 @@ function kitCard(idx, kit, catalogEntry, config) {
   const name = firstOf(catalogEntry && catalogEntry.Nombre_Comercial, kit.Nombre_Comercial);
   const title = firstOf(catalogEntry && catalogEntry.Titulo, name);
   const subtitle = firstOf(catalogEntry && catalogEntry.Subtitulo, catalogEntry && catalogEntry.Descripcion_Corta, kit.Cliente_Objetivo);
-  // Imagen propia del kit, nunca la de un componente (ver kitImage() en core.js).
-  const image = kitImage(catalogEntry);
   const feedRaw = firstOf(catalogEntry && catalogEntry.Que_Puede_Alimentar, kit.Aplicaciones) || "";
   const feed = feedRaw.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 4);
   const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
@@ -73,7 +94,7 @@ function kitCard(idx, kit, catalogEntry, config) {
   return `
     <article class="kit-card" data-kit-id="${escapeHtml(kit.Kit_ID)}">
       <a class="kit-media" href="#/kit/${encodeURIComponent(kit.Kit_ID)}">
-        ${mediaImage(image, name, "cover")}
+        ${kitMedia(catalogEntry, name, "cover", true)}
         <span class="pill pill-dark">${escapeHtml(kit.Linea || "Kit")}</span>
       </a>
       <div class="kit-body">
@@ -312,8 +333,6 @@ export function renderKitDetail(ctx, params) {
   const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
   const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
   const tagline = firstOf(catalog && catalog.Subtitulo, catalog && catalog.Descripcion_Corta, kit.Cliente_Objetivo);
-  // Imagen propia del kit, nunca la de un componente (ver kitImage() en core.js).
-  const mainImage = kitImage(catalog);
   // La galeria SI puede mostrar fotos de componentes: aqui es honesto,
   // porque es literalmente "que trae el kit", no "una foto del kit".
   const gallery = [catalog && catalog.Imagen_Panel, catalog && catalog.Imagen_Inversor, catalog && catalog.Imagen_Bateria, ...included.map((c) => c.Imagen)]
@@ -337,7 +356,7 @@ export function renderKitDetail(ctx, params) {
 
     <div class="wrap kit-top">
       <div class="gallery">
-        <div class="gallery-main">${mediaImage(mainImage, name, "cover")}</div>
+        <div class="gallery-main">${kitMedia(catalog, name, "cover")}</div>
         ${gallery.length ? `<div class="gallery-strip">${gallery.map((g) => mediaImage(g, name, "cover")).join("")}</div>` : ""}
       </div>
       <aside class="buy-card">

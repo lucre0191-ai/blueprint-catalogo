@@ -174,6 +174,43 @@ export function kitImage(catalog) {
   return catalog ? clean(catalog.Imagen_Principal) : null;
 }
 
+/** ---------------------------------------------------------------------
+ *  Estrategia de imagen del kit, en 2 niveles (documentada, no silenciosa).
+ *  ---------------------------------------------------------------------
+ *  Nivel 1 — foto propia: catalogs.Imagen_Principal, si el Excel la
+ *  tiene asignada. Es la unica fuente que representa al kit como
+ *  producto (ver kitImage() arriba).
+ *
+ *  Nivel 2 — mosaico de componentes: si NO hay foto propia, en vez de
+ *  dejar un hueco vacio se arman hasta 3 fotos reales de sus piezas
+ *  principales (panel / inversor / bateria, tomadas de catalogs.json,
+ *  que a su vez vienen de media.json por SKU). Esto se presenta
+ *  siempre como una GRILLA de 2-3 fotos, nunca como una sola imagen a
+ *  pantalla completa — asi queda visualmente claro que es "que trae el
+ *  kit", no "una foto oficial del kit". Es la misma diferencia que ya
+ *  se respeta en la galeria de la ficha de kit.
+ *
+ *  Nivel 3 — nada: si tampoco hay fotos de componentes, se devuelve
+ *  mosaic vacio y la vista cae al placeholder "Imagen pendiente".
+ *
+ *  Esta funcion nunca usa la imagen del primer componente del BOM en
+ *  solitario como si fuera la foto del kit (esa fue la causa del bug
+ *  original: "todos los kits muestran la misma imagen"). */
+export function kitVisual(catalog) {
+  const image = kitImage(catalog);
+  if (image) return { image, mosaic: [] };
+  const mosaic = [
+    catalog && catalog.Imagen_Panel,
+    catalog && catalog.Imagen_Inversor,
+    catalog && catalog.Imagen_Bateria,
+  ]
+    .map(clean)
+    .filter(Boolean)
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .slice(0, 3);
+  return { image: null, mosaic };
+}
+
 /** Componentes NO opcionales de un kit (lo que siempre viene incluido). */
 export function includedComponents(idx, kitId) {
   return (idx.kitComponents[kitId] || []).filter((c) => !c.Opcional);
