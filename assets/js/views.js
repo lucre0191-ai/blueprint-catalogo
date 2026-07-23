@@ -13,6 +13,7 @@ import {
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
+import { termHint } from "./glossary.js";
 
 const LINEA_ICON = {
   "Respaldo": "shield", "Continuidad": "bolt", "Autonomia": "battery",
@@ -102,9 +103,9 @@ function kitCard(idx, kit, catalogEntry, config) {
         ${subtitle ? `<p class="kit-sub">${escapeHtml(subtitle)}</p>` : ""}
         ${feed.length ? `<ul class="tag-list">${feed.map((f) => `<li>${escapeHtml(f)}</li>`).join("")}</ul>` : ""}
         <div class="kit-specs">
-          <div class="cell"><span class="v">${fmtNum(kit.Potencia_Panel_kW)}</span><span class="k">kW panel</span></div>
-          <div class="cell"><span class="v">${fmtNum(kit.Potencia_Inversor_kW)}</span><span class="k">kW inversor</span></div>
-          <div class="cell"><span class="v">${fmtNum(kit.Bateria_kWh)}</span><span class="k">kWh bateria</span></div>
+          <div class="cell"><span class="v">${fmtNum(kit.Potencia_Panel_kW)}</span><span class="k">kW panel${termHint("panel")}</span></div>
+          <div class="cell"><span class="v">${fmtNum(kit.Potencia_Inversor_kW)}</span><span class="k">kW inversor${termHint("inversor")}</span></div>
+          <div class="cell"><span class="v">${fmtNum(kit.Bateria_kWh)}</span><span class="k">kWh bateria${termHint("bateria")}</span></div>
         </div>
         <div class="kit-foot">
           <div class="kit-price">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Consultar</span>`}</div>
@@ -150,11 +151,11 @@ export function renderHome(ctx) {
   const featured = curated[0] || idx.catalogs.find((c) => c.Mercado === market) || idx.catalogs[0];
   const featuredKit = featured ? idx.kitsById.get(featured.Kit_ID) : null;
 
-  const heroTitle = firstOf(featured && featured.Titulo, "Nunca mas un apagon te tome por sorpresa");
+  const heroTitle = firstOf(featured && featured.Titulo, "Que el apagon no decida que se daña en tu casa");
   const heroLede = firstOf(
     featured && featured.Subtitulo,
     featured && featured.Descripcion_Corta,
-    "Sistemas solares con respaldo, calculados por Blueprint OS y listos para cotizar."
+    "Te ayudamos a elegir cuanto necesitas segun lo que de verdad queres mantener andando — la nevera, un ventilador, las luces de noche. Sin tecnicismos, sin adivinar."
   );
 
   const lineas = [...new Set(idx.kits.map((k) => k.Linea).filter(Boolean))];
@@ -169,60 +170,60 @@ export function renderHome(ctx) {
   ctx.container.innerHTML = `
     <section class="hero">
       <div class="wrap hero-inner">
-        <p class="eyebrow">${icon("bolt")}Blueprint OS · catalogo comercial en vivo</p>
+        <p class="eyebrow">${icon("bolt")}Energia solar explicada sin vueltas</p>
         <h1>${escapeHtml(heroTitle)}</h1>
         <p class="lede">${escapeHtml(heroLede)}</p>
         <form class="search-bar" id="home-search">
           <span class="sb-icon">${icon("search")}</span>
-          <input type="search" placeholder="¿Que queres alimentar hoy? Ej: nevera, cabaña, negocio..." aria-label="Buscar soluciones">
+          <input type="search" placeholder="¿Que necesitas mantener prendido? Ej: nevera, ventilador, negocio..." aria-label="Buscar soluciones">
           <button type="submit" class="btn btn-primary">Buscar</button>
         </form>
         <div class="hero-stats">
-          <div class="stat"><span class="n">${stats.kitCount}</span><span class="l">Kits activos</span></div>
+          <div class="stat"><span class="n">${stats.kitCount}</span><span class="l">Soluciones listas</span></div>
           <div class="stat"><span class="n">${stats.marketCount || "—"}</span><span class="l">Mercados</span></div>
-          <div class="stat"><span class="n">${fmtNum(stats.kw)}</span><span class="l">kW en catalogo</span></div>
-          <div class="stat"><span class="n">${stats.maxWarranty}</span><span class="l">Años de garantia (max)</span></div>
+          <div class="stat"><span class="n">${fmtNum(stats.kw)}</span><span class="l">kW disponibles</span></div>
+          <div class="stat"><span class="n">${stats.maxWarranty}</span><span class="l">Años de garantia</span></div>
         </div>
       </div>
     </section>
 
     <section class="section wrap">
-      <div class="section-head"><div><h2>Elegi tu punto de partida</h2><p class="desc">Categorias reales del catalogo, no una lista generica.</p></div></div>
+      <div class="section-head"><div><h2>¿Que problema queres resolver?</h2><p class="desc">Desde un apagon que te agarra con los chicos en casa, hasta un negocio que no puede parar.</p></div></div>
       <div class="cat-grid">
         ${lineas.map((l) => `
           <a class="cat-card" href="#/kits" data-linea="${escapeHtml(l)}">
             <span class="icon-circle">${icon(LINEA_ICON[l] || "bolt")}</span>
             <span class="cat-name">${escapeHtml(l)}</span>
-            <span class="cat-count">${idx.kits.filter((k) => k.Linea === l).length} kit${idx.kits.filter((k) => k.Linea === l).length === 1 ? "" : "s"}</span>
+            <span class="cat-count">${idx.kits.filter((k) => k.Linea === l).length} solucion${idx.kits.filter((k) => k.Linea === l).length === 1 ? "" : "es"}</span>
           </a>`).join("")}
       </div>
     </section>
 
     <section class="section wrap">
       <div class="section-head">
-        <div><h2>Soluciones destacadas</h2><p class="desc">Fichas curadas para ${escapeHtml(market || "tu mercado")}, tal como estan en el catalogo comercial.</p></div>
-        <a class="btn btn-ghost" href="#/kits">Ver todos los kits ${icon("arrowRight")}</a>
+        <div><h2>Las mas elegidas en ${escapeHtml(market || "tu zona")}</h2><p class="desc">Precio real, componentes reales — nada armado a ultimo momento.</p></div>
+        <a class="btn btn-ghost" href="#/kits">Ver todas las soluciones ${icon("arrowRight")}</a>
       </div>
       <div class="kit-grid">
         ${destacados.length
           ? destacados.map((c) => kitCard(idx, idx.kitsById.get(c.Kit_ID) || {}, c, config)).join("")
-          : `<div class="state-msg">Todavia no hay catalogos publicados para ${escapeHtml(market || "este mercado")}.</div>`}
+          : `<div class="state-msg">Todavia no tenemos soluciones cargadas para ${escapeHtml(market || "esta zona")}. Escribinos y te ayudamos igual.</div>`}
       </div>
     </section>
 
     ${beneficios.length ? `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Por que Blueprint</h2></div></div>
+      <div class="section-head"><div><h2>Por que elegir Blueprint</h2></div></div>
       <div class="benefit-grid">
         ${beneficios.map((b) => `<div class="benefit"><span class="icon-circle sm">${icon("check")}</span><p>${escapeHtml(b)}.</p></div>`).join("")}
       </div>
     </section>` : ""}
 
     <section class="quickband wrap">
-      <a href="#/biblioteca">${icon("book")}Biblioteca tecnica y manuales</a>
-      <a href="#/comparador">${icon("scale")}Comparar componentes</a>
-      <a href="#/catalogo">${icon("layers")}Explorar catalogo completo</a>
-      ${waButton(config, "Hola, quiero hablar con un asesor de Blueprint sobre energia solar.", "Hablar con un asesor")}
+      <a href="#/biblioteca">${icon("book")}Manuales y fichas tecnicas</a>
+      <a href="#/comparador">${icon("scale")}Comparar equipos</a>
+      <a href="#/catalogo">${icon("layers")}Ver todos los equipos</a>
+      ${waButton(config, "Hola, no se cual solucion me conviene. ¿Me pueden ayudar a elegir?", "No se cual elegir — ayudenme")}
     </section>
   `;
 
@@ -264,26 +265,26 @@ export function renderKits(ctx) {
     const rows = rowsFor(state.market, state.lineaFilter, state.searchQuery);
     ctx.container.querySelector("#kits-grid").innerHTML = rows.length
       ? rows.map((c) => kitCard(idx, idx.kitsById.get(c.Kit_ID) || {}, c, config)).join("")
-      : `<div class="state-msg">No hay kits que coincidan con el filtro para <strong>${escapeHtml(state.market || "")}</strong>.</div>`;
+      : `<div class="state-msg">No encontramos soluciones con esos filtros para <strong>${escapeHtml(state.market || "")}</strong>. Probá con otra palabra o escribinos por WhatsApp.</div>`;
     ctx.container.querySelector("#kits-count").textContent = `${rows.length} solucion${rows.length === 1 ? "" : "es"} encontrada${rows.length === 1 ? "" : "s"}`;
   }
 
   ctx.container.innerHTML = `
     <section class="section wrap">
       <div class="section-head">
-        <div><h2>Kits comerciales</h2><p class="desc">Directo de kits.json + catalogs.json. Precio sugerido de reventa, sin instalacion salvo que se indique.</p></div>
+        <div><h2>Todas las soluciones</h2><p class="desc">El precio es orientativo y no incluye instalacion, salvo que se indique lo contrario.</p></div>
       </div>
       <div class="filter-bar">
         <div class="market-tabs" id="market-tabs">
           ${markets.map((m) => `<button class="${m === state.market ? "active" : ""}" data-market="${escapeHtml(m)}">${escapeHtml(m)}</button>`).join("")}
         </div>
         <div class="chip-row" id="linea-chips">
-          <button class="chip ${!state.lineaFilter ? "on" : ""}" data-linea="">Todas las lineas</button>
+          <button class="chip ${!state.lineaFilter ? "on" : ""}" data-linea="">Todas</button>
           ${lineas.map((l) => `<button class="chip ${state.lineaFilter === l ? "on" : ""}" data-linea="${escapeHtml(l)}">${escapeHtml(l)}</button>`).join("")}
         </div>
         <form class="search-inline" id="kits-search">
           <span class="sb-icon">${icon("search")}</span>
-          <input type="search" placeholder="Buscar por nombre o aplicacion..." value="${escapeHtml(state.searchQuery || "")}">
+          <input type="search" placeholder="Buscar por nombre o para que la queres..." value="${escapeHtml(state.searchQuery || "")}">
         </form>
         <span class="count" id="kits-count"></span>
       </div>
@@ -364,10 +365,10 @@ export function renderKitDetail(ctx, params) {
         <h1>${escapeHtml(name)}</h1>
         ${tagline ? `<p class="tagline">${escapeHtml(tagline)}</p>` : ""}
         <div class="spec-grid">
-          <div class="spec-item"><span class="k">${icon("panel")}Panel</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
-          <div class="spec-item"><span class="k">${icon("bolt")}Inversor</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
-          <div class="spec-item"><span class="k">${icon("battery")}Bateria</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
-          <div class="spec-item"><span class="k">${icon("shield")}Garantia</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
+          <div class="spec-item"><span class="k">${icon("panel")}Panel${termHint("panel")}</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
+          <div class="spec-item"><span class="k">${icon("bolt")}Inversor${termHint("inversor")}</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
+          <div class="spec-item"><span class="k">${icon("battery")}Bateria${termHint("bateria")}</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
+          <div class="spec-item"><span class="k">${icon("shield")}Garantia${termHint("garantia")}</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
         </div>
         <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
         <div class="actions-col">
@@ -394,8 +395,8 @@ export function renderKitDetail(ctx, params) {
         ${feed.length
           ? `<div class="power-grid">${feed.map((f) => `<div class="power-item">${icon("bolt")}<span>${escapeHtml(f)}</span></div>`).join("")}</div>`
           : `<p class="muted">No hay detalle cargado para este kit todavia.</p>`}
-        <h3 style="margin-top:28px">Autonomia</h3>
-        <p class="autonomy-text" id="autonomia">${escapeHtml(kit.Autonomia_Aprox || "Sin dato de autonomia cargado.")}</p>
+        <h3 style="margin-top:28px">Autonomia${termHint("autonomia")}</h3>
+        <p class="autonomy-text" id="autonomia">${escapeHtml(kit.Autonomia_Aprox || "Todavia no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
       </div>
     </section>
 
@@ -498,7 +499,7 @@ export function renderCatalogo(ctx) {
 
   ctx.container.innerHTML = `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Catalogo de componentes</h2><p class="desc">Generado automaticamente desde products.json: paneles, inversores, baterias y accesorios.</p></div></div>
+      <div class="section-head"><div><h2>Cada pieza, por separado</h2><p class="desc">Paneles, inversores, baterias y accesorios — para quien ya sabe lo que busca, o quiere entender que trae cada solucion por dentro.</p></div></div>
       <div class="filter-bar">
         <select id="f-categoria"><option value="">Categoria</option>${categorias.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}</select>
         <select id="f-marca"><option value="">Marca</option>${marcas.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("")}</select>
@@ -665,7 +666,7 @@ export function renderComparador(ctx) {
 
   ctx.container.innerHTML = `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Comparador tecnico</h2><p class="desc">Directo de comparador.json. Elegi una categoria y hasta 2 modelos.</p></div></div>
+      <div class="section-head"><div><h2>¿Cual me conviene?</h2><p class="desc">Elegi una categoria y hasta 2 modelos para verlos lado a lado, en lenguaje simple.</p></div></div>
       <div class="chip-row" id="comp-cats">
         ${cats.map((c, i) => `<button class="chip ${i === 0 ? "on" : ""}" data-cat="${c.key}">${c.label} (${rowsOf(c.key).length})</button>`).join("")}
       </div>
@@ -711,7 +712,7 @@ export function renderBiblioteca(ctx) {
 
   ctx.container.innerHTML = `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Biblioteca tecnica</h2><p class="desc">Documentacion real cargada en biblioteca_tecnica.json y media.json. Lo que no aparece aca todavia no fue publicado.</p></div></div>
+      <div class="section-head"><div><h2>Manuales y certificados</h2><p class="desc">Para el que quiere revisar la letra chica antes de decidir: fichas tecnicas, manuales y certificados reales de cada equipo.</p></div></div>
       ${docs.length ? `
         <div class="chip-row">${groups.map((g) => `<span class="chip">${escapeHtml(g)} (${docs.filter((d) => d.label === g).length})</span>`).join("")}</div>
         <div class="doc-list" style="margin-top:20px">
@@ -719,8 +720,7 @@ export function renderBiblioteca(ctx) {
         </div>
       ` : `
         <div class="state-msg">
-          Todavia no hay documentos publicados en <strong>MEDIA_LIBRARY</strong> ni en <strong>09_BIBLIOTECA_TECNICA</strong>.
-          Apenas se carguen datasheets, manuales o certificados en el Excel, van a aparecer aca automaticamente.
+          Todavia no tenemos documentos cargados aca. En cuanto esten listos los datasheets, manuales o certificados, van a aparecer automaticamente.
         </div>
         <div class="cta-band" style="margin-top:24px">
           <div><h3>¿Buscas una ficha especifica?</h3><p class="muted">Pedila directo y te la enviamos.</p></div>

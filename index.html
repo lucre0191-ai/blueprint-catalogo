@@ -3,18 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blueprint Viewer — Catalogo Solar</title>
-<meta name="description" content="Kits de energia solar con respaldo, calculados por Blueprint OS y listos para cotizar.">
+<title>Blueprint — Energia que no se va cuando se va la luz</title>
+<meta name="description" content="Soluciones de energia solar con respaldo para tu casa o tu negocio en Cuba: elegi cuanto necesitas segun lo que queres mantener andando cuando se va la corriente.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 </head>
-<body class="power-off flicker-target">
+<body>
 
 <div class="cell-grid" aria-hidden="true"></div>
-<div class="power-veil" aria-hidden="true"></div>
+
+<!-- Ceremonia de entrada: el sitio recibe a cada visitante "apagado".
+     Tocar/clicar el interruptor (o Enter/Espacio) restaura la luz.
+     Se repite en cada carga del sitio a proposito: es parte del
+     mensaje, no solo una intro. Ver assets/app.js (wireBlackout). -->
+<div class="blackout" id="blackout" role="button" tabindex="0" aria-label="Toca o presiona Enter para restaurar la luz">
+  <div class="blackout-inner">
+    <p class="blackout-eyebrow">Apagon</p>
+    <h2 class="blackout-msg">¿Otra vez sin corriente?</h2>
+    <span class="power-switch" id="power-switch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke-linejoin="round"/></svg>
+    </span>
+    <p class="blackout-hint" id="blackout-hint">Toca para encender</p>
+  </div>
+</div>
 
 <header class="site-header">
   <div class="wrap header-row">
@@ -34,13 +48,13 @@
 </header>
 
 <main id="view">
-  <div class="wrap section"><div class="state-msg">Cargando catalogo…</div></div>
+  <div class="wrap section"><div class="state-msg">Preparando tu catalogo…</div></div>
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
-    <span>Blueprint Viewer — capa de presentacion de Blueprint OS. Cero datos inventados en esta pagina.</span>
-    <span>Datos: /data/*.json</span>
+    <span>Blueprint — soluciones de energia solar con respaldo, explicadas sin vueltas.</span>
+    <span>Toda la informacion aca es real: precios, garantias y componentes, tal como estan hoy.</span>
   </div>
 </footer>
 
