@@ -37,7 +37,8 @@ function initApp(data, idx) {
 
   const routes = [
     makeRoute([], () => { setActiveNav("/"); renderHome(ctx); }),
-    makeRoute(["diagnostico"], () => { setActiveNav("diagnostico"); renderDiagnostico(ctx); }),
+    makeRoute(["diagnostico"], () => { setActiveNav("diagnostico"); renderDiagnostico(ctx, {}); }),
+    makeRoute(["diagnostico", ":uso"], (p) => { setActiveNav("diagnostico"); renderDiagnostico(ctx, p); }),
     makeRoute(["kits"], () => { setActiveNav("kits"); renderKits(ctx); }),
     makeRoute(["kit", ":id"], (p) => { setActiveNav("kits"); renderKitDetail(ctx, p); }),
     makeRoute(["catalogo"], () => { setActiveNav("catalogo"); renderCatalogo(ctx); }),
@@ -58,7 +59,7 @@ function initApp(data, idx) {
   }
 
   document.body.classList.add("revealing");
-  setTimeout(() => document.body.classList.remove("revealing"), 950);
+  setTimeout(() => document.body.classList.remove("revealing"), 1250);
 }
 
 /** Ceremonia "apagon -> luz". Dos condiciones independientes tienen

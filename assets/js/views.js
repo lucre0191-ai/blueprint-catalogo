@@ -151,7 +151,6 @@ export function renderHome(ctx) {
   const featured = curated[0] || idx.catalogs.find((c) => c.Mercado === market) || idx.catalogs[0];
   const featuredKit = featured ? idx.kitsById.get(featured.Kit_ID) : null;
 
-  const heroTitle = firstOf(featured && featured.Titulo, "Que el apagon no decida que se daña en tu casa");
   const heroLede = firstOf(
     featured && featured.Subtitulo,
     featured && featured.Descripcion_Corta,
@@ -207,19 +206,41 @@ export function renderHome(ctx) {
     <section class="hero">
       <div class="wrap hero-inner">
         <p class="eyebrow">${icon("bolt")}Energia solar explicada sin vueltas</p>
-        <h1>${escapeHtml(heroTitle)}</h1>
-        <form class="search-bar" id="home-search">
-          <span class="sb-icon">${icon("search")}</span>
-          <input type="search" placeholder="¿Que necesitas mantener prendido? Ej: nevera, ventilador, negocio..." aria-label="Buscar soluciones">
-          <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
-        <p class="muted" style="margin-top:14px;font-size:13.5px">¿No sabes por donde arrancar? <a href="#diagnostico" style="color:var(--verde-energia);font-weight:600">Hace el diagnostico ${icon("arrowRight")}</a></p>
+        <h1>Encuentra la solucion energetica adecuada para ti.</h1>
+        <p class="lede">Aprende, compara y descubre la alternativa que mejor se adapta a tus necesidades.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Comenzar diagnostico</a>
+          <a class="btn btn-ghost" href="#kits">Explorar soluciones ${icon("arrowRight")}</a>
+        </div>
         <div class="hero-stats">
           <div class="stat"><span class="n">${stats.kitCount}</span><span class="l">Soluciones listas</span></div>
           <div class="stat"><span class="n">${stats.marketCount || "—"}</span><span class="l">Mercados</span></div>
           <div class="stat"><span class="n">${fmtNum(stats.kw)}</span><span class="l">kW disponibles</span></div>
           <div class="stat"><span class="n">${stats.maxWarranty}</span><span class="l">Años de garantia</span></div>
         </div>
+      </div>
+    </section>
+
+    <section class="section wrap">
+      <div class="quick-access-grid">
+        <a class="quick-access-card" href="#/diagnostico/residencial">
+          <span class="icon-circle">${icon("house")}</span>
+          <h3>Mi hogar</h3>
+          <p>Para que tu familia no se quede sin lo esencial cuando se va la luz.</p>
+          <span class="qa-cta">Empezar ${icon("arrowRight")}</span>
+        </a>
+        <a class="quick-access-card" href="#/diagnostico/mipyme">
+          <span class="icon-circle">${icon("store")}</span>
+          <h3>Mi negocio</h3>
+          <p>Para que la operacion no se detenga en cada apagon.</p>
+          <span class="qa-cta">Empezar ${icon("arrowRight")}</span>
+        </a>
+        <a class="quick-access-card" href="#/diagnostico">
+          <span class="icon-circle">${icon("layers")}</span>
+          <h3>Mi proyecto</h3>
+          <p>Algo mas especifico en mente — contanos que necesitas y te guiamos.</p>
+          <span class="qa-cta">Empezar ${icon("arrowRight")}</span>
+        </a>
       </div>
     </section>
 
@@ -274,11 +295,6 @@ export function renderHome(ctx) {
     </section>
   `;
 
-  ctx.container.querySelector("#home-search").addEventListener("submit", (e) => {
-    e.preventDefault();
-    state.searchQuery = e.target.querySelector("input").value;
-    location.hash = "#/kits";
-  });
   ctx.container.querySelectorAll(".cat-card").forEach((a) => {
     a.addEventListener("click", () => { state.lineaFilter = a.dataset.linea; });
   });
@@ -736,96 +752,274 @@ export function renderProductDetail(ctx, params) {
 }
 
 /* =======================================================================
-   DIAGNOSTICO (#/diagnostico — wizard corto -> recomendacion real)
+   DIAGNOSTICO INTELIGENTE (#/diagnostico — Plano 2)
    ----------------------------------------------------------------------
-   Plano 3: reemplaza "adivinar cual kit comprar" por 3 preguntas
-   simples. La logica de match es un puntaje calculado 100% sobre
-   kits.json (Linea, Tipo_Sistema, Aplicaciones) — nunca inventa un kit
-   ni un dato: si no hay ninguna coincidencia buena, lo dice explicito
-   y muestra los kits mas cercanos igual, ordenados por precio.
+   No es un formulario: es una conversacion corta que se adapta a quien
+   la responde. Blueprint no empieza preguntando kW — empieza
+   preguntando quien sos y que no puede parar en tu vida.
+
+   Arquitectura (fiel a PLANO-02-DIAGNOSTICO-INTELIGENTE.md):
+     Paso 0 — Perfil (7 tipos de cliente, arbol de decision propio)
+     Paso 1 — Sub-pregunta de contexto (solo en los perfiles donde
+               aporta: MIPYME, Agricola, Turismo — el resto salta directo)
+     Paso 2 — Que no puede parar (multi-select, vocabulario propio de
+               cada perfil, pero la puntuacion siempre se calcula sobre
+               el texto REAL de kit.Aplicaciones — nunca se inventa)
+     Paso 3 — Duracion del respaldo necesitado
+     Paso 4 — Analisis (pantalla de carga con mensajes secuenciales,
+               le da al diagnostico la sensacion de trabajo real)
+     Paso 5 — Resultado: kits reales + clasificacion de necesidad +
+               nivel de confianza (calculado, nunca inventado) +
+               accesorios reales + sugerencia si la combinacion no cierra.
+
+   Regla de oro: todo dato del resultado (kits, precios, accesorios) sale
+   de kits.json / kit_components.json. Lo unico "inteligente" es COMO se
+   pregunta y COMO se pondera — nunca que producto existe.
    ======================================================================= */
-const DIAG_USO = [
-  { key: "hogar", label: "Mi hogar", desc: "Para que mi familia no se quede sin nada esencial.", ic: "house" },
-  { key: "negocio", label: "Mi negocio", desc: "Para que la operacion no pare cuando se va la luz.", ic: "store" },
-  { key: "portatil", label: "Algo portatil", desc: "Para mi o para llevar de un lado a otro.", ic: "suitcase" },
+const DIAG_PERFILES = [
+  { key: "residencial", label: "Residencial", desc: "Mi hogar, mi familia.", ic: "house", lineas: ["Respaldo", "Continuidad", "Autonomia"] },
+  { key: "mipyme", label: "Micro o pequeño negocio", desc: "Restaurante, tienda, taller, oficina...", ic: "store", lineas: ["Continuidad", "Operacion Critica"] },
+  { key: "empresa", label: "Empresa", desc: "Produccion, turnos, operacion que no puede parar.", ic: "factory", lineas: ["Operacion Critica"] },
+  { key: "agricola", label: "Agrícola", desc: "Bombeo, riego, frio, procesamiento.", ic: "leaf", lineas: ["Operacion Critica", "Autonomia"] },
+  { key: "turismo", label: "Turismo", desc: "Hospedaje, restauracion, experiencia del huesped.", ic: "bed", lineas: ["Operacion Critica", "Continuidad"] },
+  { key: "institucion", label: "Institución", desc: "Oficinas, servidores, salud, seguridad.", ic: "building", lineas: ["Operacion Critica"] },
+  { key: "otro", label: "Otro", desc: "Algo distinto — igual te ayudamos a encontrarlo.", ic: "suitcase", lineas: ["Respaldo", "Continuidad", "Autonomia", "Operacion Critica", "Portatil"] },
 ];
-const DIAG_USO_LINEAS = {
-  hogar: ["Respaldo", "Continuidad", "Autonomia"],
-  negocio: ["Operacion Critica", "Continuidad"],
-  portatil: ["Portatil"],
+
+// Etiqueta amigable de la Linea real de kits.json, para el resultado.
+const DIAG_LINEA_LABEL = {
+  "Respaldo": "Respaldo esencial",
+  "Continuidad": "Continuidad operativa",
+  "Autonomia": "Autonomía energética",
+  "Operacion Critica": "Operación crítica protegida",
+  "Portatil": "Energía portátil",
 };
-const DIAG_NECESIDADES = [
-  { key: "nevera", label: "La nevera", ic: "fridge", kw: ["nevera"] },
-  { key: "luces", label: "Luces y ventiladores", ic: "bolt", kw: ["luces", "ventilador"] },
-  { key: "tv", label: "TV e internet", ic: "tv", kw: ["tv", "router"] },
-  { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
-  { key: "oficina", label: "Electrodomesticos / oficina", ic: "plug", kw: ["electrodomestico", "oficina"] },
-  { key: "negocio_completo", label: "Todo el negocio", ic: "store", kw: ["negocio", "carga completa"] },
-  { key: "vehiculo", label: "Cargar un vehiculo electrico", ic: "car", kw: ["vehiculo"] },
-  { key: "celular", label: "Celular y radio", ic: "wifi", kw: ["celular", "radio"] },
-];
+
+// Sub-pregunta opcional de contexto — solo aporta valor real en estos 3
+// perfiles (el rubro cambia mucho la conversacion). "boost" son
+// palabras reales de Aplicaciones que se suman como pistas, no un dato
+// inventado: es una inferencia razonable sobre ese tipo de negocio.
+const DIAG_SUBPREGUNTA = {
+  mipyme: {
+    label: "¿A que se dedica tu negocio?",
+    opciones: [
+      { key: "restaurante", label: "Restaurante o cafeteria", ic: "store", boost: ["negocio", "electrodomestico"] },
+      { key: "panaderia", label: "Panaderia o reposteria", ic: "store", boost: ["electrodomestico", "negocio"] },
+      { key: "tienda", label: "Tienda o comercio", ic: "layers", boost: ["luces", "tv"] },
+      { key: "oficina", label: "Oficina o estudio", ic: "layers", boost: ["electrodomestico", "oficina", "tv"] },
+      { key: "taller", label: "Taller", ic: "bolt", boost: ["negocio", "carga completa"] },
+      { key: "farmacia", label: "Farmacia", ic: "shield", boost: ["nevera", "electrodomestico"] },
+      { key: "hotel", label: "Hotel pequeño / hospedaje", ic: "bed", boost: ["a/c", "electrodomestico", "negocio"] },
+      { key: "otro", label: "Otro rubro", ic: "suitcase", boost: [] },
+    ],
+  },
+  agricola: {
+    label: "¿Cual es tu actividad principal?",
+    opciones: [
+      { key: "bombeo", label: "Bombeo de agua", ic: "droplet", boost: ["negocio"] },
+      { key: "frio", label: "Frio / refrigeracion", ic: "fridge", boost: ["nevera"] },
+      { key: "riego", label: "Riego", ic: "droplet", boost: ["negocio"] },
+      { key: "procesamiento", label: "Procesamiento o empaque", ic: "layers", boost: ["negocio", "electrodomestico"] },
+      { key: "otro", label: "Otra actividad", ic: "leaf", boost: [] },
+    ],
+  },
+  turismo: {
+    label: "¿Que tipo de espacio es?",
+    opciones: [
+      { key: "hotel", label: "Hotel / hospedaje", ic: "bed", boost: ["a/c", "electrodomestico"] },
+      { key: "restaurante", label: "Restaurante / bar", ic: "store", boost: ["negocio", "electrodomestico"] },
+      { key: "ambos", label: "Ambos", ic: "layers", boost: ["a/c", "negocio", "electrodomestico"] },
+      { key: "otro", label: "Otro", ic: "suitcase", boost: [] },
+    ],
+  },
+};
+
+// "Que no puede parar" — vocabulario propio por perfil, pero cada
+// opcion apunta a texto REAL de kit.Aplicaciones (ver kits.json).
+const DIAG_NECESIDADES_POR_PERFIL = {
+  residencial: [
+    { key: "nevera", label: "La nevera", ic: "fridge", kw: ["nevera"] },
+    { key: "luces", label: "Luces y ventiladores", ic: "bolt", kw: ["luces", "ventilador"] },
+    { key: "tv", label: "TV e internet", ic: "tv", kw: ["tv", "router"] },
+    { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
+    { key: "electrodomesticos", label: "Electrodomesticos / oficina en casa", ic: "plug", kw: ["electrodomestico", "oficina"] },
+  ],
+  mipyme: [
+    { key: "nevera", label: "Refrigeracion / neveras", ic: "fridge", kw: ["nevera", "refrigeracion"] },
+    { key: "luces", label: "Luces y ventilacion", ic: "bolt", kw: ["luces", "ventilador"] },
+    { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
+    { key: "oficina", label: "Equipos de oficina / PC", ic: "plug", kw: ["electrodomestico", "oficina"] },
+    { key: "negocio_completo", label: "Toda la operacion del negocio", ic: "store", kw: ["negocio", "carga completa"] },
+    { key: "vehiculo", label: "Cargar un vehiculo del negocio", ic: "car", kw: ["vehiculo"] },
+  ],
+  empresa: [
+    { key: "negocio_completo", label: "Toda la produccion / operacion", ic: "factory", kw: ["negocio", "carga completa"] },
+    { key: "vehiculo", label: "Flota / vehiculos electricos", ic: "car", kw: ["vehiculo"] },
+    { key: "oficina", label: "Sistemas y oficinas", ic: "plug", kw: ["electrodomestico", "oficina"] },
+    { key: "ac", label: "Climatizacion", ic: "layers", kw: ["a/c", "aire"] },
+  ],
+  agricola: [
+    { key: "bombeo", label: "Bombas de agua / riego", ic: "droplet", kw: ["negocio"] },
+    { key: "frio", label: "Frio / refrigeracion", ic: "fridge", kw: ["nevera", "refrigeracion"] },
+    { key: "luces", label: "Iluminacion", ic: "bolt", kw: ["luces"] },
+    { key: "electrodomesticos", label: "Equipos de procesamiento", ic: "plug", kw: ["electrodomestico"] },
+    { key: "negocio_completo", label: "Toda la explotacion", ic: "store", kw: ["negocio", "carga completa"] },
+  ],
+  turismo: [
+    { key: "ac", label: "Aire acondicionado en habitaciones", ic: "layers", kw: ["a/c", "aire"] },
+    { key: "cocina", label: "Cocina / refrigeracion", ic: "fridge", kw: ["nevera", "electrodomestico"] },
+    { key: "lavanderia", label: "Lavanderia", ic: "plug", kw: ["electrodomestico"] },
+    { key: "internet", label: "Luces e internet para huespedes", ic: "tv", kw: ["luces", "tv", "router"] },
+    { key: "negocio_completo", label: "Todo el establecimiento", ic: "store", kw: ["negocio", "carga completa"] },
+  ],
+  institucion: [
+    { key: "computadoras", label: "Computadoras y oficinas", ic: "plug", kw: ["electrodomestico", "oficina"] },
+    { key: "servidores", label: "Servidores / continuidad de datos", ic: "layers", kw: ["negocio", "electrodomestico"] },
+    { key: "medicos", label: "Equipos medicos sensibles", ic: "fridge", kw: ["nevera", "electrodomestico"] },
+    { key: "comunicacion", label: "Comunicacion / internet", ic: "tv", kw: ["tv", "router"] },
+    { key: "seguridad", label: "Iluminacion y seguridad", ic: "bolt", kw: ["luces"] },
+  ],
+  otro: [
+    { key: "nevera", label: "La nevera", ic: "fridge", kw: ["nevera"] },
+    { key: "luces", label: "Luces y ventiladores", ic: "bolt", kw: ["luces", "ventilador"] },
+    { key: "tv", label: "TV e internet", ic: "tv", kw: ["tv", "router"] },
+    { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
+    { key: "oficina", label: "Electrodomesticos / oficina", ic: "plug", kw: ["electrodomestico", "oficina"] },
+    { key: "negocio_completo", label: "Todo el negocio", ic: "store", kw: ["negocio", "carga completa"] },
+    { key: "vehiculo", label: "Cargar un vehiculo electrico", ic: "car", kw: ["vehiculo"] },
+    { key: "celular", label: "Celular y radio", ic: "wifi", kw: ["celular", "radio"] },
+  ],
+};
+
 const DIAG_DURACION = [
   { key: "unas_horas", label: "Unas horas", desc: "El apagon es corto, con eso alcanza.", ic: "clock" },
   { key: "todo_el_apagon", label: "Todo el apagon", desc: "A veces se va la luz por horas largas.", ic: "clock" },
   { key: "vivo_sin_red", label: "Vivo sin red estable", desc: "Necesito autonomia real, no solo un respaldo.", ic: "battery" },
 ];
 
-function diagScoreKit(kit, answers) {
+const DIAG_ANALISIS_MSGS = [
+  "Analizando tus necesidades…", "Revisando nuestras soluciones…", "Comparando alternativas reales…",
+  "Construyendo tu recomendacion…", "Calculando compatibilidad…", "Preparando tu resultado…",
+];
+
+/* Consumo promedio de referencia (Watts), valores tipicos usados en
+   dimensionamiento solar — NO son datos de Blueprint ni de un producto
+   puntual, son promedios generales de la industria. Por eso el
+   resultado siempre lo etiqueta como "estimacion aproximada": es una
+   guia, no una medicion real del consumo del cliente. */
+const DIAG_CONSUMO_W = {
+  nevera: 150, luces: 60, tv: 100, ac: 1200, electrodomesticos: 300,
+  negocio_completo: 3000, vehiculo: 3000, oficina: 250, bombeo: 750,
+  frio: 400, cocina: 1500, lavanderia: 500, internet: 50,
+  computadoras: 200, servidores: 500, medicos: 300, comunicacion: 100,
+  seguridad: 80, celular: 20,
+};
+
+function diagScoreKit(kit, answers, perfil, subOpcion) {
   let score = 0;
-  if ((DIAG_USO_LINEAS[answers.uso] || []).includes(kit.Linea)) score += 3;
+  if ((perfil.lineas || []).includes(kit.Linea)) score += 3;
   const apps = (kit.Aplicaciones || "").toLowerCase();
+  const necesidadesDef = DIAG_NECESIDADES_POR_PERFIL[perfil.key] || [];
   answers.necesidades.forEach((n) => {
-    const def = DIAG_NECESIDADES.find((d) => d.key === n);
+    const def = necesidadesDef.find((d) => d.key === n);
     if (def && def.kw.some((kw) => apps.includes(kw))) score += 2;
   });
+  if (subOpcion) (subOpcion.boost || []).forEach((kw) => { if (apps.includes(kw)) score += 1; });
   if (answers.duracion === "vivo_sin_red" && (kit.Tipo_Sistema === "Off-Grid" || kit.Linea === "Autonomia")) score += 2;
   if (answers.duracion === "todo_el_apagon" && (kit.Tipo_Sistema === "Hibrido" || kit.Linea === "Continuidad" || kit.Linea === "Operacion Critica")) score += 2;
   if (answers.duracion === "unas_horas" && (kit.Linea === "Portatil" || kit.Linea === "Respaldo")) score += 2;
   return score;
 }
 
-export function renderDiagnostico(ctx) {
+export function renderDiagnostico(ctx, params) {
   const { idx, data } = ctx;
   const config = data.config || {};
   const market = state.market || (data.config && data.config.Mercado_Default) || marketsFrom(idx.catalogs)[0];
+  const prefersReduced = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const answers = { uso: null, necesidades: [], duracion: null };
-  let step = 1;
+  const prePerfil = params && DIAG_PERFILES.some((p) => p.key === params.uso) ? params.uso : null;
+  const answers = { perfil: prePerfil, sub: null, necesidades: [], duracion: null };
+  let stage = prePerfil ? "sub" : "perfil";
 
+  function perfilDef() { return DIAG_PERFILES.find((p) => p.key === answers.perfil); }
+  function tieneSubpregunta() { return !!DIAG_SUBPREGUNTA[answers.perfil]; }
+
+  function stageOrder() {
+    const base = ["perfil"];
+    if (tieneSubpregunta()) base.push("sub");
+    base.push("necesidades", "duracion", "analisis", "resultado");
+    return base;
+  }
   function stepper() {
-    const labels = ["Uso", "Necesidad", "Duracion", "Resultado"];
+    const order = stageOrder().filter((s) => s !== "analisis");
+    const labels = { perfil: "Perfil", sub: "Contexto", necesidades: "Necesidad", duracion: "Duracion", resultado: "Resultado" };
+    const idx2 = order.indexOf(stage === "analisis" ? "resultado" : stage);
     return `<div class="diag-steps">
-      ${labels.map((l, i) => `<span class="diag-step ${i + 1 === step ? "on" : ""} ${i + 1 < step ? "done" : ""}">${i + 1}. ${l}</span>`).join("")}
+      ${order.map((s, i) => `<span class="diag-step ${i === idx2 ? "on" : ""} ${i < idx2 ? "done" : ""}">${i + 1}. ${labels[s]}</span>`).join("")}
     </div>`;
+  }
+  function goBack() {
+    const order = stageOrder();
+    const i = order.indexOf(stage);
+    stage = order[Math.max(0, i - 1)];
+    paint();
   }
 
   function paint() {
-    if (step === 1) {
+    if (stage === "perfil") {
       ctx.container.innerHTML = `
         <section class="section wrap diag-wrap">
           ${stepper()}
-          <div class="section-head"><div><h2>¿Para que necesitas la energia?</h2><p class="desc">Tres preguntas cortas y te mostramos, entre lo que tenemos hoy, lo que mas se ajusta.</p></div></div>
-          <div class="diag-grid">
-            ${DIAG_USO.map((o) => `
-              <button class="diag-card" data-uso="${o.key}">
+          <div class="section-head"><div><h2>Encontremos juntos la solucion adecuada para vos</h2><p class="desc">Unas pocas preguntas — nada tecnico. Cada respuesta cambia la siguiente pregunta, para no hacerte perder tiempo.</p></div></div>
+          <div class="diag-grid diag-grid-perfiles">
+            ${DIAG_PERFILES.map((o) => `
+              <button class="diag-card" data-perfil="${o.key}">
                 <span class="icon-circle">${icon(o.ic)}</span>
                 <h3>${escapeHtml(o.label)}</h3><p>${escapeHtml(o.desc)}</p>
               </button>`).join("")}
           </div>
         </section>`;
-      ctx.container.querySelectorAll("[data-uso]").forEach((btn) => {
-        btn.addEventListener("click", () => { answers.uso = btn.dataset.uso; step = 2; paint(); });
+      ctx.container.querySelectorAll("[data-perfil]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          answers.perfil = btn.dataset.perfil; answers.sub = null; answers.necesidades = [];
+          stage = tieneSubpregunta() ? "sub" : "necesidades";
+          paint();
+        });
       });
       return;
     }
 
-    if (step === 2) {
+    if (stage === "sub") {
+      const sub = DIAG_SUBPREGUNTA[answers.perfil];
+      if (!sub) { stage = "necesidades"; paint(); return; }
       ctx.container.innerHTML = `
         <section class="section wrap diag-wrap">
           ${stepper()}
-          <div class="section-head"><div><h2>¿Que queres mantener funcionando?</h2><p class="desc">Elegi todo lo que aplique — podes marcar mas de una.</p></div></div>
+          <div class="section-head"><div><h2>${escapeHtml(sub.label)}</h2></div></div>
+          <div class="diag-grid">
+            ${sub.opciones.map((o) => `
+              <button class="diag-card" data-sub="${o.key}">
+                <span class="icon-circle">${icon(o.ic)}</span>
+                <h3>${escapeHtml(o.label)}</h3>
+              </button>`).join("")}
+          </div>
+          <div class="diag-nav"><button class="btn btn-ghost" id="diag-back">Atras</button></div>
+        </section>`;
+      ctx.container.querySelectorAll("[data-sub]").forEach((btn) => {
+        btn.addEventListener("click", () => { answers.sub = btn.dataset.sub; stage = "necesidades"; paint(); });
+      });
+      ctx.container.querySelector("#diag-back").addEventListener("click", goBack);
+      return;
+    }
+
+    if (stage === "necesidades") {
+      const opciones = DIAG_NECESIDADES_POR_PERFIL[answers.perfil] || DIAG_NECESIDADES_POR_PERFIL.otro;
+      ctx.container.innerHTML = `
+        <section class="section wrap diag-wrap">
+          ${stepper()}
+          <div class="section-head"><div><h2>¿Que es lo que no puede parar?</h2><p class="desc">Elegi todo lo que aplique — podes marcar mas de una.</p></div></div>
           <div class="diag-grid diag-grid-multi">
-            ${DIAG_NECESIDADES.map((o) => `
+            ${opciones.map((o) => `
               <label class="diag-card diag-check ${answers.necesidades.includes(o.key) ? "on" : ""}" data-nec="${o.key}">
                 <span class="icon-circle">${icon(o.ic)}</span>
                 <span class="diag-check-label">${escapeHtml(o.label)}</span>
@@ -846,13 +1040,13 @@ export function renderDiagnostico(ctx) {
           paint();
         });
       });
-      ctx.container.querySelector("#diag-back").addEventListener("click", () => { step = 1; paint(); });
+      ctx.container.querySelector("#diag-back").addEventListener("click", goBack);
       const next = ctx.container.querySelector("#diag-next");
-      if (next) next.addEventListener("click", () => { step = 3; paint(); });
+      if (next) next.addEventListener("click", () => { stage = "duracion"; paint(); });
       return;
     }
 
-    if (step === 3) {
+    if (stage === "duracion") {
       ctx.container.innerHTML = `
         <section class="section wrap diag-wrap">
           ${stepper()}
@@ -867,40 +1061,114 @@ export function renderDiagnostico(ctx) {
           <div class="diag-nav"><button class="btn btn-ghost" id="diag-back">Atras</button></div>
         </section>`;
       ctx.container.querySelectorAll("[data-dur]").forEach((btn) => {
-        btn.addEventListener("click", () => { answers.duracion = btn.dataset.dur; step = 4; paint(); });
+        btn.addEventListener("click", () => { answers.duracion = btn.dataset.dur; stage = "analisis"; paint(); });
       });
-      ctx.container.querySelector("#diag-back").addEventListener("click", () => { step = 2; paint(); });
+      ctx.container.querySelector("#diag-back").addEventListener("click", goBack);
       return;
     }
 
-    // step 4: resultado — 100% calculado sobre kits.json real, nunca inventado.
+    if (stage === "analisis") {
+      ctx.container.innerHTML = `
+        <section class="section wrap diag-wrap diag-analisis">
+          <div class="diag-analisis-spinner">${icon("sparkles")}</div>
+          <p class="diag-analisis-msg" id="diag-analisis-msg">${DIAG_ANALISIS_MSGS[0]}</p>
+        </section>`;
+      if (prefersReduced) { stage = "resultado"; paint(); return; }
+      let i = 0;
+      const msgEl = ctx.container.querySelector("#diag-analisis-msg");
+      const interval = setInterval(() => {
+        i++;
+        if (i >= DIAG_ANALISIS_MSGS.length) { clearInterval(interval); stage = "resultado"; paint(); return; }
+        if (msgEl) msgEl.textContent = DIAG_ANALISIS_MSGS[i];
+      }, 450);
+      return;
+    }
+
+    // stage === "resultado" — 100% calculado sobre kits.json real, nunca inventado.
+    const perfil = perfilDef();
+    const subDef = DIAG_SUBPREGUNTA[answers.perfil];
+    const subOpcion = subDef && answers.sub ? subDef.opciones.find((o) => o.key === answers.sub) : null;
+    const necesidadesDef = DIAG_NECESIDADES_POR_PERFIL[answers.perfil] || [];
+
     const scored = idx.kits
-      .map((k) => ({ kit: k, score: diagScoreKit(k, answers) }))
+      .map((k) => ({ kit: k, score: diagScoreKit(k, answers, perfil, subOpcion) }))
       .sort((a, b) => b.score - a.score || a.kit.Precio_Sugerido_Reventa_USD - b.kit.Precio_Sugerido_Reventa_USD);
     const bestScore = scored[0] ? scored[0].score : 0;
     const top = scored.slice(0, 3);
     const exact = bestScore > 0;
+    const topKit = top[0] && top[0].kit;
+
+    // Nivel de confianza: % real del puntaje obtenido sobre el maximo
+    // teorico posible para estas respuestas — nunca un numero de adorno.
+    const maxTeorico = 3 + answers.necesidades.length * 2 + (subOpcion ? (subOpcion.boost || []).length : 0) + 2;
+    const confianza = maxTeorico > 0 ? Math.min(97, Math.round((bestScore / maxTeorico) * 100)) : 0;
+
+    const accesorios = topKit ? optionalComponents(idx, topKit.Kit_ID).slice(0, 4) : [];
+    const necesidadLabel = topKit ? (DIAG_LINEA_LABEL[topKit.Linea] || topKit.Linea) : null;
+
+    // Demanda estimada: SIEMPRE etiquetada como aproximada — suma de
+    // consumos promedio de la industria (DIAG_CONSUMO_W), no una
+    // medicion real del cliente. Ver nota junto a la tabla arriba.
+    const demandaW = answers.necesidades.reduce((sum, n) => sum + (DIAG_CONSUMO_W[n] || 0), 0);
+    // Potencial de ampliacion: esto SI es un dato real (opcionales
+    // cargados en kit_components.json para ese kit puntual).
+    const puedeAmpliar = accesorios.length > 0;
+
+    // Sugerencia honesta si la combinacion no cierra del todo (ej.
+    // apagon cortito + operacion critica de precio alto): nunca se
+    // oculta, se lo decimos claro como pide el documento.
+    const sugerencia = (answers.duracion === "unas_horas" && topKit && topKit.Precio_Sugerido_Reventa_USD > 3500)
+      ? "Lo que nos contaste sugiere una necesidad puntual, pero la solucion que mejor calza es una inversion mayor — capaz te conviene evaluar una instalacion por etapas. Hablemos y lo vemos juntos."
+      : null;
+
+    const perfilLabel = perfil ? perfil.label.toLowerCase() : "vos";
 
     ctx.container.innerHTML = `
       <section class="section wrap diag-wrap">
         ${stepper()}
-        <div class="section-head">
-          <div>
-            <h2>${exact ? "Esto es lo que mas se ajusta a lo que nos contaste" : "No encontramos una coincidencia exacta — te mostramos lo mas cercano"}</h2>
-            <p class="desc">${exact ? "Calculado sobre nuestras soluciones reales, no una lista generica." : "Contanos por WhatsApp los detalles y te ayudamos a afinar la eleccion."}</p>
-          </div>
-          <button class="btn btn-ghost" id="diag-restart">Volver a empezar</button>
+        <div class="diag-result-head">
+          <span class="pill">${icon(perfil.ic)}${escapeHtml(perfil.label)}${subOpcion ? " · " + escapeHtml(subOpcion.label) : ""}</span>
+          <h2>${exact ? `Esto es lo que mas se ajusta a lo que nos contaste` : "No encontramos una coincidencia exacta — te mostramos lo mas cercano"}</h2>
+          ${topKit ? `<p class="desc">Clasificamos tu necesidad como <strong>${escapeHtml(necesidadLabel)}</strong>. Calculado sobre nuestras soluciones reales para ${escapeHtml(perfilLabel)}, no una lista generica.</p>` : ""}
+          ${topKit ? `<div class="diag-confidence"><div class="diag-confidence-bar"><span style="width:${confianza}%"></span></div><span class="diag-confidence-label">${confianza}% de coincidencia con lo que nos contaste</span></div>` : ""}
+          ${topKit ? `
+          <div class="diag-facts">
+            ${demandaW > 0 ? `
+            <div class="diag-fact">
+              <span class="diag-fact-label">Consumo estimado (aproximado)</span>
+              <span class="diag-fact-value">~${demandaW.toLocaleString("en-US")} W</span>
+              <span class="diag-fact-note">Basado en promedios tipicos, no en una medicion real de tu consumo — un asesor puede afinarlo.</span>
+            </div>` : ""}
+            <div class="diag-fact">
+              <span class="diag-fact-label">Potencial de ampliacion</span>
+              <span class="diag-fact-value">${puedeAmpliar ? `Si, ${accesorios.length} opcion${accesorios.length === 1 ? "" : "es"} real${accesorios.length === 1 ? "" : "es"}` : "Sin ampliaciones cargadas para este kit"}</span>
+              <span class="diag-fact-note">${puedeAmpliar ? "Podes empezar por acá y crecer despues." : "Este kit ya viene en su configuracion completa."}</span>
+            </div>
+          </div>` : ""}
         </div>
+
+        ${sugerencia ? `<div class="diag-suggestion">${icon("sparkles")}<p>${escapeHtml(sugerencia)}</p></div>` : ""}
+
         <div class="kit-grid">
           ${top.map(({ kit }) => kitCard(idx, kit, catalogFor(idx, kit.Kit_ID, market), config)).join("")}
         </div>
+
+        ${accesorios.length ? `
+        <div class="diag-accesorios">
+          <h3>Accesorios que podrias sumar</h3>
+          <div class="chip-row">${accesorios.map((c) => `<span class="chip">${escapeHtml(c.Descripcion || c.SKU)}</span>`).join("")}</div>
+        </div>` : ""}
+
         <div class="cta-band wrap" style="margin-top:8px">
           <div><h3>¿Ninguna te convence del todo?</h3><p class="muted">Un asesor real revisa tu caso y te arma una a medida.</p></div>
-          ${waButton(config, "Hola, hice el diagnostico en la web y ninguna opcion me termino de convencer. ¿Me ayudan a elegir?", "Hablar con un asesor")}
+          ${waButton(config, `Hola, hice el diagnostico en la web (perfil: ${perfil.label}) y quiero que un asesor revise mi caso.`, "Hablar con un asesor")}
+        </div>
+        <div style="text-align:center;margin-top:18px">
+          <button class="btn btn-ghost" id="diag-restart">Volver a empezar</button>
         </div>
       </section>`;
     ctx.container.querySelector("#diag-restart").addEventListener("click", () => {
-      answers.uso = null; answers.necesidades = []; answers.duracion = null; step = 1; paint();
+      answers.perfil = null; answers.sub = null; answers.necesidades = []; answers.duracion = null; stage = "perfil"; paint();
     });
   }
 
