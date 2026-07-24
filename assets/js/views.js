@@ -13,7 +13,7 @@ import {
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
-import { termHint } from "./glossary.js";
+import { termHint, GLOSSARY } from "./glossary.js";
 
 const LINEA_ICON = {
   "Respaldo": "shield", "Continuidad": "bolt", "Autonomia": "battery",
@@ -213,6 +213,7 @@ export function renderHome(ctx) {
           <input type="search" placeholder="¿Que necesitas mantener prendido? Ej: nevera, ventilador, negocio..." aria-label="Buscar soluciones">
           <button type="submit" class="btn btn-primary">Buscar</button>
         </form>
+        <p class="muted" style="margin-top:14px;font-size:13.5px">¿No sabes por donde arrancar? <a href="#diagnostico" style="color:var(--verde-energia);font-weight:600">Hace el diagnostico ${icon("arrowRight")}</a></p>
         <div class="hero-stats">
           <div class="stat"><span class="n">${stats.kitCount}</span><span class="l">Soluciones listas</span></div>
           <div class="stat"><span class="n">${stats.marketCount || "—"}</span><span class="l">Mercados</span></div>
@@ -268,7 +269,7 @@ export function renderHome(ctx) {
 
     <section class="quickband wrap">
       <a href="#/comparador">${icon("scale")}Comparar equipos</a>
-      <a href="#/catalogo">${icon("layers")}Ver todos los equipos</a>
+      <a href="#/aprender">${icon("layers")}Ver todos los equipos</a>
       ${waButton(config, "Hola, no se cual solucion me conviene. ¿Me pueden ayudar a elegir?", "No se cual elegir — ayudenme")}
     </section>
   `;
@@ -419,9 +420,7 @@ export function renderKitDetail(ctx, params) {
         <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
         <div class="actions-col">
           ${waButton(config, buildInquiryText(name, market, price), "Solicitar por WhatsApp")}
-          <button class="btn btn-ghost" id="btn-pdf-comercial">${icon("pdf")}Descargar Ficha Comercial (PDF)</button>
-          <button class="btn btn-ghost" id="btn-pdf-tecnica">${icon("layers")}Descargar Especificacion Tecnica (PDF)</button>
-          <button class="btn btn-ghost" id="btn-share">${icon("share")}Compartir</button>
+          <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
         </div>
       </aside>
     </div>
@@ -465,52 +464,93 @@ export function renderKitDetail(ctx, params) {
 
     <section class="cta-band wrap">
       <div><h3>¿Listo para tu independencia energetica?</h3><p class="muted">Un asesor tecnico te acompaña en todo el proceso.</p></div>
-      ${waButton(config, buildInquiryText(name, market, price), "Solicitar cotizacion")}
+      <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
+    </section>
+  `;
+}
+
+/* =======================================================================
+   COTIZACION (#/cotizacion/:id — pantalla propia, antes vivia adentro
+   de la Ficha de Kit. Reusa tal cual el motor de PDF (pdfgen.js): esto
+   solo le da su propio paso claro dentro del recorrido, no cambia como
+   se generan los documentos. #/cotizacion sin id = estado vacio, para
+   cuando entran desde el nav sin haber elegido un kit todavia. */
+export function renderCotizacion(ctx, params) {
+  const { idx, data } = ctx;
+  const config = data.config || {};
+  const kit = params && params.id ? idx.kitsById.get(params.id) : null;
+
+  if (!kit) {
+    ctx.container.innerHTML = `
+      <section class="section wrap">
+        <div class="section-head"><div><h2>Cotizacion</h2><p class="desc">Todavia no elegiste una solucion. Arranca por el diagnostico o mira las soluciones disponibles.</p></div></div>
+        <div class="cta-band wrap">
+          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnostico</a>
+          <a class="btn btn-ghost" href="#kits">Ver todas las soluciones</a>
+        </div>
+      </section>`;
+    return;
+  }
+
+  const market = state.market || config.Mercado_Default;
+  const catalog = catalogFor(idx, kit.Kit_ID, market);
+  const warranty = kitWarrantyYears(idx, kit.Kit_ID);
+  const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
+  const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
+
+  ctx.container.innerHTML = `
+    <div class="crumb wrap"><a href="#/kit/${encodeURIComponent(kit.Kit_ID)}">${escapeHtml(name)}</a> ${icon("chevronRight")} <span class="on">Cotizacion</span></div>
+    <section class="section wrap two-col">
+      <div>
+        <span class="pill">${escapeHtml(kit.Linea || "Kit")}</span>
+        <h1 style="margin:10px 0">${escapeHtml(name)}</h1>
+        <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
+        <div class="spec-grid" style="margin-top:18px">
+          <div class="spec-item"><span class="k">${icon("panel")}Panel</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
+          <div class="spec-item"><span class="k">${icon("bolt")}Inversor</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
+          <div class="spec-item"><span class="k">${icon("battery")}Bateria</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
+          <div class="spec-item"><span class="k">${icon("shield")}Garantia</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
+        </div>
+      </div>
+      <div class="buy-card">
+        <h3 style="margin-top:0">Tu cotizacion</h3>
+        <p class="muted" style="font-size:13.5px">Generamos el documento en el momento a partir de nuestros datos reales — nunca es una captura vieja.</p>
+        <div class="actions-col">
+          <button class="btn btn-primary" id="btn-pdf-comercial">${icon("pdf")}Descargar ficha comercial (PDF)</button>
+          <button class="btn btn-ghost" id="btn-pdf-tecnica">${icon("layers")}Descargar especificacion tecnica (PDF)</button>
+          <button class="btn btn-ghost" id="btn-share">${icon("share")}Compartir</button>
+          ${waButton(config, buildInquiryText(name, market, price), "Cerrar por WhatsApp")}
+        </div>
+      </div>
     </section>
   `;
 
-  const btnPdfComercial = ctx.container.querySelector("#btn-pdf-comercial");
-  const btnPdfTecnica = ctx.container.querySelector("#btn-pdf-tecnica");
-  const btnShare = ctx.container.querySelector("#btn-share");
-
-  // Genera cada PDF en el momento a partir de los JSON — nunca es una
-  // captura de pantalla, asi que un cambio futuro en el Excel se ve
-  // reflejado automaticamente sin tocar este codigo.
   async function withBusyLabel(btn, busyText, task) {
     if (!btn) return;
     const original = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = busyText;
-    try {
-      await task();
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = original;
-    }
+    try { await task(); } finally { btn.disabled = false; btn.innerHTML = original; }
   }
 
-  if (btnPdfComercial) {
-    btnPdfComercial.addEventListener("click", () =>
-      withBusyLabel(btnPdfComercial, "Generando…", () => generateCommercialPDF(idx, data, kit.Kit_ID, market))
-    );
-  }
-  if (btnPdfTecnica) {
-    btnPdfTecnica.addEventListener("click", () =>
-      withBusyLabel(btnPdfTecnica, "Generando…", () => generateTechnicalPDF(idx, data, kit.Kit_ID, market))
-    );
-  }
-  if (btnShare) {
-    btnShare.addEventListener("click", () =>
-      withBusyLabel(btnShare, "Preparando…", () => shareCommercialPDF(idx, data, kit.Kit_ID, market))
-    );
-  }
+  const btnPdfComercial = ctx.container.querySelector("#btn-pdf-comercial");
+  const btnPdfTecnica = ctx.container.querySelector("#btn-pdf-tecnica");
+  const btnShare = ctx.container.querySelector("#btn-share");
+  if (btnPdfComercial) btnPdfComercial.addEventListener("click", () => withBusyLabel(btnPdfComercial, "Generando…", () => generateCommercialPDF(idx, data, kit.Kit_ID, market)));
+  if (btnPdfTecnica) btnPdfTecnica.addEventListener("click", () => withBusyLabel(btnPdfTecnica, "Generando…", () => generateTechnicalPDF(idx, data, kit.Kit_ID, market)));
+  if (btnShare) btnShare.addEventListener("click", () => withBusyLabel(btnShare, "Preparando…", () => shareCommercialPDF(idx, data, kit.Kit_ID, market)));
 }
 
 /* =======================================================================
-   CATALOGO DE COMPONENTES (#/catalogo — products.json)
+   EXPLORADOR DE COMPONENTES (products.json)
+   ----------------------------------------------------------------------
+   Pinta el grid filtrable dentro de CUALQUIER contenedor que reciba —
+   usado por la ruta de compatibilidad #/catalogo y por la pestaña
+   "Explorar equipos" de Aprender (#/aprender). Una sola implementacion,
+   dos entradas — asi no se duplica logica (regla de arquitectura:
+   "no crear hojas nuevas si una existente puede ampliarse").
    ======================================================================= */
-export function renderCatalogo(ctx) {
-  const { idx } = ctx;
+function paintCatalogoExplorer(container, idx) {
   const categorias = [...new Set(idx.products.map((p) => p.Categoria).filter(Boolean))].sort();
   const marcas = [...new Set(idx.products.map((p) => p.Marca).filter(Boolean))].sort();
 
@@ -534,35 +574,102 @@ export function renderCatalogo(ctx) {
 
   function paint() {
     const rows = apply();
-    ctx.container.querySelector("#cat-grid").innerHTML = rows.length
+    container.querySelector("#cat-grid").innerHTML = rows.length
       ? rows.map((p) => productCard(p, idx.mediaBySku.get(p.SKU))).join("")
       : `<div class="state-msg">Ningun componente coincide con esos filtros.</div>`;
-    ctx.container.querySelector("#cat-count").textContent = `${rows.length} componente${rows.length === 1 ? "" : "s"}`;
-    const tipoSelect = ctx.container.querySelector("#f-tipo");
+    container.querySelector("#cat-count").textContent = `${rows.length} componente${rows.length === 1 ? "" : "s"}`;
+    const tipoSelect = container.querySelector("#f-tipo");
     tipoSelect.innerHTML = `<option value="">Tipo / subcategoria</option>` + tiposFor(filters.categoria).map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
     tipoSelect.value = filters.tipo;
   }
 
-  ctx.container.innerHTML = `
-    <section class="section wrap">
-      <div class="section-head"><div><h2>Cada pieza, por separado</h2><p class="desc">Paneles, inversores, baterias y accesorios — para quien ya sabe lo que busca, o quiere entender que trae cada solucion por dentro.</p></div></div>
-      <div class="filter-bar">
-        <select id="f-categoria"><option value="">Categoria</option>${categorias.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}</select>
-        <select id="f-marca"><option value="">Marca</option>${marcas.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("")}</select>
-        <select id="f-tipo"></select>
-        <form class="search-inline" id="cat-search"><span class="sb-icon">${icon("search")}</span><input type="search" placeholder="Buscar modelo..."></form>
-        <span class="count" id="cat-count"></span>
-      </div>
-      <div class="grid-products" id="cat-grid"></div>
-    </section>
+  container.innerHTML = `
+    <div class="filter-bar">
+      <select id="f-categoria"><option value="">Categoria</option>${categorias.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}</select>
+      <select id="f-marca"><option value="">Marca</option>${marcas.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("")}</select>
+      <select id="f-tipo"></select>
+      <form class="search-inline" id="cat-search"><span class="sb-icon">${icon("search")}</span><input type="search" placeholder="Buscar modelo..."></form>
+      <span class="count" id="cat-count"></span>
+    </div>
+    <div class="grid-products" id="cat-grid"></div>
   `;
 
   paint();
-  ctx.container.querySelector("#f-categoria").addEventListener("change", (e) => { filters.categoria = e.target.value; filters.tipo = ""; paint(); });
-  ctx.container.querySelector("#f-marca").addEventListener("change", (e) => { filters.marca = e.target.value; paint(); });
-  ctx.container.querySelector("#f-tipo").addEventListener("change", (e) => { filters.tipo = e.target.value; paint(); });
-  ctx.container.querySelector("#cat-search").addEventListener("submit", (e) => e.preventDefault());
-  ctx.container.querySelector("#cat-search input").addEventListener("input", (e) => { filters.q = e.target.value; paint(); });
+  container.querySelector("#f-categoria").addEventListener("change", (e) => { filters.categoria = e.target.value; filters.tipo = ""; paint(); });
+  container.querySelector("#f-marca").addEventListener("change", (e) => { filters.marca = e.target.value; paint(); });
+  container.querySelector("#f-tipo").addEventListener("change", (e) => { filters.tipo = e.target.value; paint(); });
+  container.querySelector("#cat-search").addEventListener("submit", (e) => e.preventDefault());
+  container.querySelector("#cat-search input").addEventListener("input", (e) => { filters.q = e.target.value; paint(); });
+}
+
+/** Ruta de compatibilidad #/catalogo — ya no esta en el nav (su lugar
+ *  lo tomo "Aprender"), pero se mantiene viva porque hay links internos
+ *  que apuntan aca (ej. "Ver componente" en ampliaciones de un kit). */
+export function renderCatalogo(ctx) {
+  ctx.container.innerHTML = `
+    <section class="section wrap">
+      <div class="section-head"><div><h2>Cada pieza, por separado</h2><p class="desc">Paneles, inversores, baterias y accesorios — para quien ya sabe lo que busca, o quiere entender que trae cada solucion por dentro.</p></div></div>
+      <div id="cat-explorer"></div>
+    </section>
+  `;
+  paintCatalogoExplorer(ctx.container.querySelector("#cat-explorer"), ctx.idx);
+}
+
+/* =======================================================================
+   APRENDER (#/aprender — hub de conocimiento)
+   ----------------------------------------------------------------------
+   Fusiona lo que antes eran dos pantallas sueltas (Catalogo de
+   componentes y Biblioteca de fichas tecnicas) en una sola, con la
+   logica del Catalogo reutilizada tal cual (ver paintCatalogoExplorer
+   arriba). A proposito NO incluye descarga de fichas tecnicas por
+   producto — decision explicita de la propietaria: esa info ya vive en
+   la Ficha de Kit. El Glosario usa el mismo contenido real que ya
+   alimenta los "?" de ayuda en el resto del sitio (glossary.js). */
+const GLOSARIO_LABELS = {
+  panel: "Panel solar", inversor: "Inversor", bateria: "Bateria",
+  autonomia: "Autonomia", garantia: "Garantia", kw: "kW (kilovatio)",
+  kwh: "kWh (kilovatio-hora)", offgrid: "Off-Grid", hibrido: "Hibrido",
+};
+
+function paintGlosario(container) {
+  container.innerHTML = `
+    <div class="glossary-list">
+      ${Object.entries(GLOSSARY).map(([key, text]) => `
+        <div class="glossary-item">
+          <h3>${escapeHtml(GLOSARIO_LABELS[key] || key)}</h3>
+          <p>${escapeHtml(text)}</p>
+        </div>`).join("")}
+    </div>`;
+}
+
+export function renderAprender(ctx) {
+  const { idx, data } = ctx;
+  const config = data.config || {};
+  let tab = "equipos";
+
+  function paint() {
+    ctx.container.innerHTML = `
+      <section class="section wrap">
+        <div class="section-head"><div><h2>Aprende con Blueprint</h2><p class="desc">Todo lo que necesitas para decidir con confianza, sin vueltas tecnicas ni letra chica.</p></div></div>
+        <div class="chip-row">
+          <button class="chip ${tab === "equipos" ? "on" : ""}" data-tab="equipos">${icon("layers")}Explorar equipos</button>
+          <button class="chip ${tab === "glosario" ? "on" : ""}" data-tab="glosario">${icon("book")}Glosario</button>
+        </div>
+        <div id="aprender-body" style="margin-top:22px"></div>
+        <div class="cta-band wrap" style="margin-top:34px">
+          <div><h3>¿Preferis que te lo expliquen directo?</h3><p class="muted">Un asesor te acompaña sin apuro, en lenguaje simple.</p></div>
+          ${waButton(config, "Hola, tengo dudas sobre como funciona un sistema solar. ¿Me pueden explicar?", "Consultar por WhatsApp")}
+        </div>
+      </section>
+    `;
+    const body = ctx.container.querySelector("#aprender-body");
+    if (tab === "equipos") paintCatalogoExplorer(body, idx);
+    else paintGlosario(body);
+    ctx.container.querySelectorAll(".chip[data-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => { tab = btn.dataset.tab; paint(); });
+    });
+  }
+  paint();
 }
 
 /* =======================================================================
@@ -626,6 +733,178 @@ export function renderProductDetail(ctx, params) {
       <div class="grid-products">${related.map((p) => productCard(p, idx.mediaBySku.get(p.SKU))).join("")}</div>
     </section>` : ""}
   `;
+}
+
+/* =======================================================================
+   DIAGNOSTICO (#/diagnostico — wizard corto -> recomendacion real)
+   ----------------------------------------------------------------------
+   Plano 3: reemplaza "adivinar cual kit comprar" por 3 preguntas
+   simples. La logica de match es un puntaje calculado 100% sobre
+   kits.json (Linea, Tipo_Sistema, Aplicaciones) — nunca inventa un kit
+   ni un dato: si no hay ninguna coincidencia buena, lo dice explicito
+   y muestra los kits mas cercanos igual, ordenados por precio.
+   ======================================================================= */
+const DIAG_USO = [
+  { key: "hogar", label: "Mi hogar", desc: "Para que mi familia no se quede sin nada esencial.", ic: "house" },
+  { key: "negocio", label: "Mi negocio", desc: "Para que la operacion no pare cuando se va la luz.", ic: "store" },
+  { key: "portatil", label: "Algo portatil", desc: "Para mi o para llevar de un lado a otro.", ic: "suitcase" },
+];
+const DIAG_USO_LINEAS = {
+  hogar: ["Respaldo", "Continuidad", "Autonomia"],
+  negocio: ["Operacion Critica", "Continuidad"],
+  portatil: ["Portatil"],
+};
+const DIAG_NECESIDADES = [
+  { key: "nevera", label: "La nevera", ic: "fridge", kw: ["nevera"] },
+  { key: "luces", label: "Luces y ventiladores", ic: "bolt", kw: ["luces", "ventilador"] },
+  { key: "tv", label: "TV e internet", ic: "tv", kw: ["tv", "router"] },
+  { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
+  { key: "oficina", label: "Electrodomesticos / oficina", ic: "plug", kw: ["electrodomestico", "oficina"] },
+  { key: "negocio_completo", label: "Todo el negocio", ic: "store", kw: ["negocio", "carga completa"] },
+  { key: "vehiculo", label: "Cargar un vehiculo electrico", ic: "car", kw: ["vehiculo"] },
+  { key: "celular", label: "Celular y radio", ic: "wifi", kw: ["celular", "radio"] },
+];
+const DIAG_DURACION = [
+  { key: "unas_horas", label: "Unas horas", desc: "El apagon es corto, con eso alcanza.", ic: "clock" },
+  { key: "todo_el_apagon", label: "Todo el apagon", desc: "A veces se va la luz por horas largas.", ic: "clock" },
+  { key: "vivo_sin_red", label: "Vivo sin red estable", desc: "Necesito autonomia real, no solo un respaldo.", ic: "battery" },
+];
+
+function diagScoreKit(kit, answers) {
+  let score = 0;
+  if ((DIAG_USO_LINEAS[answers.uso] || []).includes(kit.Linea)) score += 3;
+  const apps = (kit.Aplicaciones || "").toLowerCase();
+  answers.necesidades.forEach((n) => {
+    const def = DIAG_NECESIDADES.find((d) => d.key === n);
+    if (def && def.kw.some((kw) => apps.includes(kw))) score += 2;
+  });
+  if (answers.duracion === "vivo_sin_red" && (kit.Tipo_Sistema === "Off-Grid" || kit.Linea === "Autonomia")) score += 2;
+  if (answers.duracion === "todo_el_apagon" && (kit.Tipo_Sistema === "Hibrido" || kit.Linea === "Continuidad" || kit.Linea === "Operacion Critica")) score += 2;
+  if (answers.duracion === "unas_horas" && (kit.Linea === "Portatil" || kit.Linea === "Respaldo")) score += 2;
+  return score;
+}
+
+export function renderDiagnostico(ctx) {
+  const { idx, data } = ctx;
+  const config = data.config || {};
+  const market = state.market || (data.config && data.config.Mercado_Default) || marketsFrom(idx.catalogs)[0];
+
+  const answers = { uso: null, necesidades: [], duracion: null };
+  let step = 1;
+
+  function stepper() {
+    const labels = ["Uso", "Necesidad", "Duracion", "Resultado"];
+    return `<div class="diag-steps">
+      ${labels.map((l, i) => `<span class="diag-step ${i + 1 === step ? "on" : ""} ${i + 1 < step ? "done" : ""}">${i + 1}. ${l}</span>`).join("")}
+    </div>`;
+  }
+
+  function paint() {
+    if (step === 1) {
+      ctx.container.innerHTML = `
+        <section class="section wrap diag-wrap">
+          ${stepper()}
+          <div class="section-head"><div><h2>¿Para que necesitas la energia?</h2><p class="desc">Tres preguntas cortas y te mostramos, entre lo que tenemos hoy, lo que mas se ajusta.</p></div></div>
+          <div class="diag-grid">
+            ${DIAG_USO.map((o) => `
+              <button class="diag-card" data-uso="${o.key}">
+                <span class="icon-circle">${icon(o.ic)}</span>
+                <h3>${escapeHtml(o.label)}</h3><p>${escapeHtml(o.desc)}</p>
+              </button>`).join("")}
+          </div>
+        </section>`;
+      ctx.container.querySelectorAll("[data-uso]").forEach((btn) => {
+        btn.addEventListener("click", () => { answers.uso = btn.dataset.uso; step = 2; paint(); });
+      });
+      return;
+    }
+
+    if (step === 2) {
+      ctx.container.innerHTML = `
+        <section class="section wrap diag-wrap">
+          ${stepper()}
+          <div class="section-head"><div><h2>¿Que queres mantener funcionando?</h2><p class="desc">Elegi todo lo que aplique — podes marcar mas de una.</p></div></div>
+          <div class="diag-grid diag-grid-multi">
+            ${DIAG_NECESIDADES.map((o) => `
+              <label class="diag-card diag-check ${answers.necesidades.includes(o.key) ? "on" : ""}" data-nec="${o.key}">
+                <span class="icon-circle">${icon(o.ic)}</span>
+                <span class="diag-check-label">${escapeHtml(o.label)}</span>
+                <span class="diag-check-mark">${icon("check")}</span>
+              </label>`).join("")}
+          </div>
+          <div class="diag-nav">
+            <button class="btn btn-ghost" id="diag-back">Atras</button>
+            <button class="btn btn-primary" id="diag-next" ${answers.necesidades.length ? "" : "disabled"}>Siguiente ${icon("arrowRight")}</button>
+          </div>
+        </section>`;
+      ctx.container.querySelectorAll("[data-nec]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          const key = el.dataset.nec;
+          if (answers.necesidades.includes(key)) answers.necesidades = answers.necesidades.filter((k) => k !== key);
+          else answers.necesidades.push(key);
+          paint();
+        });
+      });
+      ctx.container.querySelector("#diag-back").addEventListener("click", () => { step = 1; paint(); });
+      const next = ctx.container.querySelector("#diag-next");
+      if (next) next.addEventListener("click", () => { step = 3; paint(); });
+      return;
+    }
+
+    if (step === 3) {
+      ctx.container.innerHTML = `
+        <section class="section wrap diag-wrap">
+          ${stepper()}
+          <div class="section-head"><div><h2>¿Cuanto necesitas que dure el respaldo?</h2></div></div>
+          <div class="diag-grid">
+            ${DIAG_DURACION.map((o) => `
+              <button class="diag-card" data-dur="${o.key}">
+                <span class="icon-circle">${icon(o.ic)}</span>
+                <h3>${escapeHtml(o.label)}</h3><p>${escapeHtml(o.desc)}</p>
+              </button>`).join("")}
+          </div>
+          <div class="diag-nav"><button class="btn btn-ghost" id="diag-back">Atras</button></div>
+        </section>`;
+      ctx.container.querySelectorAll("[data-dur]").forEach((btn) => {
+        btn.addEventListener("click", () => { answers.duracion = btn.dataset.dur; step = 4; paint(); });
+      });
+      ctx.container.querySelector("#diag-back").addEventListener("click", () => { step = 2; paint(); });
+      return;
+    }
+
+    // step 4: resultado — 100% calculado sobre kits.json real, nunca inventado.
+    const scored = idx.kits
+      .map((k) => ({ kit: k, score: diagScoreKit(k, answers) }))
+      .sort((a, b) => b.score - a.score || a.kit.Precio_Sugerido_Reventa_USD - b.kit.Precio_Sugerido_Reventa_USD);
+    const bestScore = scored[0] ? scored[0].score : 0;
+    const top = scored.slice(0, 3);
+    const exact = bestScore > 0;
+
+    ctx.container.innerHTML = `
+      <section class="section wrap diag-wrap">
+        ${stepper()}
+        <div class="section-head">
+          <div>
+            <h2>${exact ? "Esto es lo que mas se ajusta a lo que nos contaste" : "No encontramos una coincidencia exacta — te mostramos lo mas cercano"}</h2>
+            <p class="desc">${exact ? "Calculado sobre nuestras soluciones reales, no una lista generica." : "Contanos por WhatsApp los detalles y te ayudamos a afinar la eleccion."}</p>
+          </div>
+          <button class="btn btn-ghost" id="diag-restart">Volver a empezar</button>
+        </div>
+        <div class="kit-grid">
+          ${top.map(({ kit }) => kitCard(idx, kit, catalogFor(idx, kit.Kit_ID, market), config)).join("")}
+        </div>
+        <div class="cta-band wrap" style="margin-top:8px">
+          <div><h3>¿Ninguna te convence del todo?</h3><p class="muted">Un asesor real revisa tu caso y te arma una a medida.</p></div>
+          ${waButton(config, "Hola, hice el diagnostico en la web y ninguna opcion me termino de convencer. ¿Me ayudan a elegir?", "Hablar con un asesor")}
+        </div>
+      </section>`;
+    ctx.container.querySelector("#diag-restart").addEventListener("click", () => {
+      answers.uso = null; answers.necesidades = []; answers.duracion = null; step = 1; paint();
+    });
+  }
+
+  paint();
 }
 
 /* =======================================================================

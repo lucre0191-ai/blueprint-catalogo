@@ -14,8 +14,8 @@
 import { loadAll, buildIndices, initRouter, makeRoute, state } from "./js/core.js";
 import {
   renderHome, renderKits, renderKitDetail, renderCatalogo,
-  renderProductDetail, renderComparador,
-  renderContacto, renderNotFound,
+  renderProductDetail, renderComparador, renderDiagnostico, renderAprender,
+  renderCotizacion, renderContacto, renderNotFound,
 } from "./js/views.js";
 import { initGlossary } from "./js/glossary.js";
 
@@ -37,11 +37,15 @@ function initApp(data, idx) {
 
   const routes = [
     makeRoute([], () => { setActiveNav("/"); renderHome(ctx); }),
+    makeRoute(["diagnostico"], () => { setActiveNav("diagnostico"); renderDiagnostico(ctx); }),
     makeRoute(["kits"], () => { setActiveNav("kits"); renderKits(ctx); }),
     makeRoute(["kit", ":id"], (p) => { setActiveNav("kits"); renderKitDetail(ctx, p); }),
     makeRoute(["catalogo"], () => { setActiveNav("catalogo"); renderCatalogo(ctx); }),
     makeRoute(["producto", ":sku"], (p) => { setActiveNav("catalogo"); renderProductDetail(ctx, p); }),
     makeRoute(["comparador"], () => { setActiveNav("comparador"); renderComparador(ctx); }),
+    makeRoute(["aprender"], () => { setActiveNav("aprender"); renderAprender(ctx); }),
+    makeRoute(["cotizacion"], () => { setActiveNav("cotizacion"); renderCotizacion(ctx, {}); }),
+    makeRoute(["cotizacion", ":id"], (p) => { setActiveNav("cotizacion"); renderCotizacion(ctx, p); }),
     makeRoute(["contacto"], () => { setActiveNav("contacto"); renderContacto(ctx); }),
   ];
 
