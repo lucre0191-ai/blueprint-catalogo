@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Blueprint Admin Publisher — herramienta privada</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #16213a; --surface-2: #1c2a47; --line: #263252; --line-bright: #3a4a72;
+    --text: #f1f5f9; --muted: #94a3b8; --faint: #72879e;
+    --verde: #22c55e; --verde-dim: #16a34a; --rojo: #f87171; --amarillo: #fbbf24;
+    --radius: 10px; --font: "Segoe UI", -apple-system, Arial, sans-serif; --mono: "Consolas", monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.5; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  h2 { font-size: 16px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  h2 .n { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--line-bright); font-size: 12px; font-family: var(--mono); }
+  p { color: var(--muted); font-size: 14px; }
+  .banner { background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.35); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 22px; font-size: 13.5px; color: #fde9b8; }
+  .banner strong { color: var(--amarillo); }
+  section.step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 18px; }
+  section.step.disabled { opacity: .45; pointer-events: none; }
+  label { display: block; font-size: 12.5px; color: var(--muted); margin: 12px 0 4px; }
+  input[type="file"], input[type="text"], input[type="password"] {
+    width: 100%; background: var(--surface-2); border: 1px solid var(--line-bright); color: var(--text);
+    border-radius: 6px; padding: 9px 11px; font-size: 13.5px; font-family: inherit;
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+  button {
+    font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; border-radius: 6px;
+    padding: 10px 18px; border: 1px solid var(--line-bright); background: var(--surface-2); color: var(--text);
+    transition: filter .15s, transform .15s;
+  }
+  button:hover { transform: translateY(-1px); }
+  button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+  button.primary { background: var(--verde); border-color: var(--verde); color: #052e12; }
+  button.primary:hover { filter: brightness(1.08); }
+  button.danger { background: transparent; border-color: var(--rojo); color: var(--rojo); }
+  .log { background: #0a0f1c; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-family: var(--mono); font-size: 12.5px; max-height: 320px; overflow-y: auto; white-space: pre-wrap; }
+  .log .ok { color: var(--verde); }
+  .log .warn { color: var(--amarillo); }
+  .log .err { color: var(--rojo); }
+  table.counts { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  table.counts th, table.counts td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  table.counts th { color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
+  .file-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .file-row:last-child { border-bottom: none; }
+  .file-row .name { font-family: var(--mono); font-size: 13px; }
+  .file-row .count { color: var(--muted); font-size: 12px; margin-left: 8px; }
+  .file-row .actions { display: flex; gap: 8px; }
+  .file-row .actions button { padding: 6px 12px; font-size: 12px; }
+  pre.preview { background: #0a0f1c; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-size: 11.5px; max-height: 280px; overflow: auto; margin-top: 8px; display: none; }
+  pre.preview.open { display: block; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0; font-size: 13.5px; }
+  .checkbox-row input { width: auto; margin-top: 3px; }
+  .status-pill { font-family: var(--mono); font-size: 11px; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; border: 1px solid var(--line-bright); }
+  .status-pill.pending { color: var(--muted); }
+  .status-pill.ok { color: var(--verde); border-color: var(--verde); }
+  .status-pill.fail { color: var(--rojo); border-color: var(--rojo); }
+  footer { color: var(--faint); font-size: 12px; text-align: center; margin-top: 30px; }
+  a { color: var(--verde); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Blueprint Admin Publisher</h1>
+  <p>Excel privado → JSON del catálogo → GitHub Pages. Herramienta interna, no enlazada desde el sitio público.</p>
+
+  <div class="banner">
+    <strong>Antes de empezar:</strong> abre y guarda el Excel en Excel o LibreOffice para que sus fórmulas
+    tengan valores calculados actualizados. Esta herramienta lee los valores ya guardados — no recalcula fórmulas.
+    El archivo Excel nunca sale de tu navegador ni se sube a ningún lado: solo se procesa localmente.
+  </div>
+
+  <section class="step" id="step1">
+    <h2><span class="n">1</span> Cargar Excel</h2>
+    <p>Selecciona el archivo <code>.xlsx</code> del catálogo. Se procesa localmente — no se envía a ningún servidor.</p>
+    <input type="file" id="file-input" accept=".xlsx,.xlsm">
+    <div style="margin-top:14px">
+      <button class="primary" id="btn-process" disabled>Procesar Excel</button>
+    </div>
+    <div id="process-log" class="log" style="display:none;margin-top:14px"></div>
+  </section>
+
+  <section class="step disabled" id="step2">
+    <h2><span class="n">2</span> Resultado y validación</h2>
+    <div id="validation-area"></div>
+  </section>
+
+  <section class="step disabled" id="step3">
+    <h2><span class="n">3</span> Revisar y descargar</h2>
+    <p>Descarga cualquier JSON para revisarlo antes de publicar. Nada se publica todavía en este paso.</p>
+    <div id="files-area"></div>
+  </section>
+
+  <section class="step disabled" id="step4">
+    <h2><span class="n">4</span> Publicar en GitHub</h2>
+    <p>Se actualiza únicamente la carpeta configurada abajo, un archivo a la vez, usando la API de Contenidos de GitHub.</p>
+    <div class="row">
+      <div>
+        <label for="gh-owner">Usuario / organización</label>
+        <input type="text" id="gh-owner" value="lucre0191-ai">
+      </div>
+      <div>
+        <label for="gh-repo">Repositorio</label>
+        <input type="text" id="gh-repo" value="blueprint-catalogo">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="gh-branch">Rama</label>
+        <input type="text" id="gh-branch" value="main">
+      </div>
+      <div>
+        <label for="gh-path">Carpeta destino</label>
+        <input type="text" id="gh-path" value="data">
+      </div>
+    </div>
+    <label for="gh-token">Token de GitHub (fino, permiso "Contents: Read and write" solo en este repositorio)</label>
+    <input type="password" id="gh-token" autocomplete="off" placeholder="ghp_… o github_pat_…">
+    <p style="margin-top:6px">El token no se guarda en ningún lado — ni localStorage, ni cookies, ni archivos. Vive solo en esta pestaña
+      mientras la tengas abierta, y desaparece al recargar o cerrar.</p>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="gh-confirm">
+      <label for="gh-confirm" style="margin:0">Confirmo que revisé los JSON generados en el paso 3 y quiero publicarlos.</label>
+    </div>
+
+    <button class="primary" id="btn-publish" disabled>Publicar en GitHub</button>
+    <div id="publish-area" style="margin-top:14px"></div>
+  </section>
+
+  <footer>Blueprint OS — Plano 03, Addendum Admin Publisher. No compartas la URL de esta página fuera del equipo.</footer>
+</div>
+
+<script>
+/* ======================================================================
+   admin-engine.js embebido — puerto 1:1 de scripts/export_to_json.py.
+   Ver bitácora Plano 03 / Fase 5 para el detalle de la verificación de
+   paridad (corrida en Node contra el Excel real, diff byte a byte
+   contra los JSON que ya produce el exportador Python: identico en los
+   11 archivos).
+   ====================================================================== */
+(function (root) {
+  "use strict";
+
+  function jsonSafe(v) {
+    if (v === null || v === undefined) return null;
+    if (v instanceof Date) {
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${v.getFullYear()}-${pad(v.getMonth() + 1)}-${pad(v.getDate())}`;
+    }
+    if (typeof v === "string") {
+      const t = v.trim();
+      if (t === "") return null;
+      if (t.startsWith("/media_blueprint/")) return t.slice(1);
+      return t;
+    }
+    return v;
+  }
+
+  function sheetToAOA(ws) {
+    if (!ws) return null;
+    return root.XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+  }
+
+  function getAOA(workbook, sheetName) {
+    return sheetToAOA(workbook.Sheets[sheetName]);
+  }
+
+  function cell(aoa, row, col) {
+    const r = aoa[row - 1];
+    return r ? (r[col - 1] === undefined ? null : r[col - 1]) : null;
+  }
+
+  function readSheetRows(aoa, headerRow, dataStart, dataEnd) {
+    const headers = aoa[headerRow - 1] || [];
+    const rows = [];
+    const lastRow = Math.min(dataEnd, aoa.length);
+    for (let r = dataStart; r <= lastRow; r++) {
+      const rowVals = aoa[r - 1] || [];
+      const allBlank = headers.every((h, i) => {
+        const v = rowVals[i];
+        return v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+      });
+      if (allBlank) continue;
+      const record = {};
+      headers.forEach((h, i) => {
+        if (h === undefined || h === null || h === "") return;
+        record[h] = jsonSafe(rowVals[i]);
+      });
+      rows.push(record);
+    }
+    return rows;
+  }
+
+  function projectColumns(rows, allow, rename) {
+    rename = rename || {};
+    return rows.map((row) => {
+      const clean = {};
+      allow.forEach((col) => {
+        if (Object.prototype.hasOwnProperty.call(row, col)) {
+          const key = rename[col] || col;
+          clean[key] = row[col];
+        }
+      });
+      return clean;
+    });
+  }
+
+  function cleanKey(name) {
+    return name.replace(/\s*\(auto\)\s*/g, "").trim();
+  }
+
+  function autoRename(allow) {
+    const out = {};
+    allow.forEach((c) => { out[c] = cleanKey(c); });
+    return out;
+  }
+
+  const REQUIRED_SHEETS = [
+    "01_PRODUCT_MASTER", "02_BOM", "03_KIT_CATALOG", "MEDIA_LIBRARY",
+    "PRODUCT_SHOWCASE", "CONTENT_BLOCKS", "CATALOGO_MASTER",
+    "LINEAS_COMERCIALES", "08_COMPARADOR", "09_BIBLIOTECA_TECNICA",
+    "SYSTEM_CONFIG",
+  ];
+
+  function findMissingSheets(workbook) {
+    return REQUIRED_SHEETS.filter((name) => !workbook.Sheets[name]);
+  }
+
+  function specsBySku(workbook) {
+    const aoa = getAOA(workbook, "01_PRODUCT_MASTER");
+    const specs = {};
+    for (let r = 5; r <= aoa.length; r++) {
+      const sku = cell(aoa, r, 1);
+      if (!sku) continue;
+      specs[sku] = {
+        Marca: jsonSafe(cell(aoa, r, 2)),
+        Modelo: jsonSafe(cell(aoa, r, 6)),
+        Descripcion_Tecnica: jsonSafe(cell(aoa, r, 8)),
+        Potencia_W: jsonSafe(cell(aoa, r, 9)),
+        Voltaje: jsonSafe(cell(aoa, r, 10)),
+        Capacidad_kWh: jsonSafe(cell(aoa, r, 11)),
+        Garantia_Anios: jsonSafe(cell(aoa, r, 12)),
+      };
+    }
+    return specs;
+  }
+
+  function mediaBySku(workbook) {
+    const aoa = getAOA(workbook, "MEDIA_LIBRARY");
+    const media = {};
+    for (let r = 5; r <= aoa.length; r++) {
+      const sku = cell(aoa, r, 2);
+      if (sku) media[sku] = jsonSafe(cell(aoa, r, 3));
+    }
+    return media;
+  }
+
+  function exportProducts(workbook) {
+    const aoa = getAOA(workbook, "01_PRODUCT_MASTER");
+    let rows = readSheetRows(aoa, 4, 5, 100);
+    rows = rows.filter((r) => r.Estado === "Activo");
+    const allow = ["SKU", "Marca", "Fabricante", "Categoria", "Subcategoria", "Modelo",
+      "Nombre_Comercial_Tecnico", "Descripcion_Tecnica", "Potencia_W", "Voltaje",
+      "Capacidad_kWh", "Garantia_Anios", "Lead_Time", "Peso_kg", "Dimensiones",
+      "Estado", "Media_ID (auto)"];
+    return projectColumns(rows, allow, autoRename(allow));
+  }
+
+  function exportBom(workbook, activeKitIds) {
+    const aoa = getAOA(workbook, "02_BOM");
+    let rows = readSheetRows(aoa, 4, 5, 200);
+    rows = rows.filter((r) => activeKitIds.has(r.Kit_ID));
+    const allow = ["Kit_ID", "SKU", "Cantidad", "Categoria (auto)", "Descripcion (auto)"];
+    return projectColumns(rows, allow, autoRename(allow));
+  }
+
+  function exportKits(workbook) {
+    const aoa = getAOA(workbook, "03_KIT_CATALOG");
+    let rows = readSheetRows(aoa, 4, 5, 20);
+    rows = rows.filter((r) => r.Estado === "Activo");
+    const allow = ["Kit_ID", "Nombre_Comercial", "Linea", "Tipo_Sistema", "Cliente_Objetivo",
+      "Aplicaciones", "Autonomia_Aprox", "Estado", "Potencia_Inversor_kW (auto)",
+      "Potencia_Panel_kW (auto)", "Bateria_kWh (auto)", "Precio_Sugerido_Reventa_USD (auto)"];
+    const kits = projectColumns(rows, allow, autoRename(allow));
+    const activeIds = new Set(rows.map((r) => r.Kit_ID).filter(Boolean));
+    return { kits, activeIds };
+  }
+
+  function exportComparador(workbook) {
+    const aoa = getAOA(workbook, "08_COMPARADOR");
+    const sections = { INVERSORES: [4, 31], BATERIAS: [32, 49], "PANELES SOLARES": [50, 80] };
+    const allow = ["SKU", "Marca", "Modelo", "Potencia_W", "Voltaje", "Garantia_Anios", "Descripcion_Tecnica"];
+    const result = {};
+    Object.entries(sections).forEach(([name, range]) => {
+      const titleRow = range[0], endRow = range[1];
+      const headerRow = titleRow + 1;
+      const rows = readSheetRows(aoa, headerRow, headerRow + 1, endRow);
+      result[name.toLowerCase().replace(/ /g, "_")] = projectColumns(rows, allow, autoRename(allow));
+    });
+    return result;
+  }
+
+  function exportBibliotecaTecnica(workbook) {
+    const aoa = getAOA(workbook, "09_BIBLIOTECA_TECNICA");
+    const rows = readSheetRows(aoa, 4, 5, 100);
+    const allow = ["SKU (auto)", "Datasheet_URL", "Manual_URL", "Certificados_URL", "Video_URL"];
+    return projectColumns(rows, allow, autoRename(allow));
+  }
+
+  function exportMedia(workbook) {
+    const aoa = getAOA(workbook, "MEDIA_LIBRARY");
+    let rows = readSheetRows(aoa, 4, 5, 100);
+    rows = rows.filter((r) => r.Estado === "Publicado");
+    const allow = ["Media_ID", "SKU", "Imagen_principal", "Imagen_2", "Imagen_3",
+      "Datasheet (auto)", "Manual (auto)", "Catalogo", "Video (auto)",
+      "Certificados (auto)", "Garantia_Anios (auto)", "FAQ"];
+    return projectColumns(rows, allow, autoRename(allow));
+  }
+
+  function exportShowcase(workbook) {
+    const aoa = getAOA(workbook, "PRODUCT_SHOWCASE");
+    let rows = readSheetRows(aoa, 4, 5, 100);
+    rows = rows.filter((r) => r.Estado === "Activo");
+    const allow = ["SKU", "Imagen_Principal (auto)", "Nombre_Comercial", "Categoria (auto)",
+      "Beneficios", "Problema_que_Resuelve", "Tipo_Cliente_Recomendado",
+      "Garantia_Anios (auto)", "Caracteristicas_Principales"];
+    return projectColumns(rows, allow, autoRename(allow));
+  }
+
+  function buildLineasComerciales(workbook) {
+    const aoa = getAOA(workbook, "LINEAS_COMERCIALES");
+    const rows = readSheetRows(aoa, 4, 5, aoa.length);
+    const out = {};
+    rows.forEach((r) => { if (r.Linea) out[r.Linea] = r; });
+    return out;
+  }
+
+  function exportContentBlocks(workbook) {
+    const aoa = getAOA(workbook, "CONTENT_BLOCKS");
+    let rows = readSheetRows(aoa, 4, 5, 82);
+    rows = rows.filter((r) => r.Estado === "Activo");
+    const allow = ["Block_ID", "Block_Group", "Categoria", "Idioma", "Texto"];
+    return projectColumns(rows, allow, autoRename(allow));
+  }
+
+  function kitComponentImages(workbook, kitId) {
+    const aoaBom = getAOA(workbook, "02_BOM");
+    const media = mediaBySku(workbook);
+    const byCategory = {};
+    const allSkus = [];
+    for (let r = 5; r <= aoaBom.length; r++) {
+      const rowKit = cell(aoaBom, r, 1);
+      if (rowKit !== kitId) continue;
+      const sku = cell(aoaBom, r, 2);
+      const categoria = cell(aoaBom, r, 6);
+      if (!sku) continue;
+      allSkus.push(sku);
+      if (categoria && !(categoria in byCategory)) byCategory[categoria] = sku;
+    }
+    const imgFor = (categoria) => {
+      const sku = byCategory[categoria];
+      return sku ? (media[sku] || null) : null;
+    };
+    return {
+      panelImg: imgFor("Panel Solar"),
+      invImg: imgFor("Inversor"),
+      batImg: imgFor("Bateria"),
+      skuList: allSkus.join(", "),
+    };
+  }
+
+  function exportCatalogs(workbook, kitsById) {
+    const aoa = getAOA(workbook, "CATALOGO_MASTER");
+    let rows = readSheetRows(aoa, 4, 5, aoa.length);
+    rows = rows.filter((r) => r.Visible === "Si" && (r.Estado === "Listo" || r.Estado === "Publicado"));
+    const allow = ["ID_Catalogo", "Kit_ID", "Nombre_Comercial", "Categoria (auto)", "Mercado",
+      "Idioma", "Titulo", "Subtitulo", "Descripcion_Corta", "Ideal_Para (auto)",
+      "Que_Puede_Alimentar (auto)", "Beneficios_Comerciales", "Garantia_Comercial (auto)",
+      "Imagen_Principal", "Imagen_Panel (auto)", "Imagen_Inversor (auto)",
+      "Imagen_Bateria (auto)", "Componentes_SKU (auto)", "Orden", "Estado",
+      "Promesa_Valor (auto)", "Descripcion_Comercial (auto)",
+      "Beneficio_01 (auto)", "Beneficio_02 (auto)", "Beneficio_03 (auto)",
+      "Beneficio_04 (auto)", "Beneficio_05 (auto)"];
+    const curated = projectColumns(rows, allow, autoRename(allow));
+
+    const coveredPairs = new Set(curated.map((c) => c.Kit_ID + "||" + c.Mercado));
+    const marketsSet = new Set(curated.map((c) => c.Mercado));
+    const markets = marketsSet.size ? [...marketsSet].sort() : ["Republica Dominicana"];
+    const lineasComerciales = buildLineasComerciales(workbook);
+
+    const fallback = [];
+    Object.entries(kitsById).forEach(([kitId, kit]) => {
+      let imgs = null;
+      const lineaContent = lineasComerciales[kit.Linea] || {};
+      markets.forEach((market) => {
+        if (coveredPairs.has(kitId + "||" + market)) return;
+        if (!imgs) imgs = kitComponentImages(workbook, kitId);
+        fallback.push({
+          ID_Catalogo: `AUTO-${kitId}`,
+          Kit_ID: kitId,
+          Nombre_Comercial: kit.Nombre_Comercial || null,
+          Categoria: kit.Linea || null,
+          Mercado: market,
+          Idioma: "Espanol",
+          Titulo: kit.Nombre_Comercial || null,
+          Subtitulo: [kit.Tipo_Sistema, kit.Cliente_Objetivo].filter(Boolean).join(", ") || null,
+          Descripcion_Corta: null,
+          Ideal_Para: kit.Cliente_Objetivo || null,
+          Que_Puede_Alimentar: kit.Aplicaciones || null,
+          Beneficios_Comerciales: null,
+          Garantia_Comercial: null,
+          Imagen_Principal: null,
+          Imagen_Panel: imgs.panelImg,
+          Imagen_Inversor: imgs.invImg,
+          Imagen_Bateria: imgs.batImg,
+          Componentes_SKU: imgs.skuList,
+          Orden: 100,
+          Estado: "Listo",
+          Promesa_Valor: lineaContent.Promesa_Valor || null,
+          Descripcion_Comercial: lineaContent.Descripcion_Comercial || null,
+          Beneficio_01: lineaContent.Beneficio_01 || null,
+          Beneficio_02: lineaContent.Beneficio_02 || null,
+          Beneficio_03: lineaContent.Beneficio_03 || null,
+          Beneficio_04: lineaContent.Beneficio_04 || null,
+          Beneficio_05: lineaContent.Beneficio_05 || null,
+        });
+      });
+    });
+
+    return curated.concat(fallback);
+  }
+
+  function exportKitComponents(workbook, activeKitIds) {
+    const aoaBom = getAOA(workbook, "02_BOM");
+    const specs = specsBySku(workbook);
+    const media = mediaBySku(workbook);
+    const result = {};
+    for (let r = 5; r <= aoaBom.length; r++) {
+      const kitId = cell(aoaBom, r, 1);
+      const sku = cell(aoaBom, r, 2);
+      if (!kitId || !sku || !activeKitIds.has(kitId)) continue;
+      const entry = {
+        SKU: sku,
+        Cantidad: jsonSafe(cell(aoaBom, r, 3)),
+        Categoria: jsonSafe(cell(aoaBom, r, 6)),
+        Descripcion: jsonSafe(cell(aoaBom, r, 7)),
+        Opcional: cell(aoaBom, r, 11) === "Opcional",
+        Imagen: media[sku] || null,
+      };
+      Object.assign(entry, specs[sku] || {});
+      if (!result[kitId]) result[kitId] = [];
+      result[kitId].push(entry);
+    }
+    return result;
+  }
+
+  function exportConfig(workbook) {
+    const aoa = getAOA(workbook, "SYSTEM_CONFIG");
+    const publicCategories = new Set(["Marca", "Idioma_Moneda", "Mercado", "Rutas", "Contacto"]);
+    const config = {};
+    for (let r = 5; r <= 17; r++) {
+      const param = cell(aoa, r, 1);
+      const valor = cell(aoa, r, 2);
+      const categoria = cell(aoa, r, 3);
+      if (param && publicCategories.has(categoria)) config[cleanKey(param)] = jsonSafe(valor);
+    }
+    return config;
+  }
+
+  function validateRelations(workbook, datasets) {
+    const warnings = [];
+    const activeKitIds = new Set(datasets.kits.map((k) => k.Kit_ID));
+    const skuSet = new Set(datasets.products.map((p) => p.SKU));
+
+    datasets.bom.forEach((row) => {
+      if (!activeKitIds.has(row.Kit_ID)) warnings.push(`bom.json: Kit_ID "${row.Kit_ID}" no existe en 03_KIT_CATALOG (o no esta Activo).`);
+      if (!skuSet.has(row.SKU)) warnings.push(`bom.json: SKU "${row.SKU}" (kit ${row.Kit_ID}) no existe en 01_PRODUCT_MASTER.`);
+    });
+    datasets.catalogs.forEach((row) => {
+      if (!activeKitIds.has(row.Kit_ID)) warnings.push(`catalogs.json: Kit_ID "${row.Kit_ID}" (${row.ID_Catalogo}) no existe en 03_KIT_CATALOG.`);
+    });
+    Object.keys(datasets.kit_components).forEach((kitId) => {
+      if (!activeKitIds.has(kitId)) warnings.push(`kit_components.json: Kit_ID "${kitId}" no existe en 03_KIT_CATALOG.`);
+    });
+
+    return warnings;
+  }
+
+  function runExport(workbook) {
+    const missing = findMissingSheets(workbook);
+    if (missing.length) return { ok: false, missingSheets: missing };
+
+    const { kits, activeIds } = exportKits(workbook);
+    const kitsById = {};
+    kits.forEach((k) => { kitsById[k.Kit_ID] = k; });
+
+    const datasets = {
+      products: exportProducts(workbook),
+      bom: exportBom(workbook, activeIds),
+      kits,
+      kit_components: exportKitComponents(workbook, activeIds),
+      comparador: exportComparador(workbook),
+      biblioteca_tecnica: exportBibliotecaTecnica(workbook),
+      media: exportMedia(workbook),
+      showcase: exportShowcase(workbook),
+      content_blocks: exportContentBlocks(workbook),
+      catalogs: exportCatalogs(workbook, kitsById),
+      config: exportConfig(workbook),
+    };
+
+    const warnings = validateRelations(workbook, datasets);
+
+    const counts = {};
+    Object.entries(datasets).forEach(([name, data]) => {
+      if (Array.isArray(data)) counts[name] = data.length;
+      else if (data && typeof data === "object") {
+        const vals = Object.values(data);
+        counts[name] = vals.length && Array.isArray(vals[0])
+          ? vals.reduce((s, v) => s + v.length, 0)
+          : Object.keys(data).length;
+      } else counts[name] = 1;
+    });
+
+    return { ok: true, datasets, warnings, counts, missingSheets: [] };
+  }
+
+  root.BlueprintExport = { REQUIRED_SHEETS, findMissingSheets, runExport, jsonSafe };
+})(window);
+</script>
+
+<script>
+/* ======================================================================
+   UI de Blueprint Admin Publisher — usa BlueprintExport de arriba.
+   ====================================================================== */
+(function () {
+  "use strict";
+
+  const fileInput = document.getElementById("file-input");
+  const btnProcess = document.getElementById("btn-process");
+  const processLog = document.getElementById("process-log");
+  const step2 = document.getElementById("step2");
+  const step3 = document.getElementById("step3");
+  const step4 = document.getElementById("step4");
+  const validationArea = document.getElementById("validation-area");
+  const filesArea = document.getElementById("files-area");
+  const ghConfirm = document.getElementById("gh-confirm");
+  const btnPublish = document.getElementById("btn-publish");
+  const publishArea = document.getElementById("publish-area");
+
+  let selectedFile = null;
+  let lastResult = null;
+
+  function logLine(el, text, cls) {
+    const span = document.createElement("div");
+    if (cls) span.className = cls;
+    span.textContent = text;
+    el.appendChild(span);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  fileInput.addEventListener("change", () => {
+    selectedFile = fileInput.files[0] || null;
+    btnProcess.disabled = !selectedFile;
+  });
+
+  btnProcess.addEventListener("click", async () => {
+    if (!selectedFile) return;
+    processLog.style.display = "block";
+    processLog.innerHTML = "";
+    btnProcess.disabled = true;
+    logLine(processLog, `Leyendo ${selectedFile.name} localmente…`);
+
+    try {
+      const buf = await selectedFile.arrayBuffer();
+      const workbook = XLSX.read(buf, { type: "array", cellDates: true });
+      logLine(processLog, `Archivo leido. Hojas encontradas: ${workbook.SheetNames.length}.`);
+
+      const result = window.BlueprintExport.runExport(workbook);
+      lastResult = result;
+
+      if (!result.ok) {
+        logLine(processLog, `Faltan hojas requeridas: ${result.missingSheets.join(", ")}`, "err");
+        renderMissingSheets(result.missingSheets);
+        step2.classList.remove("disabled");
+        step3.classList.add("disabled");
+        step4.classList.add("disabled");
+        btnProcess.disabled = false;
+        return;
+      }
+
+      Object.entries(result.counts).forEach(([name, count]) => {
+        logLine(processLog, `  ${name}.json  ->  ${count} registro(s)`, "ok");
+      });
+      logLine(processLog, `Procesamiento completo: ${Object.keys(result.datasets).length} archivos generados.`, "ok");
+
+      renderValidation(result);
+      renderFiles(result);
+
+      step2.classList.remove("disabled");
+      step3.classList.remove("disabled");
+      step4.classList.remove("disabled");
+    } catch (err) {
+      logLine(processLog, `Error procesando el archivo: ${err.message}`, "err");
+      console.error(err);
+    } finally {
+      btnProcess.disabled = false;
+    }
+  });
+
+  function renderMissingSheets(missing) {
+    validationArea.innerHTML = `
+      <p style="color:var(--rojo)">No se puede continuar: faltan ${missing.length} hoja(s) requerida(s) en el Excel.</p>
+      <div class="log">${missing.map((m) => `<div class="err">Falta la hoja: ${m}</div>`).join("")}</div>
+      <p>Verifica el nombre exacto de estas hojas en el archivo y vuelve a intentar.</p>
+    `;
+  }
+
+  function renderValidation(result) {
+    if (!result.warnings.length) {
+      validationArea.innerHTML = `<p style="color:var(--verde)">Sin advertencias — todas las relaciones Kit_ID / SKU son validas.</p>`;
+      return;
+    }
+    validationArea.innerHTML = `
+      <p style="color:var(--amarillo)">${result.warnings.length} advertencia(s). Revisa antes de publicar (no bloquean la generacion, pero indican datos huerfanos):</p>
+      <div class="log">${result.warnings.map((w) => `<div class="warn">${escapeHtml(w)}</div>`).join("")}</div>
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function renderFiles(result) {
+    filesArea.innerHTML = "";
+    Object.entries(result.datasets).forEach(([name, data]) => {
+      const row = document.createElement("div");
+      row.className = "file-row";
+      row.innerHTML = `
+        <div><span class="name">${name}.json</span><span class="count">${result.counts[name]} registro(s)</span></div>
+        <div class="actions">
+          <button type="button" data-action="preview">Ver</button>
+          <button type="button" data-action="download">Descargar</button>
+        </div>
+      `;
+      const pre = document.createElement("pre");
+      pre.className = "preview";
+      const json = JSON.stringify(data, null, 2);
+      pre.textContent = json;
+
+      row.querySelector('[data-action="preview"]').addEventListener("click", () => {
+        pre.classList.toggle("open");
+      });
+      row.querySelector('[data-action="download"]').addEventListener("click", () => {
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = `${name}.json`;
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      filesArea.appendChild(row);
+      filesArea.appendChild(pre);
+    });
+  }
+
+  ghConfirm.addEventListener("change", updatePublishButton);
+  function updatePublishButton() {
+    btnPublish.disabled = !(ghConfirm.checked && lastResult && lastResult.ok);
+  }
+
+  function utf8ToBase64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = "";
+    bytes.forEach((b) => { binary += String.fromCharCode(b); });
+    return btoa(binary);
+  }
+
+  async function publishOne(owner, repo, branch, dirPath, name, jsonObj, token) {
+    const filePath = `${dirPath.replace(/\/$/, "")}/${name}.json`;
+    const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+    const headers = { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" };
+
+    let sha;
+    const getRes = await fetch(`${apiBase}?ref=${encodeURIComponent(branch)}`, { headers });
+    if (getRes.ok) {
+      const getJson = await getRes.json();
+      sha = getJson.sha;
+    } else if (getRes.status !== 404) {
+      const errJson = await getRes.json().catch(() => ({}));
+      throw new Error(`No se pudo leer el archivo actual (HTTP ${getRes.status}): ${errJson.message || ""}`);
+    }
+
+    const body = {
+      message: `Blueprint Admin Publisher: actualizar ${name}.json`,
+      content: utf8ToBase64(JSON.stringify(jsonObj, null, 2)),
+      branch,
+    };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(apiBase, {
+      method: "PUT",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!putRes.ok) {
+      const errJson = await putRes.json().catch(() => ({}));
+      throw new Error(`HTTP ${putRes.status}: ${errJson.message || "error desconocido"}`);
+    }
+  }
+
+  btnPublish.addEventListener("click", async () => {
+    if (!lastResult || !lastResult.ok) return;
+    const owner = document.getElementById("gh-owner").value.trim();
+    const repo = document.getElementById("gh-repo").value.trim();
+    const branch = document.getElementById("gh-branch").value.trim() || "main";
+    const dirPath = document.getElementById("gh-path").value.trim() || "data";
+    const token = document.getElementById("gh-token").value.trim();
+
+    if (!owner || !repo || !token) {
+      alert("Completa usuario, repositorio y token antes de publicar.");
+      return;
+    }
+    const confirmed = confirm(
+      `Vas a publicar ${Object.keys(lastResult.datasets).length} archivo(s) JSON en ` +
+      `${owner}/${repo} (rama "${branch}", carpeta "${dirPath}"). Esto actualiza el sitio publico. ¿Confirmas?`
+    );
+    if (!confirmed) return;
+
+    btnPublish.disabled = true;
+    publishArea.innerHTML = "";
+    const log = document.createElement("div");
+    log.className = "log";
+    publishArea.appendChild(log);
+
+    let okCount = 0, failCount = 0;
+    for (const [name, data] of Object.entries(lastResult.datasets)) {
+      const row = document.createElement("div");
+      row.textContent = `Publicando ${name}.json… `;
+      const pill = document.createElement("span");
+      pill.className = "status-pill pending";
+      pill.textContent = "en curso";
+      row.appendChild(pill);
+      log.appendChild(row);
+
+      try {
+        await publishOne(owner, repo, branch, dirPath, name, data, token);
+        pill.className = "status-pill ok";
+        pill.textContent = "publicado";
+        okCount++;
+      } catch (err) {
+        pill.className = "status-pill fail";
+        pill.textContent = "fallo: " + err.message;
+        failCount++;
+      }
+    }
+
+    const summary = document.createElement("div");
+    summary.style.marginTop = "10px";
+    summary.style.fontWeight = "600";
+    summary.textContent = failCount
+      ? `Completado con errores: ${okCount} publicado(s), ${failCount} fallido(s). Revisa los archivos marcados arriba.`
+      : `Publicación completa: ${okCount} archivo(s) actualizados en ${owner}/${repo}.`;
+    summary.style.color = failCount ? "var(--rojo)" : "var(--verde)";
+    publishArea.appendChild(summary);
+
+    btnPublish.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>

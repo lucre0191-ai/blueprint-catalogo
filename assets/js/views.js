@@ -12,7 +12,10 @@ import {
   kitWarrantyYears, kitVisual, buildKitViewModel, resolveContentBlock, state,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
-import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
+import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
+// generateTechnicalPDF (pdfgen.js) ya no se usa desde el sitio publico
+// a proposito (ver renderCotizacion) -- queda disponible en el modulo
+// por si un futuro tool interno para vendedores lo necesita.
 import { termHint, GLOSSARY } from "./glossary.js";
 
 const LINEA_ICON = {
@@ -794,6 +797,11 @@ export function renderCotizacion(ctx, params) {
   const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
   const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
 
+  // Solo ficha comercial: nunca especificacion tecnica ni enlaces de
+  // fabricante (Datasheet/Manual/Certificados) en el sitio publico
+  // (Decision de Arquitectura #003, Plano 03-03; QA05/QA10 del
+  // Documento 08). generateTechnicalPDF (pdfgen.js) queda sin usarse
+  // aca a proposito -- solo se retiro el punto de acceso publico.
   ctx.container.innerHTML = `
     <div class="crumb wrap"><a href="#/kit/${encodeURIComponent(kit.Kit_ID)}">${escapeHtml(name)}</a> ${icon("chevronRight")} <span class="on">Cotizacion</span></div>
     <section class="section wrap two-col">
@@ -813,7 +821,6 @@ export function renderCotizacion(ctx, params) {
         <p class="muted" style="font-size:13.5px">Generamos el documento en el momento a partir de nuestros datos reales — nunca es una captura vieja.</p>
         <div class="actions-col">
           <button class="btn btn-primary" id="btn-pdf-comercial">${icon("pdf")}Descargar ficha comercial (PDF)</button>
-          <button class="btn btn-ghost" id="btn-pdf-tecnica">${icon("layers")}Descargar especificacion tecnica (PDF)</button>
           <button class="btn btn-ghost" id="btn-share">${icon("share")}Compartir</button>
           ${waButton(config, buildInquiryText(name, market, price), "Cerrar por WhatsApp")}
         </div>
@@ -830,10 +837,8 @@ export function renderCotizacion(ctx, params) {
   }
 
   const btnPdfComercial = ctx.container.querySelector("#btn-pdf-comercial");
-  const btnPdfTecnica = ctx.container.querySelector("#btn-pdf-tecnica");
   const btnShare = ctx.container.querySelector("#btn-share");
   if (btnPdfComercial) btnPdfComercial.addEventListener("click", () => withBusyLabel(btnPdfComercial, "Generando…", () => generateCommercialPDF(idx, data, kit.Kit_ID, market)));
-  if (btnPdfTecnica) btnPdfTecnica.addEventListener("click", () => withBusyLabel(btnPdfTecnica, "Generando…", () => generateTechnicalPDF(idx, data, kit.Kit_ID, market)));
   if (btnShare) btnShare.addEventListener("click", () => withBusyLabel(btnShare, "Preparando…", () => shareCommercialPDF(idx, data, kit.Kit_ID, market)));
 }
 

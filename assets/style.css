@@ -37,7 +37,8 @@
 
   --text-primary: var(--gris-claro);
   --text-muted: #94a3b8;
-  --text-faint: #64748b;
+  --text-faint: #72879e; /* QA09 (Doc 08): #64748b daba 3.75:1 sobre el fondo oscuro,
+    por debajo del minimo AA (4.5:1) para texto normal. Este tono da 4.82:1. */
 
   --font-display: "Poppins", sans-serif;
   --font-body: "Inter", sans-serif;
