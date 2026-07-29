@@ -89,8 +89,11 @@ function wireBlackout(dataPromise) {
     document.body.classList.add("blackout-pressed");
     if (!ready) hint.textContent = "Encendiendo…";
     // Deja ver el destello del interruptor incluso si los datos ya
-    // estaban listos — si no, la ceremonia se sentiria "cortada".
-    setTimeout(tryReveal, prefersReduced ? 60 : 420);
+    // estaban listos — si no, la ceremonia se sentiria "cortada". El
+    // tiempo (550ms) esta afinado para el destello real (.blackout-burst,
+    // 900ms) — asi el flash ya se noto bien antes de que el apagon
+    // empiece a desvanecerse encima.
+    setTimeout(tryReveal, prefersReduced ? 60 : 550);
     // Si la conexion esta muy lenta (frecuente en la isla), no dejamos
     // el interruptor esperando para siempre sin explicar nada.
     setTimeout(() => {

@@ -166,12 +166,15 @@ export function renderHome(ctx) {
     .flatMap((t) => t.split(".").map((s) => s.trim()).filter(Boolean));
   const beneficios = [...new Set(beneficiosRaw)].slice(0, 4);
 
+  // Los "5 valores" de la ceremonia — cada uno enlaza a la pantalla
+  // real que representa (no son solo decoracion, son un mini-mapa del
+  // sitio dentro del momento de bienvenida).
   const benefitIcons = [
-    ["shield", "Soluciones confiables"],
-    ["bolt", "Ahorro inteligente"],
-    ["panel", "Energía sostenible"],
-    ["store", "Soporte local"],
-    ["house", "Para hogares y negocios"],
+    ["search", "Diagnóstico Inteligente", "Entendemos tu necesidad real", "#/diagnostico"],
+    ["layers", "Soluciones a la medida", "Kits y sistemas que se adaptan a ti", "#/kits"],
+    ["scale", "Comparador Inteligente", "Elige con datos, no con dudas", "#/comparador"],
+    ["book", "Aprende y crece", "Educación práctica para todos", "#/aprender"],
+    ["shield", "Acompañamiento", "Estamos contigo en cada paso", "#/contacto"],
   ];
   const valueProps = [
     ["house", "Entiende tu realidad", "Hablamos tu idioma, entendemos tus apagones, tus necesidades y tu contexto."],
@@ -194,11 +197,12 @@ export function renderHome(ctx) {
         <h2>La energía vuelve. Y con ella, tu tranquilidad.</h2>
         <p class="desc">${escapeHtml(heroLede)}</p>
         <div class="benefit-icons-row">
-          ${benefitIcons.map(([ic, label]) => `
-            <div class="benefit-icon-item">
+          ${benefitIcons.map(([ic, label, desc, href]) => `
+            <a class="benefit-icon-item" href="${href}">
               <span class="icon-circle">${icon(ic)}</span>
               <span class="label">${escapeHtml(label)}</span>
-            </div>`).join("")}
+              <span class="benefit-desc">${escapeHtml(desc)}</span>
+            </a>`).join("")}
         </div>
       </div>
     </section>
