@@ -118,6 +118,74 @@ function kitCard(vm) {
     </article>`;
 }
 
+/* Iconografia real para "Lo que puede alimentar" (Documento 04): mapea
+   palabras que ya vienen en Aplicaciones/Que_Puede_Alimentar a un
+   icono existente. Si ninguna palabra calza, cae al rayo generico —
+   nunca se inventa un icono nuevo por item. */
+const POWER_ICON_KW = [
+  [["nevera", "refrigera", "frio"], "fridge"],
+  [["tv", "television"], "tv"],
+  [["router", "wifi", "internet", "comunicacion"], "wifi"],
+  [["celular", "telefono"], "plug"],
+  [["negocio", "comercio", "tienda"], "store"],
+  [["oficina", "computador", "servidor"], "building"],
+  [["vehiculo", "auto", "carro"], "car"],
+  [["bombeo", "agua", "bomba"], "droplet"],
+  [["hogar", "casa", "residencia"], "house"],
+];
+function powerIcon(label) {
+  const l = (label || "").toLowerCase();
+  for (const [kws, ic] of POWER_ICON_KW) if (kws.some((k) => l.includes(k))) return ic;
+  return "bolt";
+}
+
+/* Exploded View Comercial (Documento 03 + 04): una tarjeta por
+   componente REAL del kit. Solo informacion comercial permitida —
+   Marca, Modelo, Cantidad, y hasta 2 rasgos segun su categoria
+   (Potencia para Panel/Inversor, Capacidad para Bateria, Garantia si
+   existe). Nunca Voltaje, Descripcion_Tecnica ni otro dato de
+   ingenieria (eso vive solo en Aprender). El boton de imagen abre el
+   Lightbox global (ver wireLightbox). */
+function explodedCard(c) {
+  const traits = [];
+  if ((c.Categoria === "Panel Solar" || c.Categoria === "Inversor") && c.Potencia_W) traits.push(`${c.Potencia_W} W`);
+  if (c.Categoria === "Bateria" && typeof c.Capacidad_kWh === "number") traits.push(`${c.Capacidad_kWh} kWh`);
+  if (typeof c.Garantia_Anios === "number") traits.push(`${c.Garantia_Anios} años de garantía`);
+  const img = clean(c.Imagen);
+  return `
+    <article class="exploded-card">
+      <button type="button" class="exploded-media" data-lightbox-src="${escapeHtml(img || "")}" data-lightbox-alt="${escapeHtml(c.Descripcion || c.SKU)}" ${img ? "" : "disabled"}>
+        ${mediaImage(img, c.Descripcion || c.SKU, "cover")}
+        ${img ? `<span class="exploded-zoom">${icon("search")}</span>` : ""}
+      </button>
+      <div class="exploded-body">
+        <span class="exploded-cat">${escapeHtml(c.Categoria || "")}</span>
+        <h4>${escapeHtml(c.Descripcion || c.SKU)}</h4>
+        ${c.Marca || c.Modelo ? `<p class="exploded-brand">${escapeHtml([c.Marca, c.Modelo].filter(Boolean).join(" · "))}</p>` : ""}
+        <div class="exploded-foot">
+          <span class="exploded-qty">${c.Cantidad || 1}×</span>
+          ${traits.length ? `<span class="exploded-traits">${traits.map(escapeHtml).join(" · ")}</span>` : ""}
+        </div>
+      </div>
+    </article>`;
+}
+
+/* Kit inferior / superior dentro de la misma Linea, ordenados por
+   potencia real de inversor (o precio si no hay inversor, caso
+   portatiles) -- nunca una eleccion arbitraria. Devuelve null si el
+   kit es el unico de su Linea o esta en un extremo. */
+function kitNeighbors(idx, kit) {
+  const sameLinea = idx.kits
+    .filter((k) => k.Linea === kit.Linea)
+    .map((k) => ({ k, rank: k.Potencia_Inversor_kW || k.Precio_Sugerido_Reventa_USD || 0 }))
+    .sort((a, b) => a.rank - b.rank);
+  const i = sameLinea.findIndex((r) => r.k.Kit_ID === kit.Kit_ID);
+  return {
+    inferior: i > 0 ? sameLinea[i - 1].k : null,
+    superior: i >= 0 && i < sameLinea.length - 1 ? sameLinea[i + 1].k : null,
+  };
+}
+
 function productCard(product, media) {
   const image = firstOf(media && media.Imagen_principal);
   return `
@@ -459,7 +527,7 @@ export function renderKitDetail(ctx, params) {
   }
   const market = state.market || config.Mercado_Default;
   const vm = buildKitViewModel(idx, kit.Kit_ID, { market });
-  const { catalog, included, optional, warrantyYears: warranty, price, name } = vm;
+  const { catalog, included, optional, warrantyYears: warranty, price, name, badges } = vm;
   const tagline = vm.subtitle;
   // La galeria SI puede mostrar fotos de componentes: aqui es honesto,
   // porque es literalmente "que trae el kit", no "una foto del kit".
@@ -472,18 +540,47 @@ export function renderKitDetail(ctx, params) {
   // comercial, no una biblioteca de PDFs. Esa documentacion vive en el
   // servicio profesional de Blueprint, no en el sitio publico.
 
+  // Resumen Comercial (Documento 04): datos calculados desde el BOM
+  // real, nunca inventados. Cantidad de paneles = suma de Cantidad de
+  // los componentes incluidos categoria "Panel Solar". Marca de
+  // inversor/bateria = la del componente incluido de esa categoria.
+  const panelCount = included.filter((c) => c.Categoria === "Panel Solar").reduce((s, c) => s + (c.Cantidad || 0), 0);
+  const inversorComp = included.find((c) => c.Categoria === "Inversor");
+  const bateriaComp = included.find((c) => c.Categoria === "Bateria");
+
+  // Garantias por componente (Documento 04: tarjetas Paneles / Inversor
+  // / Baterias). Se omite la categoria si el kit no tiene ese
+  // componente -- nunca se rellena con "Instalacion" u otro dato que
+  // no exista en la fuente.
+  const garantiaCats = [
+    ["Panel Solar", "Paneles", "panel"],
+    ["Inversor", "Inversor", "bolt"],
+    ["Bateria", "Baterías", "battery"],
+  ].map(([cat, label, ic]) => {
+    const comp = included.find((c) => c.Categoria === cat);
+    return comp && typeof comp.Garantia_Anios === "number" ? { label, ic, years: comp.Garantia_Anios, marca: comp.Marca } : null;
+  }).filter(Boolean);
+
+  const { inferior, superior } = kitNeighbors(idx, kit);
+  const compareVm = (k) => k ? buildKitViewModel(idx, k.Kit_ID, { market }) : null;
+  const vmInferior = compareVm(inferior);
+  const vmSuperior = compareVm(superior);
+
+  const shareUrl = `${location.origin}${location.pathname}#/kit/${encodeURIComponent(kit.Kit_ID)}`;
+
   ctx.container.innerHTML = `
     <div class="crumb wrap"><a href="#/kits">Kits</a> ${icon("chevronRight")} <span>${escapeHtml(kit.Linea || "")}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(name)}</span></div>
 
     <div class="wrap kit-top">
       <div class="gallery">
-        <div class="gallery-main">${kitMedia(catalog, name, "cover")}</div>
-        ${gallery.length ? `<div class="gallery-strip">${gallery.map((g) => mediaImage(g, name, "cover")).join("")}</div>` : ""}
+        <button type="button" class="gallery-main" data-lightbox-src="${escapeHtml(vm.image || "")}" data-lightbox-alt="${escapeHtml(name)}">${kitMedia(catalog, name, "cover")}</button>
+        ${gallery.length ? `<div class="gallery-strip">${gallery.map((g) => `<button type="button" data-lightbox-src="${escapeHtml(g)}" data-lightbox-alt="${escapeHtml(name)}">${mediaImage(g, name, "cover")}</button>`).join("")}</div>` : ""}
       </div>
       <aside class="buy-card">
         <span class="pill">${escapeHtml(kit.Linea || "Kit")}</span>
         <h1>${escapeHtml(name)}</h1>
         ${tagline ? `<p class="tagline">${escapeHtml(tagline)}</p>` : ""}
+        ${badges.length ? `<ul class="badge-list">${badges.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}</ul>` : ""}
         <div class="spec-grid">
           <div class="spec-item"><span class="k">${icon("panel")}Panel${termHint("panel")}</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
           <div class="spec-item"><span class="k">${icon("bolt")}Inversor${termHint("inversor")}</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
@@ -495,29 +592,76 @@ export function renderKitDetail(ctx, params) {
         <div class="actions-col">
           ${waButton(config, buildInquiryText(name, market, price), "Solicitar por WhatsApp")}
           <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
+          <button type="button" class="btn btn-ghost btn-sm" id="share-kit-btn" data-url="${escapeHtml(shareUrl)}">${icon("share")}Compartir kit</button>
         </div>
       </aside>
     </div>
 
+    <section class="section wrap" id="resumen">
+      <h3>Resumen comercial</h3>
+      <div class="resumen-grid">
+        <div class="resumen-item"><span class="k">Tipo de sistema</span><span class="v">${escapeHtml(kit.Tipo_Sistema || "—")}</span></div>
+        <div class="resumen-item"><span class="k">Cantidad de paneles</span><span class="v">${panelCount || "—"}</span></div>
+        <div class="resumen-item"><span class="k">Marca del inversor</span><span class="v">${escapeHtml(inversorComp?.Marca || "—")}</span></div>
+        <div class="resumen-item"><span class="k">Marca de batería</span><span class="v">${escapeHtml(bateriaComp?.Marca || "—")}</span></div>
+        <div class="resumen-item"><span class="k">Autonomía estimada</span><span class="v">${escapeHtml(vm.autonomia || "Consultar")}</span></div>
+        <div class="resumen-item"><span class="k">Garantía principal</span><span class="v">${warranty ? warranty + " años" : "Consultar"}</span></div>
+      </div>
+    </section>
+
     <div class="subnav wrap">
       <a href="#incluye">Que incluye</a><a href="#alimenta">Que puede alimentar</a>
-      <a href="#autonomia">Autonomia</a>${optional.length ? `<a href="#ampliaciones">Ampliaciones</a>` : ""}
+      <a href="#autonomia">Autonomia</a>${garantiaCats.length ? `<a href="#garantias">Garantías</a>` : ""}${(vmInferior || vmSuperior) ? `<a href="#comparar">Comparar</a>` : ""}${optional.length ? `<a href="#ampliaciones">Ampliaciones</a>` : ""}
     </div>
 
-    <section class="section wrap two-col">
-      <div id="incluye">
-        <h3>Que incluye</h3>
-        ${included.map((c) => `<div class="include-row">${icon("check")}<span>${c.Cantidad || 1}× ${escapeHtml(c.Descripcion || c.SKU)}</span></div>`).join("") || `<p class="muted">Sin datos de composicion.</p>`}
+    <section class="section wrap" id="incluye">
+      <h3>Que incluye — vista despiezada</h3>
+      <p class="muted" style="margin:4px 0 18px">Cada componente real del kit, tal como viene armado. Pulsa una imagen para ampliarla.</p>
+      <div class="exploded-grid">
+        ${included.map(explodedCard).join("") || `<p class="muted">Sin datos de composicion.</p>`}
       </div>
+    </section>
+
+    <section class="section wrap two-col">
       <div id="alimenta">
         <h3>Que puede alimentar</h3>
         ${feed.length
-          ? `<div class="power-grid">${feed.map((f) => `<div class="power-item">${icon("bolt")}<span>${escapeHtml(f)}</span></div>`).join("")}</div>`
+          ? `<div class="power-grid">${feed.map((f) => `<div class="power-item">${icon(powerIcon(f))}<span>${escapeHtml(f)}</span></div>`).join("")}</div>`
           : `<p class="muted">No hay detalle cargado para este kit todavia.</p>`}
-        <h3 style="margin-top:28px">Autonomia${termHint("autonomia")}</h3>
-        <p class="autonomy-text" id="autonomia">${escapeHtml(vm.autonomia || "Todavia no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
+      </div>
+      <div id="autonomia">
+        <h3>Autonomia${termHint("autonomia")}</h3>
+        <p class="autonomy-text">${escapeHtml(vm.autonomia || "Todavia no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
       </div>
     </section>
+
+    ${garantiaCats.length ? `
+    <section class="section wrap" id="garantias">
+      <h3>Garantías</h3>
+      <div class="garantia-grid">
+        ${garantiaCats.map((g) => `<div class="garantia-card"><span class="icon-circle">${icon(g.ic)}</span><h4>${escapeHtml(g.label)}</h4><p>${g.years} años${g.marca ? ` · ${escapeHtml(g.marca)}` : ""}</p></div>`).join("")}
+      </div>
+    </section>` : ""}
+
+    ${(vmInferior || vmSuperior) ? `
+    <section class="section wrap" id="comparar">
+      <h3>Comparación rápida</h3>
+      <p class="muted" style="margin:4px 0 18px">Solo información comercial — potencia, capacidad y garantía.</p>
+      <div class="compare-quick">
+        ${[vmInferior, vm, vmSuperior].map((v, i) => v ? `
+          <div class="compare-quick-col ${i === 1 ? "current" : ""}">
+            <span class="pill ${i === 1 ? "" : "pill-dark"}">${i === 0 ? "Un paso menos" : i === 2 ? "Un paso más" : "Este kit"}</span>
+            <h4>${escapeHtml(v.name)}</h4>
+            <div class="compare-quick-specs">
+              <div><span class="k">Panel</span><span class="v">${fmtNum(v.potenciaPanelKw)} kW</span></div>
+              <div><span class="k">Inversor</span><span class="v">${fmtNum(v.potenciaInversorKw)} kW</span></div>
+              <div><span class="k">Batería</span><span class="v">${fmtNum(v.bateriaKwh)} kWh</span></div>
+              <div><span class="k">Garantía</span><span class="v">${v.warrantyYears ? v.warrantyYears + " años" : "—"}</span></div>
+            </div>
+            ${i !== 1 ? `<a class="btn btn-ghost btn-sm" href="#/kit/${encodeURIComponent(v.id)}">Ver este kit</a>` : ""}
+          </div>` : "").join("")}
+      </div>
+    </section>` : ""}
 
     ${optional.length ? `
     <section class="section wrap" id="ampliaciones">
@@ -532,7 +676,66 @@ export function renderKitDetail(ctx, params) {
       <div><h3>¿Listo para tu independencia energetica?</h3><p class="muted">Un asesor tecnico te acompaña en todo el proceso.</p></div>
       <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
     </section>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Cerrar">${icon("close")}</button>
+      <img id="lightbox-img" src="" alt="">
+    </div>
   `;
+
+  wireLightbox(ctx.container);
+  wireShareButton(ctx.container);
+}
+
+/* Lightbox reutilizable (Documento 04 + 05): fondo oscuro, cierra con
+   ESC, click afuera, o el boton — nunca abre una pestana nueva. */
+function wireLightbox(container) {
+  const lb = container.querySelector("#lightbox");
+  if (!lb) return;
+  const imgEl = lb.querySelector("#lightbox-img");
+  function open(src, alt) {
+    if (!src) return;
+    imgEl.src = src;
+    imgEl.alt = alt || "";
+    lb.hidden = false;
+    document.body.classList.add("lightbox-open");
+  }
+  function close() {
+    lb.hidden = true;
+    imgEl.src = "";
+    document.body.classList.remove("lightbox-open");
+  }
+  container.querySelectorAll("[data-lightbox-src]").forEach((btn) => {
+    btn.addEventListener("click", () => open(btn.dataset.lightboxSrc, btn.dataset.lightboxAlt));
+  });
+  lb.querySelector("#lightbox-close").addEventListener("click", close);
+  lb.addEventListener("click", (e) => { if (e.target === lb) close(); });
+  document.addEventListener("keydown", function escHandler(e) {
+    if (e.key === "Escape") close();
+  });
+}
+
+/* Compartir kit (Documento 04): URL directa, nunca PDF. Web Share API
+   si el navegador la soporta; si no, copia el enlace al portapapeles
+   con confirmacion visible. */
+function wireShareButton(container) {
+  const btn = container.querySelector("#share-kit-btn");
+  if (!btn) return;
+  const url = btn.dataset.url;
+  const original = btn.innerHTML;
+  btn.addEventListener("click", async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({ url, title: document.title });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      btn.innerHTML = `${icon("check")}Enlace copiado`;
+      setTimeout(() => { btn.innerHTML = original; }, 2200);
+    } catch (err) {
+      // Cancelado por el usuario o sin permiso de portapapeles -- no es un error real.
+    }
+  });
 }
 
 /* =======================================================================
