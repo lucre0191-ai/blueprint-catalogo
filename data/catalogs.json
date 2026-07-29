@@ -13,13 +13,20 @@
     "Que_Puede_Alimentar": "(bloque no encontrado)",
     "Beneficios_Comerciales": "Respaldo automatico ante apagones. Reduce tu factura vendiendo el excedente de energia. Instalacion profesional incluida. Monitoreo de produccion en tiempo real.",
     "Garantia_Comercial": "(bloque no encontrado)",
-    "Imagen_Principal": "media_blueprint/kits/K5-HYBRID/hero_RD_ES.jpg",
+    "Imagen_Principal": null,
     "Imagen_Panel": "media_blueprint/SUNEVO-PAN-590W-001/principal.jpg",
     "Imagen_Inversor": "media_blueprint/SOLIS-INV-5KW-001/principal.jpg",
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SOLIS-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-5KW-001, SUNEVO-PKG-STD-001",
     "Orden": 1,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Tu día continúa, incluso cuando la red falla.",
+    "Descripcion_Comercial": "Combina generación solar, almacenamiento y respaldo para mantener tus actividades habituales con mayor estabilidad y aprovechar mejor tu propia energía.",
+    "Beneficio_01": "Mantiene cargas prioritarias en funcionamiento.",
+    "Beneficio_02": "Aprovecha la energía solar durante el día.",
+    "Beneficio_03": "Permite almacenar energía para usarla cuando sea necesaria.",
+    "Beneficio_04": "Monitoreo y control disponibles según el inversor incluido.",
+    "Beneficio_05": "Preparado para crecer con nuevas necesidades."
   },
   {
     "ID_Catalogo": "CAT-002",
@@ -29,19 +36,26 @@
     "Mercado": "Cuba",
     "Idioma": "Espanol",
     "Titulo": "Energia propia, sin depender de nadie",
-    "Subtitulo": "Soluciones solares para hogares, pequeños y grandes negocios con un solo click.",
+    "Subtitulo": "Sistema hibrido de 5kW para hogares y pequenos negocios en Cuba",
     "Descripcion_Corta": "Genera y almacena tu propia energia, con la tranquilidad de siempre tener respaldo.",
     "Ideal_Para": "(bloque no encontrado)",
     "Que_Puede_Alimentar": "(bloque no encontrado)",
     "Beneficios_Comerciales": "Respaldo automatico ante apagones frecuentes. Autonomia energetica real. Componentes de marca reconocida internacionalmente.",
     "Garantia_Comercial": "(bloque no encontrado)",
-    "Imagen_Principal": "media_blueprint/kits/K5-HYBRID/hero_CU_ES.jpg",
+    "Imagen_Principal": null,
     "Imagen_Panel": "media_blueprint/SUNEVO-PAN-590W-001/principal.jpg",
     "Imagen_Inversor": "media_blueprint/SOLIS-INV-5KW-001/principal.jpg",
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SOLIS-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-5KW-001, SUNEVO-PKG-STD-001",
     "Orden": 1,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Tu día continúa, incluso cuando la red falla.",
+    "Descripcion_Comercial": "Combina generación solar, almacenamiento y respaldo para mantener tus actividades habituales con mayor estabilidad y aprovechar mejor tu propia energía.",
+    "Beneficio_01": "Mantiene cargas prioritarias en funcionamiento.",
+    "Beneficio_02": "Aprovecha la energía solar durante el día.",
+    "Beneficio_03": "Permite almacenar energía para usarla cuando sea necesaria.",
+    "Beneficio_04": "Monitoreo y control disponibles según el inversor incluido.",
+    "Beneficio_05": "Preparado para crecer con nuevas necesidades."
   },
   {
     "ID_Catalogo": "CAT-004",
@@ -57,13 +71,20 @@
     "Que_Puede_Alimentar": "(bloque no encontrado)",
     "Beneficios_Comerciales": "Respaldo total para operacion comercial critica. Incluye cargador de vehiculo electrico. Monitoreo remoto por WiFi. Marca Solis, reconocida mundialmente.",
     "Garantia_Comercial": "(bloque no encontrado)",
-    "Imagen_Principal": "media_blueprint/kits/K10-HYBRID/hero_RD_ES.jpg",
+    "Imagen_Principal": null,
     "Imagen_Panel": "media_blueprint/SUNEVO-PAN-590W-002/principal.jpg",
     "Imagen_Inversor": "media_blueprint/SOLIS-INV-10KW-001/principal.jpg",
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, SOLIS-INV-10KW-001, SUNARK-BAT-1024-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-001, SUNARK-EVC-7KW-001",
     "Orden": 2,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "CAT-005",
@@ -79,13 +100,20 @@
     "Que_Puede_Alimentar": "(bloque no encontrado)",
     "Beneficios_Comerciales": "Sin instalacion fija. Portatil, se recarga con panel solar plegable opcional. Ideal como primera compra antes de decidir invertir en un sistema fijo.",
     "Garantia_Comercial": "(bloque no encontrado)",
-    "Imagen_Principal": "media_blueprint/kits/K-PORT-A5/hero_RD_ES.jpg",
+    "Imagen_Principal": null,
     "Imagen_Panel": null,
     "Imagen_Inversor": null,
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-500W-001, SUNEVO-CHG-100W-001",
     "Orden": 3,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K3-OFFGRID",
@@ -107,7 +135,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-3KW-001, SUNEVO-PKG-STD-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "La energía que necesitas cuando más la necesitas.",
+    "Descripcion_Comercial": "Mantén funcionando los equipos esenciales de tu hogar o pequeño negocio con una solución confiable, sencilla y preparada para crecer contigo.",
+    "Beneficio_01": "Respaldo automático ante interrupciones eléctricas.",
+    "Beneficio_02": "Protege los equipos esenciales del hogar o negocio.",
+    "Beneficio_03": "Instalación sencilla y preparada para una puesta en marcha ágil.",
+    "Beneficio_04": "Sistema ampliable si tus necesidades aumentan.",
+    "Beneficio_05": "Mayor tranquilidad frente a fallas de la red."
   },
   {
     "ID_Catalogo": "AUTO-K3-OFFGRID",
@@ -129,7 +164,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-3KW-001, SUNEVO-PKG-STD-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "La energía que necesitas cuando más la necesitas.",
+    "Descripcion_Comercial": "Mantén funcionando los equipos esenciales de tu hogar o pequeño negocio con una solución confiable, sencilla y preparada para crecer contigo.",
+    "Beneficio_01": "Respaldo automático ante interrupciones eléctricas.",
+    "Beneficio_02": "Protege los equipos esenciales del hogar o negocio.",
+    "Beneficio_03": "Instalación sencilla y preparada para una puesta en marcha ágil.",
+    "Beneficio_04": "Sistema ampliable si tus necesidades aumentan.",
+    "Beneficio_05": "Mayor tranquilidad frente a fallas de la red."
   },
   {
     "ID_Catalogo": "AUTO-K3-OFF-3KWINV",
@@ -151,7 +193,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-002/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-3KW-001, SUNARK-BAT-512-002, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-3KW-001, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "La energía que necesitas cuando más la necesitas.",
+    "Descripcion_Comercial": "Mantén funcionando los equipos esenciales de tu hogar o pequeño negocio con una solución confiable, sencilla y preparada para crecer contigo.",
+    "Beneficio_01": "Respaldo automático ante interrupciones eléctricas.",
+    "Beneficio_02": "Protege los equipos esenciales del hogar o negocio.",
+    "Beneficio_03": "Instalación sencilla y preparada para una puesta en marcha ágil.",
+    "Beneficio_04": "Sistema ampliable si tus necesidades aumentan.",
+    "Beneficio_05": "Mayor tranquilidad frente a fallas de la red."
   },
   {
     "ID_Catalogo": "AUTO-K3-OFF-3KWINV",
@@ -173,51 +222,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-002/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-3KW-001, SUNARK-BAT-512-002, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-3KW-001, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
-  },
-  {
-    "ID_Catalogo": "AUTO-K3-OFF-5KWINV",
-    "Kit_ID": "K3-OFF-5KWINV",
-    "Nombre_Comercial": "Respaldo Esencial 3K Plus",
-    "Categoria": "Respaldo",
-    "Mercado": "Cuba",
-    "Idioma": "Espanol",
-    "Titulo": "Respaldo Esencial 3K Plus",
-    "Subtitulo": "Off-Grid, Residencial basico",
-    "Descripcion_Corta": null,
-    "Ideal_Para": "Residencial basico",
-    "Que_Puede_Alimentar": "Nevera, luces, TV, router, ventiladores",
-    "Beneficios_Comerciales": null,
-    "Garantia_Comercial": null,
-    "Imagen_Principal": null,
-    "Imagen_Panel": "media_blueprint/SUNEVO-PAN-590W-001/principal.jpg",
-    "Imagen_Inversor": "media_blueprint/SUNARK-INV-5KW-001/principal.jpg",
-    "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
-    "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-3KW-001",
-    "Orden": 100,
-    "Estado": "Listo"
-  },
-  {
-    "ID_Catalogo": "AUTO-K3-OFF-5KWINV",
-    "Kit_ID": "K3-OFF-5KWINV",
-    "Nombre_Comercial": "Respaldo Esencial 3K Plus",
-    "Categoria": "Respaldo",
-    "Mercado": "Republica Dominicana",
-    "Idioma": "Espanol",
-    "Titulo": "Respaldo Esencial 3K Plus",
-    "Subtitulo": "Off-Grid, Residencial basico",
-    "Descripcion_Corta": null,
-    "Ideal_Para": "Residencial basico",
-    "Que_Puede_Alimentar": "Nevera, luces, TV, router, ventiladores",
-    "Beneficios_Comerciales": null,
-    "Garantia_Comercial": null,
-    "Imagen_Principal": null,
-    "Imagen_Panel": "media_blueprint/SUNEVO-PAN-590W-001/principal.jpg",
-    "Imagen_Inversor": "media_blueprint/SUNARK-INV-5KW-001/principal.jpg",
-    "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
-    "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-3KW-001",
-    "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "La energía que necesitas cuando más la necesitas.",
+    "Descripcion_Comercial": "Mantén funcionando los equipos esenciales de tu hogar o pequeño negocio con una solución confiable, sencilla y preparada para crecer contigo.",
+    "Beneficio_01": "Respaldo automático ante interrupciones eléctricas.",
+    "Beneficio_02": "Protege los equipos esenciales del hogar o negocio.",
+    "Beneficio_03": "Instalación sencilla y preparada para una puesta en marcha ágil.",
+    "Beneficio_04": "Sistema ampliable si tus necesidades aumentan.",
+    "Beneficio_05": "Mayor tranquilidad frente a fallas de la red."
   },
   {
     "ID_Catalogo": "AUTO-K5-OFFGRID",
@@ -239,7 +251,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-5KW-002, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Tu energía. Tus decisiones.",
+    "Descripcion_Comercial": "Genera, almacena y utiliza tu propia energía para reducir la dependencia de la red y disfrutar de una mayor independencia energética.",
+    "Beneficio_01": "Reduce la dependencia de la red eléctrica.",
+    "Beneficio_02": "Aprovecha mejor la energía solar disponible.",
+    "Beneficio_03": "Ofrece mayor estabilidad en zonas con suministro irregular.",
+    "Beneficio_04": "Sistema escalable según tus necesidades.",
+    "Beneficio_05": "Pensado para producir y almacenar energía todos los días."
   },
   {
     "ID_Catalogo": "AUTO-K5-OFFGRID",
@@ -261,7 +280,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-001, SUNARK-INV-5KW-001, SUNARK-BAT-512-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-5KW-002, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Tu energía. Tus decisiones.",
+    "Descripcion_Comercial": "Genera, almacena y utiliza tu propia energía para reducir la dependencia de la red y disfrutar de una mayor independencia energética.",
+    "Beneficio_01": "Reduce la dependencia de la red eléctrica.",
+    "Beneficio_02": "Aprovecha mejor la energía solar disponible.",
+    "Beneficio_03": "Ofrece mayor estabilidad en zonas con suministro irregular.",
+    "Beneficio_04": "Sistema escalable según tus necesidades.",
+    "Beneficio_05": "Pensado para producir y almacenar energía todos los días."
   },
   {
     "ID_Catalogo": "AUTO-K10-HYBRID",
@@ -283,7 +309,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, SOLIS-INV-10KW-001, SUNARK-BAT-1024-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-001, SUNARK-EVC-7KW-001, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "AUTO-K10-HYBRID-INH",
@@ -305,7 +338,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1600-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, INHNRG-INV-10KW-001, SUNARK-BAT-1600-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-001, SUNARK-EVC-7KW-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "AUTO-K10-HYBRID-INH",
@@ -327,7 +367,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1600-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, INHNRG-INV-10KW-001, SUNARK-BAT-1600-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-001, SUNARK-EVC-7KW-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "AUTO-K10-OFFGRID",
@@ -349,7 +396,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, SUNARK-INV-10KW-001, SUNARK-BAT-1024-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-002, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "AUTO-K10-OFFGRID",
@@ -371,7 +425,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, SUNARK-INV-10KW-001, SUNARK-BAT-1024-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-002, GEN-CMB-2IN2O-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-A1",
@@ -393,7 +454,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-200W-001, SUNEVO-CHG-100W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-A1",
@@ -415,7 +483,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-200W-001, SUNEVO-CHG-100W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-A5",
@@ -437,7 +512,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-500W-001, SUNEVO-CHG-100W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-A6",
@@ -459,7 +541,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-600W-001, SUNEVO-CHG-100W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-A6",
@@ -481,7 +570,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-600W-001, SUNEVO-CHG-100W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T11",
@@ -503,7 +599,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-1200W-001, SUNEVO-CHG-200W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T11",
@@ -525,7 +628,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-1200W-001, SUNEVO-CHG-200W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T20",
@@ -547,7 +657,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-2400W-001, SUNEVO-CHG-300W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T20",
@@ -569,7 +686,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-2400W-001, SUNEVO-CHG-300W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T30",
@@ -591,7 +715,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-3000W-001, SUNEVO-CHG-300W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T30",
@@ -613,7 +744,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-3000W-001, SUNEVO-CHG-300W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T50",
@@ -635,7 +773,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-5376W-001, SUNEVO-CHG-300W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K-PORT-T50",
@@ -657,7 +802,14 @@
     "Imagen_Bateria": null,
     "Componentes_SKU": "SUNARK-STA-5376W-001, SUNEVO-CHG-300W-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Energía donde la necesites.",
+    "Descripcion_Comercial": "Una solución portátil, práctica y lista para usar donde la necesites, sin instalaciones complejas y con la flexibilidad de llevar energía contigo.",
+    "Beneficio_01": "Lista para usar sin instalación fija.",
+    "Beneficio_02": "Fácil de transportar y conectar.",
+    "Beneficio_03": "Útil para emergencias, movilidad y trabajo remoto.",
+    "Beneficio_04": "Puede recargarse mediante red o energía solar según el modelo.",
+    "Beneficio_05": "Una forma práctica de comenzar con respaldo energético."
   },
   {
     "ID_Catalogo": "AUTO-K10-HYBRID-INH-10",
@@ -679,7 +831,14 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, INHNRG-INV-10KW-001, SUNARK-BAT-1024-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-001, SUNARK-EVC-7KW-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   },
   {
     "ID_Catalogo": "AUTO-K10-HYBRID-INH-10",
@@ -701,6 +860,13 @@
     "Imagen_Bateria": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
     "Componentes_SKU": "SUNEVO-PAN-590W-002, INHNRG-INV-10KW-001, SUNARK-BAT-1024-001, GEN-CAB-4MM-001, GEN-CON-30A-001, GEN-EST-10KW-001, SUNARK-EVC-7KW-001",
     "Orden": 100,
-    "Estado": "Listo"
+    "Estado": "Listo",
+    "Promesa_Valor": "Cuando tu operación no puede detenerse.",
+    "Descripcion_Comercial": "Diseñado para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger la productividad, el servicio y los ingresos.",
+    "Beneficio_01": "Mantiene cargas críticas y procesos prioritarios.",
+    "Beneficio_02": "Reduce el impacto operativo de las interrupciones.",
+    "Beneficio_03": "Monitoreo remoto disponible según la solución.",
+    "Beneficio_04": "Escalable para acompañar el crecimiento del negocio.",
+    "Beneficio_05": "Mayor control y confiabilidad para la operación diaria."
   }
 ]

@@ -230,6 +230,118 @@ export function kitWarrantyYears(idx, kitId) {
 }
 
 /* ---------------------------------------------------------------------
+   content_blocks.json — bloques reutilizables de texto aprobado
+   (Ideal_Para, Que_Puede_Alimentar, Garantia_Comercial, Disclaimer,
+   Llamado_a_la_Accion...). Sirven como red de respaldo REAL cuando
+   catalogs.json trae el campo vacio o roto ("(bloque no encontrado)",
+   ya neutralizado por clean()) — nunca para inventar texto nuevo, solo
+   para resolver contenido que ya existe aprobado en otro lugar del
+   sistema. Si tampoco hay bloque, se devuelve null y la vista debe
+   ocultar el elemento (ver Documento 07, Plano 03).
+   --------------------------------------------------------------------- */
+export function resolveContentBlock(idx, group, lang = "Español") {
+  if (!group) return null;
+  const rows = idx.contentBlocksByGroup.get(group) || [];
+  if (!rows.length) return null;
+  const forLang = rows.find((r) => r.Idioma === lang);
+  return clean((forLang || rows[0]).Texto);
+}
+
+/** NOTA: Descripcion_Corta y Beneficios_Comerciales por Linea ya se
+ *  resuelven del lado del Excel (hoja LINEAS_COMERCIALES, con
+ *  Promesa_Valor + Descripcion_Comercial + Beneficio_01..05 por Linea,
+ *  heredados por formula en las columnas "(auto)" de CATALOGO_MASTER).
+ *  No se duplica ese mecanismo aca con content_blocks.json — en cuanto
+ *  el exportador incluya esos campos en catalogs.json, buildKitViewModel()
+ *  los va a leer directo (ver mas abajo). Pendiente: actualizar
+ *  export_to_json.py para que sepa leer el nuevo esquema de
+ *  CATALOGO_MASTER/LINEAS_COMERCIALES — hoy sigue pensado para el
+ *  esquema anterior (Mod_7.xlsx). */
+
+/** ---------------------------------------------------------------------
+ *  Smart Kit View Model (Documento 07 — Data Binding & Smart Rendering).
+ *  ---------------------------------------------------------------------
+ *  Punto unico de combinacion de datos por kit: kits.json (identidad) +
+ *  catalogs.json via catalogFor() (contenido editorial del mercado) +
+ *  content_blocks.json (respaldo real cuando el catalogo no trae el
+ *  dato) + kit_components.json (piezas incluidas/opcionales) +
+ *  kitVisual() (imagen o mosaico honesto). Las vistas (kitCard,
+ *  renderKitDetail, etc.) consumen este objeto en vez de combinar JSON
+ *  directamente en el template — asi la jerarquia de fuentes vive en un
+ *  solo lugar, documentada, y no se repite ni se contradice entre
+ *  pantallas. Nunca inventa un valor: si ninguna fuente lo tiene, el
+ *  campo queda en null y la vista decide como degradar. */
+export function buildKitViewModel(idx, kitId, { market, lang = "Español" } = {}) {
+  const kit = idx.kitsById.get(kitId);
+  if (!kit) return null;
+
+  const catalog = catalogFor(idx, kitId, market);
+  const included = includedComponents(idx, kitId);
+  const optional = optionalComponents(idx, kitId);
+  const visual = kitVisual(catalog);
+
+  const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
+  const title = firstOf(catalog && catalog.Titulo, name);
+
+  // Promesa_Valor / Descripcion_Comercial / Beneficio_01..05: contenido
+  // por Linea que vive en la hoja LINEAS_COMERCIALES del Excel, heredado
+  // por formula en las columnas "(auto)" de CATALOGO_MASTER. AUN NO
+  // llega a catalogs.json — el exportador todavia no conoce el nuevo
+  // esquema (CATALOGO_MASTER / LINEAS_COMERCIALES). Los nombres de campo
+  // de aca abajo son el nombre esperado una vez actualizado el
+  // exportador (a confirmar contra su salida real, no inventar
+  // contenido si no llegan). Mientras tanto estas 4 lineas devuelven
+  // null/[] y todo sigue funcionando con el fallback de siempre.
+  const promesaValor = clean(catalog && catalog.Promesa_Valor);
+  const descripcionComercial = clean(catalog && catalog.Descripcion_Comercial);
+  const beneficiosList = [1, 2, 3, 4, 5]
+    .map((n) => catalog && catalog[`Beneficio_0${n}`])
+    .map(clean)
+    .filter(Boolean);
+
+  // Descripcion_Corta / Beneficios_Comerciales: primero el texto propio
+  // del kit si el Excel lo trae para un caso puntual, despues el
+  // contenido por Linea (Descripcion_Comercial / Beneficio_01..05) —
+  // nunca texto fabricado por el codigo (decision de la propietaria,
+  // Plano 03: esto se redacta por Linea, no por kit).
+  const description = firstOf(catalog && catalog.Descripcion_Corta, descripcionComercial, catalog && catalog.Subtitulo);
+  const subtitle = firstOf(catalog && catalog.Subtitulo, promesaValor, description, kit.Cliente_Objetivo);
+  const idealPara = firstOf(catalog && catalog.Ideal_Para, kit.Cliente_Objetivo);
+  const feedText = firstOf(catalog && catalog.Que_Puede_Alimentar, kit.Aplicaciones);
+  const feed = feedText ? feedText.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  const beneficiosRaw = clean(catalog && catalog.Beneficios_Comerciales);
+  const beneficios = firstOf(beneficiosRaw, beneficiosList.length ? beneficiosList.join(" ") : null);
+  const warrantyYears = kitWarrantyYears(idx, kitId);
+  // Garantia_Comercial casi nunca esta cargada por kit todavia — cae al
+  // bloque generico GARANTIA_ESTANDAR (texto real, aprobado, el mismo
+  // que ya existe en content_blocks.json) en vez de mostrar el campo
+  // vacio o el marcador roto del Excel.
+  const garantiaComercial = firstOf(
+    catalog && catalog.Garantia_Comercial,
+    resolveContentBlock(idx, "GARANTIA_ESTANDAR", lang)
+  );
+  const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
+
+  return {
+    id: kit.Kit_ID,
+    kit, catalog,
+    market: (catalog && catalog.Mercado) || market || null,
+    name, title, subtitle, description, idealPara, feed, beneficios,
+    promesaValor, beneficiosList,
+    linea: kit.Linea || null,
+    tipoSistema: kit.Tipo_Sistema || null,
+    potenciaPanelKw: typeof kit.Potencia_Panel_kW === "number" ? kit.Potencia_Panel_kW : null,
+    potenciaInversorKw: typeof kit.Potencia_Inversor_kW === "number" ? kit.Potencia_Inversor_kW : null,
+    bateriaKwh: typeof kit.Bateria_kWh === "number" ? kit.Bateria_kWh : null,
+    autonomia: clean(kit.Autonomia_Aprox),
+    warrantyYears, garantiaComercial,
+    price, currency: "USD",
+    image: visual.image, mosaic: visual.mosaic,
+    included, optional,
+  };
+}
+
+/* ---------------------------------------------------------------------
    Router hash-based: compatible con GitHub Pages (sin backend, sin
    configuracion de servidor). Formato: #/ruta/param
    --------------------------------------------------------------------- */

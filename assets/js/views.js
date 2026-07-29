@@ -9,7 +9,7 @@
 import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
-  kitWarrantyYears, kitVisual, state,
+  kitWarrantyYears, kitVisual, buildKitViewModel, state,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -83,33 +83,29 @@ function computeStats(idx) {
 /* =======================================================================
    TARJETAS REUTILIZABLES
    ======================================================================= */
-function kitCard(idx, kit, catalogEntry, config) {
-  const name = firstOf(catalogEntry && catalogEntry.Nombre_Comercial, kit.Nombre_Comercial);
-  const title = firstOf(catalogEntry && catalogEntry.Titulo, name);
-  const subtitle = firstOf(catalogEntry && catalogEntry.Subtitulo, catalogEntry && catalogEntry.Descripcion_Corta, kit.Cliente_Objetivo);
-  const feedRaw = firstOf(catalogEntry && catalogEntry.Que_Puede_Alimentar, kit.Aplicaciones) || "";
-  const feed = feedRaw.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 4);
-  const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
-  const market = catalogEntry ? catalogEntry.Mercado : null;
-
+/** Recibe un View Model ya armado (ver buildKitViewModel() en core.js).
+ *  No combina JSON directamente: toda la jerarquia de fuentes vive en
+ *  un solo lugar (Documento 07, Plano 03). */
+function kitCard(vm) {
+  const feed = vm.feed.slice(0, 4);
   return `
-    <article class="kit-card" data-kit-id="${escapeHtml(kit.Kit_ID)}">
-      <a class="kit-media" href="#/kit/${encodeURIComponent(kit.Kit_ID)}">
-        ${kitMedia(catalogEntry, name, "cover", true)}
-        <span class="pill pill-dark">${escapeHtml(kit.Linea || "Kit")}</span>
+    <article class="kit-card" data-kit-id="${escapeHtml(vm.id)}">
+      <a class="kit-media" href="#/kit/${encodeURIComponent(vm.id)}">
+        ${kitMedia(vm.catalog, vm.name, "cover", true)}
+        <span class="pill pill-dark">${escapeHtml(vm.linea || "Kit")}</span>
       </a>
       <div class="kit-body">
-        <h3 class="kit-title"><a href="#/kit/${encodeURIComponent(kit.Kit_ID)}">${escapeHtml(title)}</a></h3>
-        ${subtitle ? `<p class="kit-sub">${escapeHtml(subtitle)}</p>` : ""}
+        <h3 class="kit-title"><a href="#/kit/${encodeURIComponent(vm.id)}">${escapeHtml(vm.title)}</a></h3>
+        ${vm.subtitle ? `<p class="kit-sub">${escapeHtml(vm.subtitle)}</p>` : ""}
         ${feed.length ? `<ul class="tag-list">${feed.map((f) => `<li>${escapeHtml(f)}</li>`).join("")}</ul>` : ""}
         <div class="kit-specs">
-          <div class="cell"><span class="v">${fmtNum(kit.Potencia_Panel_kW)}</span><span class="k">kW panel${termHint("panel")}</span></div>
-          <div class="cell"><span class="v">${fmtNum(kit.Potencia_Inversor_kW)}</span><span class="k">kW inversor${termHint("inversor")}</span></div>
-          <div class="cell"><span class="v">${fmtNum(kit.Bateria_kWh)}</span><span class="k">kWh bateria${termHint("bateria")}</span></div>
+          <div class="cell"><span class="v">${fmtNum(vm.potenciaPanelKw)}</span><span class="k">kW panel${termHint("panel")}</span></div>
+          <div class="cell"><span class="v">${fmtNum(vm.potenciaInversorKw)}</span><span class="k">kW inversor${termHint("inversor")}</span></div>
+          <div class="cell"><span class="v">${fmtNum(vm.bateriaKwh)}</span><span class="k">kWh bateria${termHint("bateria")}</span></div>
         </div>
         <div class="kit-foot">
-          <div class="kit-price">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Consultar</span>`}</div>
-          <a class="btn btn-ghost btn-sm" href="#/kit/${encodeURIComponent(kit.Kit_ID)}">Ver solucion ${icon("arrowRight")}</a>
+          <div class="kit-price">${vm.price ? `<span class="amount">$${vm.price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Consultar</span>`}</div>
+          <a class="btn btn-ghost btn-sm" href="#/kit/${encodeURIComponent(vm.id)}">Ver solucion ${icon("arrowRight")}</a>
         </div>
       </div>
     </article>`;
@@ -267,7 +263,7 @@ export function renderHome(ctx) {
       </div>
       <div class="kit-grid">
         ${destacados.length
-          ? destacados.map((c) => kitCard(idx, idx.kitsById.get(c.Kit_ID) || {}, c, config)).join("")
+          ? destacados.map((c) => kitCard(buildKitViewModel(idx, c.Kit_ID, { market }))).join("")
           : `<div class="state-msg">Todavia no tenemos soluciones cargadas para ${escapeHtml(market || "esta zona")}. Escribinos y te ayudamos igual.</div>`}
       </div>
     </section>
@@ -331,7 +327,7 @@ export function renderKits(ctx) {
   function paint() {
     const rows = rowsFor(state.market, state.lineaFilter, state.searchQuery);
     ctx.container.querySelector("#kits-grid").innerHTML = rows.length
-      ? rows.map((c) => kitCard(idx, idx.kitsById.get(c.Kit_ID) || {}, c, config)).join("")
+      ? rows.map((c) => kitCard(buildKitViewModel(idx, c.Kit_ID, { market: state.market }))).join("")
       : `<div class="state-msg">No encontramos soluciones con esos filtros para <strong>${escapeHtml(state.market || "")}</strong>. Probá con otra palabra o escribinos por WhatsApp.</div>`;
     ctx.container.querySelector("#kits-count").textContent = `${rows.length} solucion${rows.length === 1 ? "" : "es"} encontrada${rows.length === 1 ? "" : "s"}`;
   }
@@ -394,30 +390,19 @@ export function renderKitDetail(ctx, params) {
     return;
   }
   const market = state.market || config.Mercado_Default;
-  const catalog = catalogFor(idx, kit.Kit_ID, market);
-  const included = includedComponents(idx, kit.Kit_ID);
-  const optional = optionalComponents(idx, kit.Kit_ID);
-  const warranty = kitWarrantyYears(idx, kit.Kit_ID);
-  const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
-  const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
-  const tagline = firstOf(catalog && catalog.Subtitulo, catalog && catalog.Descripcion_Corta, kit.Cliente_Objetivo);
+  const vm = buildKitViewModel(idx, kit.Kit_ID, { market });
+  const { catalog, included, optional, warrantyYears: warranty, price, name } = vm;
+  const tagline = vm.subtitle;
   // La galeria SI puede mostrar fotos de componentes: aqui es honesto,
   // porque es literalmente "que trae el kit", no "una foto del kit".
   const gallery = [catalog && catalog.Imagen_Panel, catalog && catalog.Imagen_Inversor, catalog && catalog.Imagen_Bateria, ...included.map((c) => c.Imagen)]
     .map((p) => clean(p)).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).slice(0, 5);
-  const feedText = firstOf(catalog && catalog.Que_Puede_Alimentar, kit.Aplicaciones);
-  const feed = feedText ? feedText.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  const feed = vm.feed;
 
-  const docs = [];
-  included.forEach((c) => {
-    const m = idx.mediaBySku.get(c.SKU);
-    const b = idx.bibliotecaBySku.get(c.SKU);
-    [["Datasheet", m && m.Datasheet], ["Manual", m && m.Manual], ["Catalogo", m && m.Catalogo],
-     ["Certificados", m && m.Certificados], ["Video", m && m.Video],
-     ["Datasheet", b && b.Datasheet_URL], ["Manual", b && b.Manual_URL],
-     ["Certificados", b && b.Certificados_URL], ["Video", b && b.Video_URL]]
-      .forEach(([label, url]) => { const u = clean(url); if (u) docs.push({ label, url: u, sku: c.SKU }); });
-  });
+  // Nunca fichas tecnicas ni manuales publicos aca (Decision de
+  // Arquitectura #003, Plano 03-03): esta pantalla es una experiencia
+  // comercial, no una biblioteca de PDFs. Esa documentacion vive en el
+  // servicio profesional de Blueprint, no en el sitio publico.
 
   ctx.container.innerHTML = `
     <div class="crumb wrap"><a href="#/kits">Kits</a> ${icon("chevronRight")} <span>${escapeHtml(kit.Linea || "")}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(name)}</span></div>
@@ -437,6 +422,7 @@ export function renderKitDetail(ctx, params) {
           <div class="spec-item"><span class="k">${icon("battery")}Bateria${termHint("bateria")}</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
           <div class="spec-item"><span class="k">${icon("shield")}Garantia${termHint("garantia")}</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
         </div>
+        ${vm.garantiaComercial ? `<p class="warranty-note muted" style="font-size:13px;margin-top:-6px">${escapeHtml(vm.garantiaComercial)}</p>` : ""}
         <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
         <div class="actions-col">
           ${waButton(config, buildInquiryText(name, market, price), "Solicitar por WhatsApp")}
@@ -447,7 +433,7 @@ export function renderKitDetail(ctx, params) {
 
     <div class="subnav wrap">
       <a href="#incluye">Que incluye</a><a href="#alimenta">Que puede alimentar</a>
-      <a href="#autonomia">Autonomia</a>${optional.length ? `<a href="#ampliaciones">Ampliaciones</a>` : ""}${docs.length ? `<a href="#documentos">Documentos</a>` : ""}
+      <a href="#autonomia">Autonomia</a>${optional.length ? `<a href="#ampliaciones">Ampliaciones</a>` : ""}
     </div>
 
     <section class="section wrap two-col">
@@ -461,7 +447,7 @@ export function renderKitDetail(ctx, params) {
           ? `<div class="power-grid">${feed.map((f) => `<div class="power-item">${icon("bolt")}<span>${escapeHtml(f)}</span></div>`).join("")}</div>`
           : `<p class="muted">No hay detalle cargado para este kit todavia.</p>`}
         <h3 style="margin-top:28px">Autonomia${termHint("autonomia")}</h3>
-        <p class="autonomy-text" id="autonomia">${escapeHtml(kit.Autonomia_Aprox || "Todavia no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
+        <p class="autonomy-text" id="autonomia">${escapeHtml(vm.autonomia || "Todavia no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
       </div>
     </section>
 
@@ -471,14 +457,6 @@ export function renderKitDetail(ctx, params) {
       <p class="muted" style="margin:4px 0 18px">Componentes opcionales reales de este kit, no genericos.</p>
       <div class="upgrade-grid">
         ${optional.map((c) => `<div class="upgrade-card"><span class="icon-circle sm">${icon("bolt")}</span><h4>${escapeHtml(c.Descripcion || c.SKU)}</h4><p>${escapeHtml(c.Categoria || "")}${c.Potencia_W ? " · " + c.Potencia_W + " W" : ""}</p><a href="#/producto/${encodeURIComponent(c.SKU)}" class="btn btn-ghost btn-sm">Ver componente</a></div>`).join("")}
-      </div>
-    </section>` : ""}
-
-    ${docs.length ? `
-    <section class="section wrap" id="documentos">
-      <h3>Documentos</h3>
-      <div class="doc-list">
-        ${docs.map((d) => `<a class="doc-row" href="${escapeHtml(d.url)}" target="_blank" rel="noopener">${icon("file")}<span>${escapeHtml(d.label)} — ${escapeHtml(d.sku)}</span>${icon("download")}</a>`).join("")}
       </div>
     </section>` : ""}
 
@@ -1154,7 +1132,7 @@ export function renderDiagnostico(ctx, params) {
         ${sugerencia ? `<div class="diag-suggestion">${icon("sparkles")}<p>${escapeHtml(sugerencia)}</p></div>` : ""}
 
         <div class="kit-grid">
-          ${top.map(({ kit }) => kitCard(idx, kit, catalogFor(idx, kit.Kit_ID, market), config)).join("")}
+          ${top.map(({ kit }) => kitCard(buildKitViewModel(idx, kit.Kit_ID, { market }))).join("")}
         </div>
 
         ${accesorios.length ? `

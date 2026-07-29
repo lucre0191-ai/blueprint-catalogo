@@ -189,48 +189,6 @@
     "Descripcion": "Estructura 3kW"
   },
   {
-    "Kit_ID": "K3-OFF-5KWINV",
-    "SKU": "SUNEVO-PAN-590W-001",
-    "Cantidad": 6,
-    "Categoria": "Panel Solar",
-    "Descripcion": "Panel SunEvo 590W HBD"
-  },
-  {
-    "Kit_ID": "K3-OFF-5KWINV",
-    "SKU": "SUNARK-INV-5KW-001",
-    "Cantidad": 1,
-    "Categoria": "Inversor",
-    "Descripcion": "SunArk HSI 5000U"
-  },
-  {
-    "Kit_ID": "K3-OFF-5KWINV",
-    "SKU": "SUNARK-BAT-512-001",
-    "Cantidad": 1,
-    "Categoria": "Bateria",
-    "Descripcion": "SunArk 5.12kWh 51.2V"
-  },
-  {
-    "Kit_ID": "K3-OFF-5KWINV",
-    "SKU": "GEN-CAB-4MM-001",
-    "Cantidad": 100,
-    "Categoria": "Cable",
-    "Descripcion": "Cable Solar 4mm2"
-  },
-  {
-    "Kit_ID": "K3-OFF-5KWINV",
-    "SKU": "GEN-CON-30A-001",
-    "Cantidad": 10,
-    "Categoria": "Conector",
-    "Descripcion": "Conector MC4 30A"
-  },
-  {
-    "Kit_ID": "K3-OFF-5KWINV",
-    "SKU": "GEN-EST-3KW-001",
-    "Cantidad": 1,
-    "Categoria": "Estructura",
-    "Descripcion": "Estructura 3kW"
-  },
-  {
     "Kit_ID": "K5-OFFGRID",
     "SKU": "SUNEVO-PAN-590W-001",
     "Cantidad": 10,
