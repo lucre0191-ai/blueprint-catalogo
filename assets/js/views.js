@@ -9,7 +9,7 @@
 import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
-  kitWarrantyYears, kitVisual, buildKitViewModel, state,
+  kitWarrantyYears, kitVisual, buildKitViewModel, resolveContentBlock, state,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, generateTechnicalPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -88,6 +88,11 @@ function computeStats(idx) {
  *  un solo lugar (Documento 07, Plano 03). */
 function kitCard(vm) {
   const feed = vm.feed.slice(0, 4);
+  // Beneficio principal: 1 sola linea, el primer beneficio real (por
+  // Linea, via LINEAS_COMERCIALES) o la descripcion corta si el kit
+  // tiene una propia -- nunca un parrafo largo en la tarjeta.
+  const beneficioPrincipal = vm.beneficiosList[0] || vm.description;
+  const badges = vm.badges.slice(0, 4);
   return `
     <article class="kit-card" data-kit-id="${escapeHtml(vm.id)}">
       <a class="kit-media" href="#/kit/${encodeURIComponent(vm.id)}">
@@ -98,6 +103,8 @@ function kitCard(vm) {
         <h3 class="kit-title"><a href="#/kit/${encodeURIComponent(vm.id)}">${escapeHtml(vm.title)}</a></h3>
         ${vm.subtitle ? `<p class="kit-sub">${escapeHtml(vm.subtitle)}</p>` : ""}
         ${feed.length ? `<ul class="tag-list">${feed.map((f) => `<li>${escapeHtml(f)}</li>`).join("")}</ul>` : ""}
+        ${beneficioPrincipal ? `<p class="kit-benefit">${icon("sparkles")}${escapeHtml(beneficioPrincipal)}</p>` : ""}
+        ${badges.length ? `<ul class="badge-list">${badges.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}</ul>` : ""}
         <div class="kit-specs">
           <div class="cell"><span class="v">${fmtNum(vm.potenciaPanelKw)}</span><span class="k">kW panel${termHint("panel")}</span></div>
           <div class="cell"><span class="v">${fmtNum(vm.potenciaInversorKw)}</span><span class="k">kW inversor${termHint("inversor")}</span></div>
@@ -332,7 +339,32 @@ export function renderKits(ctx) {
     ctx.container.querySelector("#kits-count").textContent = `${rows.length} solucion${rows.length === 1 ? "" : "es"} encontrada${rows.length === 1 ? "" : "s"}`;
   }
 
+  const stats = computeStats(idx);
+  const cta = resolveContentBlock(idx, "CTA_EVALUACION");
+  const disclaimer = resolveContentBlock(idx, "DISCLAIMER_DISPONIBILIDAD");
+
   ctx.container.innerHTML = `
+    <section class="cat-hero wrap">
+      <div class="cat-hero-text">
+        <span class="pill">Showroom Blueprint</span>
+        <h1>Explora soluciones, no productos sueltos</h1>
+        <p class="desc">Cada kit es una solucion completa pensada para un tipo de necesidad. Compara, elegi la que se ajusta a tu situacion, y pedi tu cotizacion en el momento.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnostico</a>
+          <a class="btn btn-ghost" href="#comparador">${icon("scale")}Comparar soluciones</a>
+        </div>
+        <ul class="cat-indicadores">
+          <li>${icon("layers")}<span><strong>${stats.kitCount}</strong> soluciones disenadas</span></li>
+          <li>${icon("award")}<span>Hasta <strong>${stats.maxWarranty}</strong> anios de garantia</span></li>
+          <li>${icon("scale")}<span>Disponible en <strong>${stats.marketCount}</strong> mercado${stats.marketCount === 1 ? "" : "s"}</span></li>
+          <li>${icon("shield")}<span>Soporte real por WhatsApp</span></li>
+        </ul>
+      </div>
+      <div class="cat-hero-media">
+        <img src="assets/img/scene-industrial.jpg" alt="Instalacion solar Blueprint en funcionamiento" loading="eager">
+      </div>
+    </section>
+
     <section class="section wrap">
       <div class="section-head">
         <div><h2>Todas las soluciones</h2><p class="desc">El precio es orientativo y no incluye instalacion, salvo que se indique lo contrario.</p></div>
@@ -343,7 +375,7 @@ export function renderKits(ctx) {
         </div>
         <div class="chip-row" id="linea-chips">
           <button class="chip ${!state.lineaFilter ? "on" : ""}" data-linea="">Todas</button>
-          ${lineas.map((l) => `<button class="chip ${state.lineaFilter === l ? "on" : ""}" data-linea="${escapeHtml(l)}">${escapeHtml(l)}</button>`).join("")}
+          ${lineas.map((l) => `<button class="chip ${state.lineaFilter === l ? "on" : ""}" data-linea="${escapeHtml(l)}">${escapeHtml(DIAG_LINEA_LABEL[l] || l)}</button>`).join("")}
         </div>
         <form class="search-inline" id="kits-search">
           <span class="sb-icon">${icon("search")}</span>
@@ -353,6 +385,42 @@ export function renderKits(ctx) {
       </div>
       <div class="kit-grid" id="kits-grid"></div>
     </section>
+
+    <section class="section wrap">
+      <div class="section-head"><div><h2>Por que elegir Blueprint</h2></div></div>
+      <div class="benefit-grid">
+        <div class="benefit"><span class="icon-circle">${icon("award")}</span><div><h4>Garantia real de fabrica</h4><p>Hasta ${stats.maxWarranty} anios segun el componente, nunca una promesa generica.</p></div></div>
+        <div class="benefit"><span class="icon-circle">${icon("scale")}</span><div><h4>Comparas antes de decidir</h4><p>El comparador te muestra diferencias reales entre soluciones, sin tecnicismos.</p></div></div>
+        <div class="benefit"><span class="icon-circle">${icon("bolt")}</span><div><h4>Diagnostico honesto</h4><p>Te recomendamos segun tu necesidad real, con nivel de confianza calculado, no adivinado.</p></div></div>
+        <div class="benefit"><span class="icon-circle">${icon("shield")}</span><div><h4>Acompanamiento humano</h4><p>Un asesor real responde tus preguntas por WhatsApp antes y despues de comprar.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section wrap">
+      <div class="section-head"><div><h2>Como funciona</h2></div></div>
+      <div class="proceso-grid">
+        <div class="proceso-step"><span class="proceso-num">1</span><h4>Elegis o te diagnosticamos</h4><p>Explora el catalogo libremente o dejanos recomendarte segun tu necesidad.</p></div>
+        <div class="proceso-step"><span class="proceso-num">2</span><h4>Comparas si queres</h4><p>Poné dos o tres soluciones lado a lado antes de decidir.</p></div>
+        <div class="proceso-step"><span class="proceso-num">3</span><h4>Pedis tu cotizacion</h4><p>Generamos el documento con datos reales, o hablas directo por WhatsApp.</p></div>
+        <div class="proceso-step"><span class="proceso-num">4</span><h4>Instalacion coordinada</h4><p>Un asesor te acompana en la puesta en marcha.</p></div>
+      </div>
+    </section>
+
+    <section class="section wrap">
+      <div class="section-head"><div><h2>Preguntas frecuentes</h2></div></div>
+      <div class="faq-list">
+        <details class="faq-item"><summary>El precio incluye instalacion?</summary><p>El precio mostrado es orientativo y no incluye instalacion, salvo que se indique lo contrario en la ficha del kit.</p></details>
+        ${disclaimer ? `<details class="faq-item"><summary>Los componentes pueden variar?</summary><p>${escapeHtml(disclaimer)}</p></details>` : ""}
+        <details class="faq-item"><summary>No estoy seguro que kit necesito, que hago?</summary><p>Arranca por el <a href="#diagnostico">diagnostico</a>: en unos pasos te recomendamos una solucion con nivel de confianza real, calculado sobre tus respuestas.</p></details>
+        <details class="faq-item"><summary>Como pido mas informacion?</summary><p>Escribinos directo por WhatsApp desde cualquier ficha de kit, o desde <a href="#contacto">Contacto</a>.</p></details>
+      </div>
+    </section>
+
+    ${cta ? `
+    <section class="cta-band wrap">
+      <div><h3>${escapeHtml(cta)}</h3></div>
+      ${waButton(config, "Hola, quiero una evaluacion de mi consumo electrico antes de elegir un kit.", "Hablar con un asesor")}
+    </section>` : ""}
   `;
 
   paint();

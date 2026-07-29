@@ -408,13 +408,75 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .glossary-item h3 { font-size: 14.5px; margin: 0 0 8px; color: var(--verde-energia); }
 .glossary-item p { font-size: 13.5px; color: var(--text-muted); margin: 0; line-height: 1.6; }
 
+/* ---------- catalogo: hero + indicadores (Documento 02) ---------- */
+/* Imagen ~60%, texto ~40% -- nunca al reves (Documento 02). En mobile
+   se apila, la imagen conserva protagonismo. */
+.cat-hero { display: grid; grid-template-columns: 1fr; gap: 28px; padding: 40px 0 8px; align-items: center; }
+@media (min-width: 900px) { .cat-hero { grid-template-columns: 2fr 3fr; gap: 40px; } }
+.cat-hero-text h1 { font-size: clamp(26px, 4.4vw, 40px); line-height: 1.08; margin: 10px 0 14px; }
+.cat-hero-media { border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/3; border: 1px solid var(--line); }
+.cat-hero-media img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 900px) { .cat-hero-media { aspect-ratio: 16/11; } }
+
+/* Indicadores rapidos: elegantes, nunca tarjetas (Documento 02). */
+.cat-indicadores { list-style: none; margin: 22px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 12px; }
+.cat-indicadores li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--text-muted); }
+.cat-indicadores .ic svg { width: 16px; height: 16px; color: var(--verde-energia); }
+.cat-indicadores strong { color: var(--text-primary); font-family: var(--font-mono); }
+@media (min-width: 640px) { .cat-indicadores { flex-direction: row; flex-wrap: wrap; gap: 22px; } }
+
+/* Proceso de compra: pasos numerados, sin adornos innecesarios. */
+.proceso-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 700px) { .proceso-grid { grid-template-columns: repeat(4, 1fr); } }
+.proceso-step { position: relative; padding-top: 6px; }
+.proceso-num { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--bg-surface-2); border: 1px solid var(--verde-energia); color: var(--verde-energia); font-family: var(--font-mono); font-weight: 700; font-size: 13px; margin-bottom: 10px; }
+.proceso-step h4 { font-size: 14.5px; margin: 0 0 6px; }
+.proceso-step p { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin: 0; }
+
+/* FAQ: <details>/<summary> nativo -- accesible por teclado sin JS. */
+.faq-list { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+.faq-item { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px 18px; }
+.faq-item summary { cursor: pointer; padding: 14px 0; font-size: 14.5px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; font-family: var(--font-mono); font-size: 18px; color: var(--text-muted); }
+.faq-item[open] summary::after { content: "\2212"; }
+.faq-item p { color: var(--text-muted); font-size: 13.5px; line-height: 1.6; margin: 0 0 16px; }
+.faq-item a { color: var(--verde-energia); }
+
 /* ---------- kit / product cards ---------- */
 .kit-grid, .grid-products { display: grid; grid-template-columns: 1fr; gap: 18px; }
 @media (min-width: 640px) { .kit-grid, .grid-products { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1040px) { .kit-grid, .grid-products { grid-template-columns: repeat(3, 1fr); } }
 
-.kit-card, .prod-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
-.kit-card:hover, .prod-card:hover { border-color: var(--line-bright); transform: translateY(-2px); }
+/* Tarjetas Inteligentes (Documento 03 + Documento 05 — Motion &
+   Experience): la imagen domina, el hover es sutil (elevacion + brillo
+   de borde + zoom minimo de imagen, 180-250ms), y la aparicion es
+   escalonada -- nunca todas las tarjetas a la vez. prefers-reduced-motion
+   (regla global arriba) ya colapsa animation/transition-duration a ~0,
+   asi que esto degrada solo a un fade sin necesidad de una rama aparte. */
+.kit-card, .prod-card {
+  background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+  animation: card-reveal .4s ease both;
+}
+.kit-card:hover, .prod-card:hover {
+  border-color: var(--verde-energia);
+  transform: translateY(-7px);
+  box-shadow: 0 14px 32px -14px rgba(0,0,0,.5), 0 0 0 1px rgba(34,197,94,.25), 0 0 26px -6px rgba(34,197,94,.35);
+}
+.kit-card:hover .kit-media img, .prod-card:hover .prod-media img { transform: scale(1.02); }
+
+@keyframes card-reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+/* Escalonado via nth-child: nunca todas las tarjetas aparecen juntas. */
+.kit-grid .kit-card:nth-child(1), .grid-products .prod-card:nth-child(1) { animation-delay: 0ms; }
+.kit-grid .kit-card:nth-child(2), .grid-products .prod-card:nth-child(2) { animation-delay: 60ms; }
+.kit-grid .kit-card:nth-child(3), .grid-products .prod-card:nth-child(3) { animation-delay: 120ms; }
+.kit-grid .kit-card:nth-child(4), .grid-products .prod-card:nth-child(4) { animation-delay: 180ms; }
+.kit-grid .kit-card:nth-child(5), .grid-products .prod-card:nth-child(5) { animation-delay: 240ms; }
+.kit-grid .kit-card:nth-child(6), .grid-products .prod-card:nth-child(6) { animation-delay: 300ms; }
+.kit-grid .kit-card:nth-child(n+7), .grid-products .prod-card:nth-child(n+7) { animation-delay: 340ms; }
+
 .kit-media, .prod-media { position: relative; aspect-ratio: 16/10; background: var(--bg-surface-2); overflow: hidden; display: block; }
 .media-ph { width: 100%; height: 100%; }
 /* Fotos reales: siempre se ven completas, nunca estiradas ni recortadas.
@@ -422,6 +484,7 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
    entera, aunque su proporcion no coincida con la del recuadro. */
 .kit-media img, .prod-media img, .gallery-main img, .gallery-strip img {
   width: 100%; height: 100%; object-fit: contain; object-position: center; display: block;
+  transition: transform .25s ease;
 }
 .media-ph {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-faint);
@@ -452,8 +515,22 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .kit-body, .prod-body { padding: 18px 18px 20px; display: flex; flex-direction: column; flex: 1; gap: 4px; }
 .kit-title, .prod-title { font-size: 19px; line-height: 1.1; margin-bottom: 4px; }
 .kit-sub, .prod-sub { color: var(--text-muted); font-size: 13.5px; margin-bottom: 10px; }
+.kit-benefit { display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; color: var(--text-primary); margin: 0 0 12px; line-height: 1.4; }
+.kit-benefit .ic { flex: none; margin-top: 1px; }
+.kit-benefit .ic svg { width: 13px; height: 13px; color: var(--verde-energia); }
 .tag-list { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .tag-list li { font-family: var(--font-mono); font-size: 11px; background: var(--bg-surface-2); border: 1px solid var(--line); padding: 4px 9px; border-radius: var(--radius); }
+
+/* Insignias comerciales (Documento 03): datos reales del kit, nunca
+   specs electricas. Solo cambian ligeramente de color al pasar el
+   cursor -- nunca saltan ni crecen (Documento 05). */
+.badge-list { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.badge-list li {
+  font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .03em;
+  color: var(--verde-energia); background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3);
+  padding: 4px 9px; border-radius: var(--radius); transition: background-color .2s ease, border-color .2s ease;
+}
+.kit-card:hover .badge-list li { background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.45); }
 
 .kit-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
 .kit-specs .cell { background: var(--bg-surface); padding: 10px 8px; text-align: center; }

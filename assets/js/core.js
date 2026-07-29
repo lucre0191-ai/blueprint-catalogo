@@ -229,6 +229,45 @@ export function kitWarrantyYears(idx, kitId) {
   return years.length ? Math.max(...years) : null;
 }
 
+/** ---------------------------------------------------------------------
+ *  Insignias comerciales reales del kit (Documento 03 — Tarjetas
+ *  Inteligentes: "no inferir estos atributos desde nombres ambiguos").
+ *  ---------------------------------------------------------------------
+ *  Cada insignia sale de un dato real y explicito:
+ *  - Tipo de sistema: campo Tipo_Sistema de kits.json.
+ *  - WiFi / Monitoreo remoto / Paralelizable / Litio: texto curado de
+ *    showcase.json (Nombre_Comercial, Caracteristicas_Principales,
+ *    Beneficios) de los componentes REALMENTE incluidos en el kit —
+ *    nunca adivinado del nombre del SKU.
+ *  - Bateria incluida: Bateria_kWh > 0 en kits.json.
+ *  - Expandible: el kit tiene componentes opcionales reales en
+ *    kit_components.json (ampliaciones de verdad, no decorativas).
+ *  Si ningun dato respalda una insignia, simplemente no aparece. */
+export function kitBadges(idx, kitId, kit) {
+  const included = includedComponents(idx, kitId);
+  const optional = optionalComponents(idx, kitId);
+  const badges = [];
+
+  if (kit.Tipo_Sistema === "Hibrido") badges.push("Híbrido");
+  else if (kit.Tipo_Sistema === "Off-Grid") badges.push("Off-Grid");
+  else if (kit.Tipo_Sistema === "Portatil") badges.push("Portátil");
+
+  const showcaseTexts = included
+    .map((c) => idx.showcaseBySku.get(c.SKU))
+    .filter(Boolean)
+    .map((s) => `${s.Nombre_Comercial || ""} ${s.Caracteristicas_Principales || ""} ${s.Beneficios || ""}`.toLowerCase());
+  const anyIncludes = (kw) => showcaseTexts.some((t) => t.includes(kw));
+
+  if (anyIncludes("wifi")) badges.push("WiFi incluido");
+  if (anyIncludes("monitoreo")) badges.push("Monitoreo remoto");
+  if (anyIncludes("paraleliz")) badges.push("Paralelizable");
+  if (anyIncludes("litio")) badges.push("Batería de litio");
+  if (typeof kit.Bateria_kWh === "number" && kit.Bateria_kWh > 0) badges.push("Batería incluida");
+  if (optional.length > 0) badges.push("Expandible");
+
+  return badges;
+}
+
 /* ---------------------------------------------------------------------
    content_blocks.json — bloques reutilizables de texto aprobado
    (Ideal_Para, Que_Puede_Alimentar, Garantia_Comercial, Disclaimer,
@@ -328,6 +367,7 @@ export function buildKitViewModel(idx, kitId, { market, lang = "Español" } = {}
     market: (catalog && catalog.Mercado) || market || null,
     name, title, subtitle, description, idealPara, feed, beneficios,
     promesaValor, beneficiosList,
+    badges: kitBadges(idx, kitId, kit),
     linea: kit.Linea || null,
     tipoSistema: kit.Tipo_Sistema || null,
     potenciaPanelKw: typeof kit.Potencia_Panel_kW === "number" ? kit.Potencia_Panel_kW : null,

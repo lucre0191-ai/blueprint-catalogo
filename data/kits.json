@@ -8,10 +8,10 @@
     "Aplicaciones": "Nevera, luces, TV, router, ventiladores",
     "Autonomia_Aprox": "4-6 horas de respaldo en apagon tipico",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 0.59,
+    "Potencia_Inversor_kW": 5,
     "Potencia_Panel_kW": 3.54,
-    "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 2677.7103125000003
+    "Bateria_kWh": 5.12,
+    "Precio_Sugerido_Reventa_USD": 2677.7103125
   },
   {
     "Kit_ID": "K3-OFF-3KWINV",
@@ -22,9 +22,9 @@
     "Aplicaciones": "Nevera, luces, TV, router, ventiladores",
     "Autonomia_Aprox": "4-6 horas de respaldo en apagon tipico",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 5,
-    "Potencia_Panel_kW": 30,
-    "Bateria_kWh": 0,
+    "Potencia_Inversor_kW": 3,
+    "Potencia_Panel_kW": 3.54,
+    "Bateria_kWh": 5.12,
     "Precio_Sugerido_Reventa_USD": 2540.5584375
   },
   {
@@ -36,9 +36,9 @@
     "Aplicaciones": "Nevera, A/C 1 unidad, electrodomesticos, oficina en casa",
     "Autonomia_Aprox": "6-10 horas de respaldo, con posibilidad de vender excedente a la red",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 0,
-    "Potencia_Panel_kW": 0,
-    "Bateria_kWh": 0,
+    "Potencia_Inversor_kW": 5,
+    "Potencia_Panel_kW": 5.31,
+    "Bateria_kWh": 5.12,
     "Precio_Sugerido_Reventa_USD": 4815.236875
   },
   {
@@ -50,10 +50,10 @@
     "Aplicaciones": "Nevera, A/C 1 unidad, electrodomesticos",
     "Autonomia_Aprox": "6-10 horas de respaldo, sin conexion a la red",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 0,
-    "Potencia_Panel_kW": 0,
-    "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 3205.8909374999994
+    "Potencia_Inversor_kW": 5,
+    "Potencia_Panel_kW": 5.9,
+    "Bateria_kWh": 5.12,
+    "Precio_Sugerido_Reventa_USD": 3205.8909375
   },
   {
     "Kit_ID": "K10-HYBRID",
@@ -64,9 +64,9 @@
     "Aplicaciones": "Carga completa de negocio + cargador de vehiculo electrico",
     "Autonomia_Aprox": "8-12 horas de respaldo, con venta de excedente a la red",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 0,
-    "Potencia_Panel_kW": 0,
-    "Bateria_kWh": 0,
+    "Potencia_Inversor_kW": 10,
+    "Potencia_Panel_kW": 10.62,
+    "Bateria_kWh": 10.24,
     "Precio_Sugerido_Reventa_USD": 7831.1190625
   },
   {
@@ -78,9 +78,9 @@
     "Aplicaciones": "Carga completa de negocio + cargador de vehiculo electrico",
     "Autonomia_Aprox": "8-12 horas de respaldo, con venta de excedente a la red",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 0,
-    "Potencia_Panel_kW": 0,
-    "Bateria_kWh": 0,
+    "Potencia_Inversor_kW": 10,
+    "Potencia_Panel_kW": 10.62,
+    "Bateria_kWh": 16,
     "Precio_Sugerido_Reventa_USD": 6836.0384375
   },
   {
@@ -92,10 +92,10 @@
     "Aplicaciones": "Carga completa de negocio",
     "Autonomia_Aprox": "8-12 horas de respaldo, sin conexion a la red",
     "Estado": "Activo",
-    "Potencia_Inversor_kW": 0.59,
+    "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
-    "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 5823.449062499999
+    "Bateria_kWh": 10.24,
+    "Precio_Sugerido_Reventa_USD": 5823.4490625
   },
   {
     "Kit_ID": "K-PORT-A1",
@@ -109,7 +109,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 209.78156249999998
+    "Precio_Sugerido_Reventa_USD": 209.7815625
   },
   {
     "Kit_ID": "K-PORT-A5",
@@ -123,7 +123,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 380.49187499999994
+    "Precio_Sugerido_Reventa_USD": 380.491875
   },
   {
     "Kit_ID": "K-PORT-A6",
@@ -137,7 +137,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 419.88656249999997
+    "Precio_Sugerido_Reventa_USD": 419.8865625
   },
   {
     "Kit_ID": "K-PORT-T11",
@@ -151,7 +151,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 682.8825781249999
+    "Precio_Sugerido_Reventa_USD": 682.882578125
   },
   {
     "Kit_ID": "K-PORT-T20",
@@ -165,7 +165,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 1222.7357031249999
+    "Precio_Sugerido_Reventa_USD": 1222.735703125
   },
   {
     "Kit_ID": "K-PORT-T30",
@@ -193,7 +193,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 2314.4792187499997
+    "Precio_Sugerido_Reventa_USD": 2314.47921875
   },
   {
     "Kit_ID": "K10-HYBRID-INH-10",
@@ -205,8 +205,8 @@
     "Autonomia_Aprox": "6-10 horas de respaldo, con venta de excedente a la red",
     "Estado": "Activo",
     "Potencia_Inversor_kW": 10,
-    "Potencia_Panel_kW": 180,
-    "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 6398.319687499999
+    "Potencia_Panel_kW": 10.62,
+    "Bateria_kWh": 10.24,
+    "Precio_Sugerido_Reventa_USD": 6398.3196875
   }
 ]
