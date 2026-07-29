@@ -11,7 +11,7 @@
    estan listos (lo que tarde mas de los dos). Ver wireBlackout().
    ====================================================================== */
 
-import { loadAll, buildIndices, initRouter, makeRoute, state } from "./js/core.js";
+import { loadAll, buildIndices, initRouter, makeRoute, state, initScrollReveal } from "./js/core.js";
 import {
   renderHome, renderKits, renderKitDetail, renderCatalogo,
   renderProductDetail, renderComparador, renderDiagnostico, renderAprender,
@@ -50,7 +50,9 @@ function initApp(data, idx) {
     makeRoute(["contacto"], () => { setActiveNav("contacto"); renderContacto(ctx); }),
   ];
 
-  initRouter(routes, () => { setActiveNav(""); renderNotFound(ctx); })();
+  document.addEventListener("click", tagViewTransitionSource, true);
+
+  initRouter(routes, () => { setActiveNav(""); renderNotFound(ctx); }, runRender)();
 
   const toggle = document.getElementById("nav-toggle");
   if (toggle) {
@@ -60,6 +62,42 @@ function initApp(data, idx) {
 
   document.body.classList.add("revealing");
   setTimeout(() => document.body.classList.remove("revealing"), 1250);
+}
+
+/* Transicion entre pantallas (Documento 05, "Cambio entre Tarjeta y
+   Ficha"): usa la View Transitions API nativa del navegador cuando
+   esta disponible -- un crossfade suave y, para la tarjeta de kit que
+   el visitante realmente toco, un morph con la foto de la Ficha en vez
+   de un corte. Se degrada sola (sin rama especial) en navegadores que
+   no la soportan o si el visitante pidio menos movimiento: ahi
+   simplemente se pinta la vista de una vez, como antes. */
+const VT_NAME = "kit-hero-transition";
+
+function tagViewTransitionSource(e) {
+  const a = e.target.closest('a[href^="#/kit/"]');
+  if (!a) return;
+  const card = a.closest(".kit-card");
+  const media = card && card.querySelector(".kit-media");
+  if (media) media.style.viewTransitionName = VT_NAME;
+}
+
+function clearViewTransitionNames() {
+  document.querySelectorAll('[style*="view-transition-name"]').forEach((el) => {
+    el.style.viewTransitionName = "";
+  });
+}
+
+function runRender(renderFn) {
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const supported = typeof document.startViewTransition === "function";
+  const finish = () => initScrollReveal(viewEl);
+  if (!supported || prefersReduced) {
+    renderFn();
+    finish();
+    return;
+  }
+  const transition = document.startViewTransition(() => { renderFn(); finish(); });
+  transition.finished.then(clearViewTransitionNames).catch(clearViewTransitionNames);
 }
 
 /** Ceremonia "apagon -> luz". Dos condiciones independientes tienen

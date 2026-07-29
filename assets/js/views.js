@@ -146,6 +146,26 @@ function powerIcon(label) {
    existe). Nunca Voltaje, Descripcion_Tecnica ni otro dato de
    ingenieria (eso vive solo en Aprender). El boton de imagen abre el
    Lightbox global (ver wireLightbox). */
+/* Orden de entrada de la Exploded View (Documento 05: "la sensacion
+   debe ser la de armar el kit frente al usuario" — Paneles -> Inversor
+   -> Baterias -> Protecciones -> Estructura -> Accesorios). Solo
+   reordena la presentacion visual/de animacion; no cambia que
+   componentes se muestran (eso sigue viniendo 100% de kit_components). */
+const EXPLODED_CATEGORY_RANK = {
+  "Panel Solar": 0,
+  "Inversor": 1,
+  "Bateria": 2,
+  "Caja Combinadora": 3, "Conector": 3, "Cable": 3,
+  "Estructura": 4,
+};
+function explodedOrder(included) {
+  return [...included].sort((a, b) => {
+    const ra = EXPLODED_CATEGORY_RANK[a.Categoria] ?? 5;
+    const rb = EXPLODED_CATEGORY_RANK[b.Categoria] ?? 5;
+    return ra - rb;
+  });
+}
+
 function explodedCard(c) {
   const traits = [];
   if ((c.Categoria === "Panel Solar" || c.Categoria === "Inversor") && c.Potencia_W) traits.push(`${c.Potencia_W} W`);
@@ -573,7 +593,10 @@ export function renderKitDetail(ctx, params) {
 
     <div class="wrap kit-top">
       <div class="gallery">
-        <button type="button" class="gallery-main" data-lightbox-src="${escapeHtml(vm.image || "")}" data-lightbox-alt="${escapeHtml(name)}">${kitMedia(catalog, name, "cover")}</button>
+        <!-- "kit-hero-transition" coincide a proposito con VT_NAME en
+             app.js: es el lado "llegada" del morph de View Transitions
+             entre la tarjeta del listado y esta Ficha (Documento 05). -->
+        <button type="button" class="gallery-main" style="view-transition-name:kit-hero-transition" data-lightbox-src="${escapeHtml(vm.image || "")}" data-lightbox-alt="${escapeHtml(name)}">${kitMedia(catalog, name, "cover")}</button>
         ${gallery.length ? `<div class="gallery-strip">${gallery.map((g) => `<button type="button" data-lightbox-src="${escapeHtml(g)}" data-lightbox-alt="${escapeHtml(name)}">${mediaImage(g, name, "cover")}</button>`).join("")}</div>` : ""}
       </div>
       <aside class="buy-card">
@@ -618,7 +641,7 @@ export function renderKitDetail(ctx, params) {
       <h3>Que incluye — vista despiezada</h3>
       <p class="muted" style="margin:4px 0 18px">Cada componente real del kit, tal como viene armado. Pulsa una imagen para ampliarla.</p>
       <div class="exploded-grid">
-        ${included.map(explodedCard).join("") || `<p class="muted">Sin datos de composicion.</p>`}
+        ${explodedOrder(included).map(explodedCard).join("") || `<p class="muted">Sin datos de composicion.</p>`}
       </div>
     </section>
 
@@ -677,7 +700,7 @@ export function renderKitDetail(ctx, params) {
       <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
     </section>
 
-    <div class="lightbox" id="lightbox" hidden>
+    <div class="lightbox" id="lightbox" aria-hidden="true">
       <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Cerrar">${icon("close")}</button>
       <img id="lightbox-img" src="" alt="">
     </div>
@@ -697,13 +720,17 @@ function wireLightbox(container) {
     if (!src) return;
     imgEl.src = src;
     imgEl.alt = alt || "";
-    lb.hidden = false;
+    lb.classList.add("open");
+    lb.setAttribute("aria-hidden", "false");
     document.body.classList.add("lightbox-open");
   }
   function close() {
-    lb.hidden = true;
-    imgEl.src = "";
+    lb.classList.remove("open");
+    lb.setAttribute("aria-hidden", "true");
     document.body.classList.remove("lightbox-open");
+    // Se limpia el src recien despues de que termina la transicion de
+    // salida (Documento 05: "transicion suave", nunca un corte seco).
+    setTimeout(() => { if (!lb.classList.contains("open")) imgEl.src = ""; }, 300);
   }
   container.querySelectorAll("[data-lightbox-src]").forEach((btn) => {
     btn.addEventListener("click", () => open(btn.dataset.lightboxSrc, btn.dataset.lightboxAlt));

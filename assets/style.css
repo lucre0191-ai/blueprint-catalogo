@@ -56,6 +56,23 @@ html { scroll-behavior: smooth; }
   * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
 
+/* Transicion entre pantallas via View Transitions API (Documento 05).
+   Se fija una duracion explicita y corta (dentro del maximo de 350ms
+   del documento) en vez de dejar el default del navegador, que varia.
+   Si el navegador no soporta la API esto simplemente no se aplica
+   nunca -- ver runRender() en app.js. */
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+  animation-duration: 240ms;
+  animation-timing-function: ease;
+}
+
+/* Entrada de secciones al hacer scroll (Documento 05). Ver
+   initScrollReveal() en core.js -- solo se aplica la clase reveal-io
+   a secciones que arrancan fuera de pantalla, asi que si JS no corre
+   por algun motivo, el contenido nunca queda oculto. */
+.reveal-io { opacity: 0; transform: translateY(16px); }
+.reveal-io.in-view { opacity: 1; transform: translateY(0); transition: opacity .3s ease, transform .3s ease; }
+
 body { margin: 0; background: var(--bg-blackout); color: var(--text-primary); font-family: var(--font-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
@@ -184,8 +201,16 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 }
 
 /* ---------- botones / chips / pills ---------- */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; padding: 11px 16px; border-radius: var(--radius); border: 1px solid var(--line-bright); background: var(--bg-surface-2); cursor: pointer; transition: filter .15s ease, background .15s ease; }
+/* Botones (Documento 05): responden de inmediato -- ligera iluminacion
+   + ligero aumento de profundidad al pasar el cursor, un leve "hundido"
+   al presionar. Nunca rebotes ni pulsaciones exageradas. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; padding: 11px 16px; border-radius: var(--radius); border: 1px solid var(--line-bright); background: var(--bg-surface-2); cursor: pointer;
+  transition: filter .15s ease, background .15s ease, transform .15s ease, box-shadow .15s ease;
+}
 .btn .ic svg { width: 15px; height: 15px; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -8px rgba(0,0,0,.45); }
+.btn:active { transform: translateY(0); box-shadow: none; filter: brightness(.97); }
 .btn-primary { background: var(--accent-power); color: #052e12; border-color: var(--accent-power); }
 .btn-primary:hover { filter: brightness(1.06); }
 .btn-ghost { background: transparent; }
@@ -415,7 +440,11 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 @media (min-width: 900px) { .cat-hero { grid-template-columns: 2fr 3fr; gap: 40px; } }
 .cat-hero-text h1 { font-size: clamp(26px, 4.4vw, 40px); line-height: 1.08; margin: 10px 0 14px; }
 .cat-hero-media { border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/3; border: 1px solid var(--line); }
-.cat-hero-media img { width: 100%; height: 100%; object-fit: cover; }
+/* La foto del Hero nunca queda completamente inmovil (Documento 05):
+   una respiracion extremadamente lenta y casi imperceptible, nunca un
+   zoom o parallax agresivo. */
+.cat-hero-media img { width: 100%; height: 100%; object-fit: cover; animation: hero-breathe 16s ease-in-out infinite; }
+@keyframes hero-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 @media (min-width: 900px) { .cat-hero-media { aspect-ratio: 16/11; } }
 
 /* Indicadores rapidos: elegantes, nunca tarjetas (Documento 02). */
@@ -458,7 +487,7 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
   background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
   overflow: hidden; display: flex; flex-direction: column;
   transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease;
-  animation: card-reveal .4s ease both;
+  animation: card-reveal .3s ease both;
 }
 .kit-card:hover, .prod-card:hover {
   border-color: var(--verde-energia);
@@ -530,7 +559,7 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
   color: var(--verde-energia); background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3);
   padding: 4px 9px; border-radius: var(--radius); transition: background-color .2s ease, border-color .2s ease;
 }
-.kit-card:hover .badge-list li { background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.45); }
+.badge-list li:hover, .kit-card:hover .badge-list li { background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.45); }
 
 .kit-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
 .kit-specs .cell { background: var(--bg-surface); padding: 10px 8px; text-align: center; }
@@ -629,8 +658,23 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .exploded-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media (min-width: 640px) { .exploded-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 1000px) { .exploded-grid { grid-template-columns: repeat(4, 1fr); } }
-.exploded-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; transition: border-color .2s, transform .2s; }
+.exploded-card {
+  background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden;
+  transition: border-color .2s, transform .2s;
+  animation: card-reveal .3s ease both;
+}
 .exploded-card:hover { border-color: var(--line-bright); transform: translateY(-3px); }
+/* Entrada progresiva "armando el kit" (Documento 05): el orden visual
+   ya viene de explodedOrder() en views.js (Panel->Inversor->Bateria->
+   Protecciones->Estructura->Accesorios); aca solo se escalona el
+   tiempo de aparicion, nunca todos los componentes a la vez. */
+.exploded-grid .exploded-card:nth-child(1) { animation-delay: 0ms; }
+.exploded-grid .exploded-card:nth-child(2) { animation-delay: 50ms; }
+.exploded-grid .exploded-card:nth-child(3) { animation-delay: 100ms; }
+.exploded-grid .exploded-card:nth-child(4) { animation-delay: 150ms; }
+.exploded-grid .exploded-card:nth-child(5) { animation-delay: 200ms; }
+.exploded-grid .exploded-card:nth-child(6) { animation-delay: 250ms; }
+.exploded-grid .exploded-card:nth-child(n+7) { animation-delay: 300ms; }
 .exploded-media { position: relative; aspect-ratio: 1/1; background: var(--bg-surface-2); }
 .exploded-media:disabled { cursor: default; }
 .exploded-zoom { position: absolute; right: 8px; bottom: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(10,15,28,.8); display: flex; align-items: center; justify-content: center; color: var(--text-primary); }
@@ -665,8 +709,10 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .lightbox {
   position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 2000;
   background: rgba(5,7,10,.94); display: flex; align-items: center; justify-content: center; padding: 32px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .28s ease, visibility .28s ease;
 }
-.lightbox[hidden] { display: none; }
+.lightbox.open { opacity: 1; visibility: visible; pointer-events: auto; }
 .lightbox img { max-width: min(1100px, 92vw); max-height: 88vh; object-fit: contain; border-radius: var(--radius); }
 .lightbox-close {
   position: absolute; top: 20px; right: 20px; width: 42px; height: 42px; border-radius: 50%;

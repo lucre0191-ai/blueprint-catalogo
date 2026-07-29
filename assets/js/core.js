@@ -385,7 +385,46 @@ export function buildKitViewModel(idx, kitId, { market, lang = "Español" } = {}
    Router hash-based: compatible con GitHub Pages (sin backend, sin
    configuracion de servidor). Formato: #/ruta/param
    --------------------------------------------------------------------- */
-export function initRouter(routes, fallback) {
+/** Entrada de secciones al hacer scroll (Documento 05: fade + ligero
+ *  desplazamiento vertical, 300ms, nunca todas a la vez). Solo anima
+ *  secciones que arrancan fuera del viewport -- lo que ya se ve al
+ *  cargar la pantalla se muestra directo, sin parpadeo. Si el
+ *  navegador no soporta IntersectionObserver, o el visitante pidio
+ *  menos movimiento, todo se muestra sin animar (nunca depende de esto
+ *  para ser legible). */
+export function initScrollReveal(container) {
+  if (!container || typeof IntersectionObserver !== "function") return;
+  const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReduced) return;
+  const els = container.querySelectorAll(".section, .cta-band");
+  if (!els.length) return;
+  const vh = window.innerHeight || 800;
+  const toObserve = [];
+  els.forEach((el) => {
+    if (el.getBoundingClientRect().top < vh * 0.92) return; // ya visible: se muestra directo
+    el.classList.add("reveal-io");
+    toObserve.push(el);
+  });
+  if (!toObserve.length) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
+  toObserve.forEach((el) => io.observe(el));
+}
+
+/** `runRender` envuelve cada render de ruta (navegar y pintar). Por
+ *  defecto solo ejecuta la funcion tal cual; app.js pasa una version
+ *  que ademas usa la View Transitions API del navegador para que
+ *  cambiar de pantalla se sienta como una continuacion y no como un
+ *  corte (Documento 05: "el usuario nunca debe sentir que cambia de
+ *  pagina"). Mantenerlo opcional aca deja el router testeable sin DOM
+ *  real (jsdom no siempre implementa startViewTransition). */
+export function initRouter(routes, fallback, runRender = (fn) => fn()) {
   function currentPath() {
     const hash = location.hash.replace(/^#/, "") || "/";
     return hash.split("?")[0];
@@ -396,12 +435,11 @@ export function initRouter(routes, fallback) {
     for (const route of routes) {
       const match = route.match(segments);
       if (match) {
-        window.scrollTo(0, 0);
-        route.handler(match);
+        runRender(() => { window.scrollTo(0, 0); route.handler(match); });
         return;
       }
     }
-    fallback();
+    runRender(fallback);
   }
   window.addEventListener("hashchange", resolve);
   window.addEventListener("DOMContentLoaded", resolve);
