@@ -175,23 +175,29 @@ export function kitImage(catalog) {
 }
 
 /** ---------------------------------------------------------------------
- *  Estrategia de imagen del kit, en 2 niveles (documentada, no silenciosa).
+ *  Estrategia de imagen del kit (simplificada — Plano 03, retiro del mosaico).
  *  ---------------------------------------------------------------------
- *  Nivel 1 — foto propia: catalogs.Imagen_Principal, si el Excel la
- *  tiene asignada. Es la unica fuente que representa al kit como
- *  producto (ver kitImage() arriba).
+ *  Nivel 1 — foto propia: catalogs.Imagen_Principal (Hero Product, ver
+ *  Documento 06), si el Excel la tiene asignada. Es la unica fuente que
+ *  representa al kit como producto (ver kitImage() arriba).
  *
- *  Nivel 2 — mosaico de componentes: si NO hay foto propia, en vez de
- *  dejar un hueco vacio se arman hasta 3 fotos reales de sus piezas
- *  principales (panel / inversor / bateria, tomadas de catalogs.json,
- *  que a su vez vienen de media.json por SKU). Esto se presenta
- *  siempre como una GRILLA de 2-3 fotos, nunca como una sola imagen a
- *  pantalla completa — asi queda visualmente claro que es "que trae el
- *  kit", no "una foto oficial del kit". Es la misma diferencia que ya
- *  se respeta en la galeria de la ficha de kit.
+ *  Nivel 2 — nada: si todavia no existe la foto Hero del kit, se
+ *  devuelve mosaic vacio y la vista cae al placeholder "Imagen
+ *  pendiente" — nunca una imagen que no le pertenece al kit.
  *
- *  Nivel 3 — nada: si tampoco hay fotos de componentes, se devuelve
- *  mosaic vacio y la vista cae al placeholder "Imagen pendiente".
+ *  Antes existia un Nivel intermedio que armaba una grilla con las
+ *  fotos de producto de panel/inversor/bateria (tomadas de catalogs.json
+ *  / media.json por SKU) cuando faltaba la foto Hero. Se retiro por dos
+ *  problemas reales detectados en el sitio publicado: (1) muchos kits
+ *  comparten el mismo SKU de panel/inversor, asi que la misma foto de
+ *  producto se repetia identica en varios kits distintos, dando una
+ *  sensacion "plantillera"; y (2) esas fotos de producto no estan
+ *  pensadas para recortarse (object-fit: cover) dentro de una grilla, lo
+ *  que en la ficha de kit (contenedor grande, sin alto de fila
+ *  definido para el grid interno) producia una caja gigante desbordada
+ *  fuera de pantalla. Mientras un kit no tenga su propia foto Hero, es
+ *  preferible el placeholder honesto "Imagen pendiente" a un mosaico
+ *  roto o repetido.
  *
  *  Esta funcion nunca usa la imagen del primer componente del BOM en
  *  solitario como si fuera la foto del kit (esa fue la causa del bug
@@ -199,16 +205,7 @@ export function kitImage(catalog) {
 export function kitVisual(catalog) {
   const image = kitImage(catalog);
   if (image) return { image, mosaic: [] };
-  const mosaic = [
-    catalog && catalog.Imagen_Panel,
-    catalog && catalog.Imagen_Inversor,
-    catalog && catalog.Imagen_Bateria,
-  ]
-    .map(clean)
-    .filter(Boolean)
-    .filter((v, i, a) => a.indexOf(v) === i)
-    .slice(0, 3);
-  return { image: null, mosaic };
+  return { image: null, mosaic: [] };
 }
 
 /** Componentes NO opcionales de un kit (lo que siempre viene incluido). */
