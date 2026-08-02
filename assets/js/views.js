@@ -552,10 +552,16 @@ export function renderKitDetail(ctx, params) {
   const vm = buildKitViewModel(idx, kit.Kit_ID, { market });
   const { catalog, included, optional, warrantyYears: warranty, price, name, badges } = vm;
   const tagline = vm.subtitle;
-  // La galeria SI puede mostrar fotos de componentes: aqui es honesto,
-  // porque es literalmente "que trae el kit", no "una foto del kit".
-  const gallery = [catalog && catalog.Imagen_Panel, catalog && catalog.Imagen_Inversor, catalog && catalog.Imagen_Bateria, ...included.map((c) => c.Imagen)]
-    .map((p) => clean(p)).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).slice(0, 5);
+  // Antes esta ficha mostraba, debajo de la foto principal, una tira
+  // ("gallery-strip") con las fotos sueltas de panel/inversor/bateria
+  // tomadas de catalogs.json/kit_components.json. Se retiro por pedido
+  // directo de la propietaria ("no quiero esto tampoco, solo la foto
+  // principal") y porque ademas tenia un bug real de CSS (las
+  // miniaturas de 64x64 terminaban mostrandose a su tamano de archivo
+  // real, gigantes, por un conflicto de especificidad entre
+  // ".gallery-strip > *" y ".gallery-strip button"). La foto individual
+  // de cada componente real sigue disponible, mostrada en su tamano
+  // correcto, en la seccion "Que incluye" mas abajo (exploded-grid).
   const feed = vm.feed;
 
   // Nunca fichas tecnicas ni manuales publicos aca (Decision de
@@ -600,7 +606,6 @@ export function renderKitDetail(ctx, params) {
              app.js: es el lado "llegada" del morph de View Transitions
              entre la tarjeta del listado y esta Ficha (Documento 05). -->
         <button type="button" class="gallery-main" style="view-transition-name:kit-hero-transition" data-lightbox-src="${escapeHtml(vm.image || "")}" data-lightbox-alt="${escapeHtml(name)}">${kitMedia(catalog, name, "cover")}</button>
-        ${gallery.length ? `<div class="gallery-strip">${gallery.map((g) => `<button type="button" data-lightbox-src="${escapeHtml(g)}" data-lightbox-alt="${escapeHtml(name)}">${mediaImage(g, name, "cover")}</button>`).join("")}</div>` : ""}
       </div>
       <aside class="buy-card">
         <span class="pill">${escapeHtml(kit.Linea || "Kit")}</span>

@@ -612,24 +612,32 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .gallery-main .media-ph { width: 100%; height: 100%; }
 .gallery-strip { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
 .gallery-strip > * { width: 64px; height: 64px; flex: none; border-radius: 8px; overflow: hidden; background: var(--bg-surface-2); }
-/* gallery-main / gallery-strip ahora son <button> (para abrir el
-   Lightbox) -- reset de estilos nativos de boton para que se vean
-   identicos a como se veian como <div>.
-   IMPORTANTE: .gallery-main NO lleva height:100% aqui -- su alto ya
-   lo define aspect-ratio:4/3 (linea 611). Si se agrupa con height:100%
-   (como estaba antes), esa regla gana por venir despues en la cascada
-   (misma especificidad) y el contenedor pierde el alto fijo: al no
-   tener el padre .gallery un alto propio, 100% se resuelve contra un
-   alto indefinido y el box termina "creciendo" a un tamaño enorme
-   (bug reportado: caja gigante vacia/desbordada en la ficha de kit). */
+/* gallery-main es <button> (para abrir el Lightbox) -- reset de
+   estilos nativos de boton para que se vea identico a como se veia
+   como <div>.
+   IMPORTANTE: NO lleva height:100% aqui -- su alto ya lo define
+   aspect-ratio:4/3 (linea 611). Si se le agrega height:100% (como
+   estaba antes, agrupado junto con una regla vieja de .gallery-strip
+   button que ya no existe), esa regla gana por venir despues en la
+   cascada (misma especificidad) y el contenedor pierde el alto fijo:
+   al no tener el padre .gallery un alto propio, 100% se resuelve
+   contra un alto indefinido y el box termina "creciendo" a un tamaño
+   enorme (bug reportado: caja gigante vacia/desbordada en la ficha de
+   kit). */
 .gallery-main {
   display: block; width: 100%; padding: 0; margin: 0; border: none; background: none;
   cursor: zoom-in; font: inherit; color: inherit;
 }
-.gallery-strip button {
-  display: block; width: 100%; height: 100%; padding: 0; margin: 0; border: none; background: none;
-  cursor: zoom-in; font: inherit; color: inherit;
-}
+/* Nota: la tira de miniaturas de componentes (gallery-strip) debajo de
+   la foto principal se retiro de la Ficha de Kit (views.js,
+   renderKitDetail) por pedido directo de la propietaria -- ademas de
+   tener un bug real (las miniaturas de 64x64 se mostraban a su tamano
+   de archivo completo, gigantes, por un conflicto de especificidad
+   entre ".gallery-strip > *" y una regla vieja ".gallery-strip
+   button"). La regla ".gallery-strip > *" de arriba sigue viva porque
+   la Ficha de Producto (renderProductDetail) todavia usa un
+   gallery-strip propio, con <div>/<img> (no <button>), asi que no
+   comparte ese bug. */
 
 .buy-card { background: var(--bg-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; gap: 14px; align-self: start; }
 @media (min-width: 900px) { .buy-card { position: sticky; top: 76px; } }
