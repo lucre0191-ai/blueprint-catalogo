@@ -24,6 +24,11 @@ function contactInfo(config) {
     brand: firstOf(config.Nombre_Comercial_Sistema) || "Blueprint",
     logo: firstOf(config.Logo_URL),
     whatsapp: firstOf(config.WhatsApp_Ventas),
+    // Nombre de la persona de contacto (SYSTEM_CONFIG!Contacto_Nombre,
+    // categoria "Contacto") -- pedido directo de la propietaria, para
+    // que la ficha descargable diga a quien contactar, no solo el
+    // numero. Si no esta cargado en el Excel, simplemente no aparece.
+    contactName: firstOf(config.Contacto_Nombre),
   };
 }
 
@@ -101,11 +106,14 @@ export function commercialContent(idx, data, kitId, market) {
     specs,
     autonomia: kit.Autonomia_Aprox || null,
     price: fmtUSD(kit.Precio_Sugerido_Reventa_USD),
-    includedLines: included.map((c) => `${c.Cantidad || 1}× ${c.Descripcion || c.SKU}`),
-    optionalLines: optional.map((c) => ({
-      label: c.Descripcion || c.SKU,
-      meta: [c.Categoria, c.Potencia_W ? `${c.Potencia_W} W` : null].filter(Boolean).join(" · "),
-    })),
+    // Antes esta ficha llevaba "includedLines"/"optionalLines" (texto
+    // plano tipo "6x Panel SunEvo 590W HBD") para dibujar con bullets().
+    // Se retiro: pdfgen.js ahora dibuja cada componente con su foto real
+    // (componentList(), usa directamente "included"/"optional" de
+    // baseContent mas abajo) -- pedido directo de la propietaria, para
+    // que coincida con el modelo de catalogo de referencia (SunEvo) que
+    // subio: miniatura + nombre/marca-modelo + insignias de garantia y
+    // cantidad, no una lista de texto.
   };
 }
 
@@ -124,20 +132,10 @@ export function technicalContent(idx, data, kitId, market) {
     ["Tipo de sistema", kit.Tipo_Sistema],
   ].filter(([, v]) => v);
 
-  function componentRow(c) {
-    return [
-      c.SKU,
-      c.Categoria || "—",
-      [c.Marca, c.Modelo].filter(Boolean).join(" ") || "—",
-      String(c.Cantidad || 1),
-      c.Potencia_W ? `${c.Potencia_W} W` : (c.Capacidad_kWh ? `${c.Capacidad_kWh} kWh` : "—"),
-      c.Voltaje && c.Voltaje !== "-" ? c.Voltaje : "—",
-      c.Garantia_Anios ? `${c.Garantia_Anios} a.` : "—",
-    ];
-  }
-
-  const componentRows = included.map(componentRow);
-  const optionalRows = optional.map(componentRow);
+  // Antes armaba "componentRows"/"optionalRows" (filas de texto para una
+  // tabla) -- pdfgen.js ahora dibuja cada componente con su foto real via
+  // componentList(), usando directamente "included"/"optional" que ya
+  // vienen de baseContent (ver mas abajo, "...base").
   const docs = docsForSkus(idx, included.map((c) => c.SKU));
 
   return {
@@ -145,9 +143,6 @@ export function technicalContent(idx, data, kitId, market) {
     docKind: "tecnica",
     docLabel: "Especificacion tecnica",
     specs,
-    componentHeaders: ["SKU", "Categoria", "Marca / Modelo", "Cant.", "Potencia / Cap.", "Voltaje", "Garantia"],
-    componentRows,
-    optionalRows,
     docs,
   };
 }

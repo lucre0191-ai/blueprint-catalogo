@@ -27,6 +27,10 @@ const MUTED = [110, 118, 128];
 const LINE = [223, 227, 232];
 const PANEL = [246, 247, 245];
 const ACCENT = [245, 166, 35]; // amber de marca
+const BADGE_WARR_BG = [222, 242, 234];
+const BADGE_WARR_FG = [21, 122, 74];
+const BADGE_QTY_BG = [253, 240, 219];
+const BADGE_QTY_FG = [158, 98, 15];
 
 /** Envoltura sobre jsPDF con helpers de layout con salto de pagina
  *  automatico — asi el generador no depende de cuantos componentes
@@ -212,7 +216,12 @@ class DocWriter {
   }
 
   /** Incrusta una imagen manteniendo proporcion. No lanza si falla:
-   *  el documento sigue siendo util aunque una foto no cargue. */
+   *  el documento sigue siendo util aunque una foto no cargue.
+   *  Se reescala primero (resizedDataURL) a ~2x el tamano final en el
+   *  PDF: las fotos Hero originales pueden pesar 1-2 MB a resolucion
+   *  completa, innecesario para un recuadro de unos cientos de puntos.
+   *  Sin esto, un PDF con varias fotos termina pesando varios MB — poco
+   *  practico para compartir por WhatsApp. */
   async image(url, maxW, maxH) {
     try {
       const dataUrl = await fetchAsDataURL(url);
@@ -224,14 +233,113 @@ class DocWriter {
         w = (maxH * dims.w) / dims.h;
       }
       this.ensure(h + 10);
-      const format = /png/i.test(url) ? "PNG" : "JPEG";
-      this.doc.addImage(dataUrl, format, MARGIN, this.y, w, h);
+      const { dataUrl: embedUrl } = await resizedDataURL(url, w * 2, h * 2, { cover: false, quality: 0.82 });
+      this.doc.addImage(embedUrl, "JPEG", MARGIN, this.y, w, h);
       this.y += h + 12;
       return true;
     } catch (err) {
       console.warn("No se pudo incrustar imagen en el PDF:", url, err);
       return false;
     }
+  }
+
+  /** Fila de componente con foto real (Documento 06 / pedido directo de
+   *  la propietaria, modelo de referencia SunEvo): miniatura cuadrada +
+   *  nombre/marca-modelo/specs + una insignia de garantia y una de
+   *  cantidad, coloreadas. Antes esta lista era solo texto plano
+   *  ("6× Panel SunEvo 590W HBD"); ahora cada componente se ve como en
+   *  el catalogo de referencia que subio la propietaria. Si la foto no
+   *  carga, cae a un recuadro vacio — el documento nunca se rompe por
+   *  una imagen faltante. */
+  async componentRow(c) {
+    const rowH = 50;
+    const thumbSize = 40;
+    const badgeW = 58;
+    const badgeH = 18;
+    const badgeGap = 6;
+    this.ensure(rowH + 8);
+    const startY = this.y;
+    const thumbX = MARGIN;
+
+    let drewImage = false;
+    if (c.Imagen) {
+      try {
+        // cover:true = recorta al centro para llenar el cuadrado (misma
+        // idea que object-fit:cover en la web); reescalado a ~3x el
+        // tamano final en puntos, de sobra para que se vea nitida sin
+        // arrastrar la foto de producto completa (a veces >1 MB) a un
+        // recuadro de 40x40pt.
+        const { dataUrl } = await resizedDataURL(c.Imagen, thumbSize * 3, thumbSize * 3, { cover: true, quality: 0.78 });
+        this.doc.addImage(dataUrl, "JPEG", thumbX, startY, thumbSize, thumbSize);
+        drewImage = true;
+      } catch (err) {
+        console.warn("No se pudo incrustar imagen del componente:", c.Imagen, err);
+      }
+    }
+    if (!drewImage) {
+      this.doc.setDrawColor(...LINE);
+      this.doc.setFillColor(...PANEL);
+      this.doc.roundedRect(thumbX, startY, thumbSize, thumbSize, 3, 3, "FD");
+    }
+
+    const hasWarranty = typeof c.Garantia_Anios === "number";
+    const badgesCount = hasWarranty ? 2 : 1;
+    const badgesTotalW = badgesCount * badgeW + (badgesCount - 1) * badgeGap;
+    const textX = thumbX + thumbSize + 10;
+    const textW = CONTENT_W - thumbSize - 10 - badgesTotalW - 10;
+
+    this.doc.setFont("helvetica", "bold");
+    this.doc.setFontSize(10);
+    this.doc.setTextColor(...INK);
+    const title = c.Descripcion || c.SKU;
+    const titleLines = this.doc.splitTextToSize(title, textW);
+    this.doc.text(titleLines[0] || "", textX, startY + 15);
+
+    this.doc.setFont("helvetica", "normal");
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...MUTED);
+    const marcaModelo = [c.Marca, c.Modelo].filter(Boolean).join(" ");
+    const specParts = [
+      c.Potencia_W ? `${c.Potencia_W} W` : (typeof c.Capacidad_kWh === "number" ? `${c.Capacidad_kWh} kWh` : null),
+      c.Voltaje && c.Voltaje !== "-" ? c.Voltaje : null,
+    ].filter(Boolean);
+    const metaLine = [c.Categoria, marcaModelo, ...specParts].filter(Boolean).join(" · ");
+    const metaLines = this.doc.splitTextToSize(metaLine, textW);
+    this.doc.text(metaLines.slice(0, 2), textX, startY + 28);
+
+    let bx = PAGE_W - MARGIN - badgesTotalW;
+    const badgeY = startY + (thumbSize - badgeH) / 2;
+    if (hasWarranty) {
+      this.doc.setFillColor(...BADGE_WARR_BG);
+      this.doc.roundedRect(bx, badgeY, badgeW, badgeH, 9, 9, "F");
+      this.doc.setFont("helvetica", "bold");
+      this.doc.setFontSize(8);
+      this.doc.setTextColor(...BADGE_WARR_FG);
+      this.doc.text(`${c.Garantia_Anios} años`, bx + badgeW / 2, badgeY + 12.5, { align: "center" });
+      bx += badgeW + badgeGap;
+    }
+    this.doc.setFillColor(...BADGE_QTY_BG);
+    this.doc.roundedRect(bx, badgeY, badgeW, badgeH, 9, 9, "F");
+    this.doc.setFont("helvetica", "bold");
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...BADGE_QTY_FG);
+    this.doc.text(`${c.Cantidad || 1}×`, bx + badgeW / 2, badgeY + 12.5, { align: "center" });
+
+    this.y = startY + rowH;
+    this.doc.setDrawColor(...LINE);
+    this.doc.setLineWidth(0.5);
+    this.doc.line(MARGIN, this.y - 6, PAGE_W - MARGIN, this.y - 6);
+  }
+
+  /** Lista de componentes con foto — ver componentRow(). Se recorre en
+   *  secuencia (no en paralelo) para no saturar de golpe la carga de
+   *  imagenes ni desordenar el salto de pagina, que depende de this.y. */
+  async componentList(items) {
+    if (!items || !items.length) return;
+    for (const c of items) {
+      await this.componentRow(c);
+    }
+    this.y += 4;
   }
 
   /** Grilla de hasta 3 fotos de componentes — el mismo fallback que usa
@@ -301,6 +409,51 @@ function imageDimensions(dataUrl) {
   });
 }
 
+function loadImageEl(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+/** Descarga una imagen y la reescala/recomprime a un tamano de pixeles
+ *  razonable (via canvas) antes de que se incruste en el PDF. Las fotos
+ *  reales (Hero generado por IA o fotos de producto de fabricante)
+ *  suelen pesar cientos de KB o mas de 1 MB a resolucion original —
+ *  innecesario cuando van a mostrarse en un recuadro chico del
+ *  documento. Sin este paso, un PDF con varias fotos termina pesando
+ *  varios MB, poco practico para compartir por WhatsApp.
+ *  `cover:true` recorta al centro para llenar el recuadro exacto (como
+ *  object-fit:cover, para miniaturas cuadradas); `cover:false` encoge
+ *  la imagen completa sin recortar (como object-fit:contain, para la
+ *  foto Hero, que no debe perder ningun borde). */
+async function resizedDataURL(url, targetW, targetH, { cover = true, quality = 0.78 } = {}) {
+  const original = await fetchAsDataURL(url);
+  const img = await loadImageEl(original);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(targetW));
+  canvas.height = Math.max(1, Math.round(targetH));
+  const ctx = canvas.getContext("2d");
+  const iw = img.naturalWidth || 1;
+  const ih = img.naturalHeight || 1;
+  if (cover) {
+    const scale = Math.max(canvas.width / iw, canvas.height / ih);
+    const dw = iw * scale;
+    const dh = ih * scale;
+    ctx.drawImage(img, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+  } else {
+    const scale = Math.min(canvas.width / iw, canvas.height / ih);
+    const dw = iw * scale;
+    const dh = ih * scale;
+    ctx.fillStyle = "#f6f7f5";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+  }
+  return { dataUrl: canvas.toDataURL("image/jpeg", quality), w: canvas.width, h: canvas.height };
+}
+
 /** Encabezado de marca: logo vectorial (siempre disponible, no depende
  *  de que exista una imagen de logo real) + nombre + tipo de documento. */
 function drawLetterhead(w, content) {
@@ -332,7 +485,11 @@ function drawFooters(doc, contact) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);
-    const contactLine = contact.whatsapp ? `WhatsApp: ${contact.whatsapp}` : contact.brand;
+    const contactBits = [
+      contact.contactName ? `Contacto: ${contact.contactName}` : null,
+      contact.whatsapp ? `WhatsApp: ${contact.whatsapp}` : null,
+    ].filter(Boolean);
+    const contactLine = contactBits.length ? contactBits.join(" · ") : contact.brand;
     doc.text(contactLine, MARGIN, PAGE_H - MARGIN + 18);
     doc.text(`Pagina ${i} de ${pages}`, PAGE_W - MARGIN, PAGE_H - MARGIN + 18, { align: "right" });
   }
@@ -371,12 +528,16 @@ export async function buildCommercialDoc(idx, data, kitId, market) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(230, 230, 230);
-    doc.text("PRECIO SUGERIDO", MARGIN + 10, w.y + 13);
+    doc.text("VALOR DEL SISTEMA", MARGIN + 10, w.y + 13);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(15);
     doc.setTextColor(...ACCENT);
     doc.text(`USD $${content.price}`, MARGIN + 10, w.y + 27);
     w.y += 44;
+    // Nota de variacion (pedido directo de la propietaria, solo en el
+    // PDF -- el sitio publico muestra el precio limpio, sin esta letra
+    // chica; ver conversacion 2026-08-02).
+    w.p("Precio referencial, sujeto a confirmacion final por un asesor.", { size: 8, color: MUTED, gap: 2 });
   }
 
   if (content.applications.length) {
@@ -394,20 +555,23 @@ export async function buildCommercialDoc(idx, data, kitId, market) {
     w.specGrid(content.specs, 2);
   }
 
-  if (content.includedLines.length) {
+  if (content.included.length) {
     w.h2("Componentes incluidos");
-    w.bullets(content.includedLines);
+    await w.componentList(content.included);
   }
 
-  if (content.optionalLines.length) {
+  if (content.optional.length) {
     w.h2("Accesorios compatibles (ampliaciones opcionales)");
-    w.bullets(content.optionalLines);
+    await w.componentList(content.optional);
   }
 
   w.ensure(90); // manda el bloque de contacto completo a la siguiente pagina si no cabe entero
   w.rule();
   w.h2("Contacto");
   w.p(content.contact.brand, { bold: true, color: INK, size: 11, gap: 2 });
+  if (content.contact.contactName) {
+    w.p(`Contacto: ${content.contact.contactName}`, { size: 10, gap: 2 });
+  }
   if (content.contact.whatsapp) {
     w.p(`WhatsApp: ${content.contact.whatsapp}`, { size: 10, gap: 2 });
   }
@@ -442,15 +606,14 @@ export async function buildTechnicalDoc(idx, data, kitId, market) {
     w.specGrid(content.specs, 2);
   }
 
-  const colWidths = [104, 70, 122, 30, 66, 56, 45];
-  if (content.componentRows.length) {
+  if (content.included.length) {
     w.h2("Componentes incluidos (BOM)");
-    w.table(content.componentHeaders, colWidths, content.componentRows);
+    await w.componentList(content.included);
   }
 
-  if (content.optionalRows.length) {
+  if (content.optional.length) {
     w.h2("Accesorios / ampliaciones opcionales");
-    w.table(content.componentHeaders, colWidths, content.optionalRows);
+    await w.componentList(content.optional);
   }
 
   if (content.docs.length) {
@@ -462,6 +625,9 @@ export async function buildTechnicalDoc(idx, data, kitId, market) {
   w.rule();
   w.h2("Contacto tecnico");
   w.p(content.contact.brand, { bold: true, color: INK, size: 11, gap: 2 });
+  if (content.contact.contactName) {
+    w.p(`Contacto: ${content.contact.contactName}`, { size: 10, gap: 2 });
+  }
   if (content.contact.whatsapp) {
     w.p(`WhatsApp: ${content.contact.whatsapp}`, { size: 10, gap: 2 });
   }

@@ -114,7 +114,7 @@ function kitCard(vm) {
           <div class="cell"><span class="v">${fmtNum(vm.bateriaKwh)}</span><span class="k">kWh bateria${termHint("bateria")}</span></div>
         </div>
         <div class="kit-foot">
-          <div class="kit-price">${vm.price ? `<span class="amount">$${vm.price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Consultar</span>`}</div>
+          <div class="kit-price">${vm.price ? `<span class="amount">$${vm.price}</span><span class="cur">USD · Valor del sistema</span>` : `<span class="amount muted">Consultar</span>`}</div>
           <a class="btn btn-ghost btn-sm" href="#/kit/${encodeURIComponent(vm.id)}">Ver solucion ${icon("arrowRight")}</a>
         </div>
       </div>
@@ -619,7 +619,7 @@ export function renderKitDetail(ctx, params) {
           <div class="spec-item"><span class="k">${icon("shield")}Garantia${termHint("garantia")}</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
         </div>
         ${vm.garantiaComercial ? `<p class="warranty-note muted" style="font-size:13px;margin-top:-6px">${escapeHtml(vm.garantiaComercial)}</p>` : ""}
-        <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
+        <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD · Valor del sistema</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
         <div class="actions-col">
           ${waButton(config, buildInquiryText(name, market, price), "Solicitar por WhatsApp")}
           <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
@@ -813,7 +813,7 @@ export function renderCotizacion(ctx, params) {
       <div>
         <span class="pill">${escapeHtml(kit.Linea || "Kit")}</span>
         <h1 style="margin:10px 0">${escapeHtml(name)}</h1>
-        <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD sugerido</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
+        <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD · Valor del sistema</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
         <div class="spec-grid" style="margin-top:18px">
           <div class="spec-item"><span class="k">${icon("panel")}Panel</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
           <div class="spec-item"><span class="k">${icon("bolt")}Inversor</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
