@@ -4,66 +4,66 @@
     "Imagen_Principal": "media_blueprint/SUNEVO-PAN-590W-001/principal.jpg",
     "Nombre_Comercial": "Panel Solar Bifacial 590W",
     "Categoria": "Panel Solar",
-    "Beneficios": "Aprovecha la luz reflejada en ambas caras para generar hasta un 10-15% mas de energia que un panel convencional del mismo tamano. Vidrio doble bifacial, mayor resistencia y vida util.",
-    "Problema_que_Resuelve": "El cliente necesita generar mas energia sin ocupar mas espacio de techo.",
-    "Tipo_Cliente_Recomendado": "Residencial y comercial que busca maximizar la produccion por metro cuadrado de techo.",
+    "Beneficios": "Aprovecha la luz reflejada en ambas caras para generar hasta un 10-15% más de energía que un panel convencional del mismo tamaño. Vidrio doble bifacial, mayor resistencia y vida útil.",
+    "Problema_que_Resuelve": "El cliente necesita generar más energía sin ocupar más espacio de techo.",
+    "Tipo_Cliente_Recomendado": "Residencial y comercial que busca maximizar la producción por metro cuadrado de techo.",
     "Garantia_Anios": 25,
-    "Caracteristicas_Principales": "590W, tecnologia N-Type Bifacial Half Cell, 25 anos de garantia, 2278x1134x30mm."
+    "Caracteristicas_Principales": "590W, tecnología N-Type Bifacial Half Cell, 25 años de garantía, 2278x1134x30mm."
   },
   {
     "SKU": "SUNEVO-PAN-590W-002",
     "Imagen_Principal": "media_blueprint/SUNEVO-PAN-590W-002/principal.jpg",
-    "Nombre_Comercial": "Panel Solar Bifacial 590W (linea 10kW)",
+    "Nombre_Comercial": "Panel Solar Bifacial 590W (línea 10kW)",
     "Categoria": "Panel Solar",
-    "Beneficios": "Misma tecnologia bifacial de alto rendimiento, configurado para instalaciones de mayor escala (strings de 9 paneles).",
-    "Problema_que_Resuelve": "El cliente necesita una gran cantidad de paneles identicos para un sistema comercial de 10kW.",
-    "Tipo_Cliente_Recomendado": "Comercios y pequenas empresas que arman sistemas de 10kW.",
+    "Beneficios": "Misma tecnología bifacial de alto rendimiento, configurado para instalaciones de mayor escala (strings de 9 paneles).",
+    "Problema_que_Resuelve": "El cliente necesita una gran cantidad de paneles idénticos para un sistema comercial de 10kW.",
+    "Tipo_Cliente_Recomendado": "Comercios y pequeñas empresas que arman sistemas de 10kW.",
     "Garantia_Anios": 25,
-    "Caracteristicas_Principales": "590W, Mono N-Type Bifacial Dual Glass, Half Cell, 25 anos de garantia."
+    "Caracteristicas_Principales": "590W, Mono N-Type Bifacial Dual Glass, Half Cell, 25 años de garantía."
   },
   {
     "SKU": "SUNARK-INV-3KW-001",
     "Imagen_Principal": "media_blueprint/SUNARK-INV-3KW-001/principal.jpg",
     "Nombre_Comercial": "Inversor Off-Grid 3kW",
     "Categoria": "Inversor",
-    "Beneficios": "La entrada mas economica para tener respaldo electrico real ante apagones, sin necesidad de un sistema de mayor capacidad.",
-    "Problema_que_Resuelve": "El cliente sufre apagones frecuentes y quiere la solucion fija mas accesible del catalogo.",
+    "Beneficios": "La entrada más económica para tener respaldo eléctrico real ante apagones, sin necesidad de un sistema de mayor capacidad.",
+    "Problema_que_Resuelve": "El cliente sufre apagones frecuentes y quiere la solución fija más accesible del catálogo.",
     "Tipo_Cliente_Recomendado": "Residencial con consumo bajo (nevera, luces, TV, router).",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "3kW de salida, entrada 110/220Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "3kW de salida, entrada 110/220Vdc, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-INV-5KW-001",
     "Imagen_Principal": "media_blueprint/SUNARK-INV-5KW-001/principal.jpg",
     "Nombre_Comercial": "Inversor Off-Grid 5kW",
     "Categoria": "Inversor",
-    "Beneficios": "Respaldo electrico solido para una vivienda o comercio pequeno, sin depender de la red durante el apagon.",
-    "Problema_que_Resuelve": "El cliente necesita cubrir mas carga que la de un sistema de entrada (A/C ocasional, mas electrodomesticos).",
+    "Beneficios": "Respaldo eléctrico sólido para una vivienda o comercio pequeño, sin depender de la red durante el apagón.",
+    "Problema_que_Resuelve": "El cliente necesita cubrir más carga que la de un sistema de entrada (A/C ocasional, más electrodomésticos).",
     "Tipo_Cliente_Recomendado": "Residencial y comercio pequeno con consumo medio.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "5kW de salida, entrada 110/220Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "5kW de salida, entrada 110/220Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-5KW-001",
     "Imagen_Principal": "media_blueprint/SOLIS-INV-5KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 5kW Solis",
+    "Nombre_Comercial": "Inversor Híbrido 5kW Solis",
     "Categoria": "Inversor",
-    "Beneficios": "Respaldo ante apagones Y ahorro en la factura vendiendo el excedente de energia a la red. Marca reconocida internacionalmente, mejor garantia de la categoria.",
-    "Problema_que_Resuelve": "El cliente quiere independencia energetica sin renunciar a los beneficios de estar conectado a la red.",
-    "Tipo_Cliente_Recomendado": "Residencial o comercio pequeno que prioriza marca reconocida y garantia extendida.",
+    "Beneficios": "Respaldo ante apagones Y ahorro en la factura vendiendo el excedente de energía a la red. Marca reconocida internacionalmente, mejor garantía de la categoría.",
+    "Problema_que_Resuelve": "El cliente quiere independencia energética sin renunciar a los beneficios de estar conectado a la red.",
+    "Tipo_Cliente_Recomendado": "Residencial o comercio pequeño que prioriza marca reconocida y garantía extendida.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "5kW hibrido, bateria 40-60V, MPPT 90-435V, 10 anos de garantia."
+    "Caracteristicas_Principales": "5kW híbrido, batería 40-60V, MPPT 90-435V, 10 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-10KW-001",
     "Imagen_Principal": "media_blueprint/SOLIS-INV-10KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 10kW Solis WiFi",
+    "Nombre_Comercial": "Inversor Híbrido 10kW Solis WiFi",
     "Categoria": "Inversor",
-    "Beneficios": "La opcion premium para negocios que no pueden permitirse un apagon: mayor potencia, monitoreo remoto por WiFi y la garantia de una marca lider mundial.",
-    "Problema_que_Resuelve": "El cliente tiene una operacion comercial que se detiene por completo sin electricidad.",
-    "Tipo_Cliente_Recomendado": "Comercio establecido con consumo alto y operacion critica.",
+    "Beneficios": "La opción premium para negocios que no pueden permitirse un apagón: mayor potencia, monitoreo remoto por WiFi y la garantía de una marca líder mundial.",
+    "Problema_que_Resuelve": "El cliente tiene una operación comercial que se detiene por completo sin electricidad.",
+    "Tipo_Cliente_Recomendado": "Comercio establecido con consumo alto y operación crítica.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "10kW hibrido con WiFi, MPPT 100-450Vdc, AC 120/240V."
+    "Caracteristicas_Principales": "10kW híbrido con WiFi, MPPT 100-450Vdc, AC 120/240V."
   },
   {
     "SKU": "SUNARK-INV-10KW-001",
@@ -71,7 +71,7 @@
     "Nombre_Comercial": "Inversor Off-Grid 10kW WiFi",
     "Categoria": "Inversor",
     "Beneficios": "Toda la potencia del tier 10kW para negocios en zonas sin red estable, con monitoreo remoto incluido.",
-    "Problema_que_Resuelve": "El cliente esta en una zona sin red confiable y necesita independencia total, no solo respaldo.",
+    "Problema_que_Resuelve": "El cliente está en una zona sin red confiable y necesita independencia total, no solo respaldo.",
     "Tipo_Cliente_Recomendado": "Comercio o vivienda en zona rural o con red muy inestable.",
     "Garantia_Anios": 5,
     "Caracteristicas_Principales": "10kW off-grid con WiFi, MPPT 125-425Vdc, AC 120/240V."
@@ -79,299 +79,299 @@
   {
     "SKU": "INHNRG-INV-10KW-001",
     "Imagen_Principal": "media_blueprint/INHNRG-INV-10KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 10kW INHENERGY WiFi",
+    "Nombre_Comercial": "Inversor Híbrido 10kW INHENERGY WiFi",
     "Categoria": "Inversor",
-    "Beneficios": "La misma capacidad de 10kW hibrido con monitoreo WiFi, a un precio mas accesible que las marcas premium.",
-    "Problema_que_Resuelve": "El cliente necesita un sistema de 10kW hibrido pero con presupuesto mas ajustado que la version Solis.",
+    "Beneficios": "La misma capacidad de 10kW híbrido con monitoreo WiFi, a un precio más accesible que las marcas premium.",
+    "Problema_que_Resuelve": "El cliente necesita un sistema de 10kW híbrido pero con presupuesto más ajustado que la versión Solis.",
     "Tipo_Cliente_Recomendado": "Comercio con consumo alto y sensibilidad al precio.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "10kW hibrido con WiFi, MPPT 80-500Vdc, AC 120/240V."
+    "Caracteristicas_Principales": "10kW híbrido con WiFi, MPPT 80-500Vdc, AC 120/240V."
   },
   {
     "SKU": "SUNARK-BAT-512-001",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-512-001/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 5.12kWh",
+    "Nombre_Comercial": "Banco de Baterías de Litio 5.12kWh",
     "Categoria": "Bateria",
-    "Beneficios": "Almacena energia solar para usarla de noche o durante un apagon, con quimica LFP: mas segura y de mayor vida util que el plomo-acido tradicional.",
-    "Problema_que_Resuelve": "El cliente genera energia solar de dia pero necesita electricidad tambien de noche o durante un apagon.",
-    "Tipo_Cliente_Recomendado": "Cualquier cliente de los tiers 3kW o 5kW que quiera autonomia real, no solo generacion diurna.",
+    "Beneficios": "Almacena energía solar para usarla de noche o durante un apagón, con química LFP: más segura y de mayor vida útil que el plomo-ácido tradicional.",
+    "Problema_que_Resuelve": "El cliente genera energía solar de día pero necesita electricidad también de noche o durante un apagón.",
+    "Tipo_Cliente_Recomendado": "Cualquier cliente de los tiers 3kW o 5kW que quiera autonomía real, no solo generación diurna.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "51.2V 100Ah, 5.12kWh, DOD recomendado 80%, 10 anos de garantia."
+    "Caracteristicas_Principales": "51.2V 100Ah, 5.12kWh, DOD recomendado 80%, 10 años de garantía."
   },
   {
     "SKU": "SUNARK-BAT-512-002",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-512-002/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 5.12kWh (25.6V)",
+    "Nombre_Comercial": "Banco de Baterías de Litio 5.12kWh (25.6V)",
     "Categoria": "Bateria",
-    "Beneficios": "Misma capacidad de almacenamiento que la version estandar, compatible especificamente con el inversor economico de 3kW.",
-    "Problema_que_Resuelve": "El cliente eligio el sistema de entrada de 3kW y necesita la bateria compatible con ese inversor.",
-    "Tipo_Cliente_Recomendado": "Residencial con el kit de entrada (tier 3kW economico).",
+    "Beneficios": "Misma capacidad de almacenamiento que la versión estándar, compatible específicamente con el inversor económico de 3kW.",
+    "Problema_que_Resuelve": "El cliente eligió el sistema de entrada de 3kW y necesita la batería compatible con ese inversor.",
+    "Tipo_Cliente_Recomendado": "Residencial con el kit de entrada (tier 3kW económico).",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "25.6V 200Ah, 5.12kWh, DOD recomendado 80%, 10 anos de garantia."
+    "Caracteristicas_Principales": "25.6V 200Ah, 5.12kWh, DOD recomendado 80%, 10 años de garantía."
   },
   {
     "SKU": "SUNARK-BAT-1024-001",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-1024-001/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 10.24kWh Apilable",
+    "Nombre_Comercial": "Banco de Baterías de Litio 10.24kWh Apilable",
     "Categoria": "Bateria",
-    "Beneficios": "El doble de autonomia que la bateria estandar, pensado para negocios que no pueden arriesgarse a quedarse sin energia.",
-    "Problema_que_Resuelve": "El cliente necesita 8-12 horas de autonomia, no solo 4-6.",
-    "Tipo_Cliente_Recomendado": "Comercio con el tier 10kW o residencial con consumo alto y equipos criticos.",
+    "Beneficios": "El doble de autonomía que la batería estándar, pensado para negocios que no pueden arriesgarse a quedarse sin energía.",
+    "Problema_que_Resuelve": "El cliente necesita 8-12 horas de autonomía, no solo 4-6.",
+    "Tipo_Cliente_Recomendado": "Comercio con el tier 10kW o residencial con consumo alto y equipos críticos.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "51.2V 200Ah, 10.24kWh, DOD recomendado 80%, 10 anos de garantia, diseno apilable."
+    "Caracteristicas_Principales": "51.2V 200Ah, 10.24kWh, DOD recomendado 80%, 10 años de garantía, diseño apilable."
   },
   {
     "SKU": "SUNARK-BAT-1600-001",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-1600-001/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 16kWh Apilable",
+    "Nombre_Comercial": "Banco de Baterías de Litio 16kWh Apilable",
     "Categoria": "Bateria",
-    "Beneficios": "La mayor capacidad de almacenamiento del catalogo estandar: mas horas de autonomia sin necesidad de un diseno a medida.",
-    "Problema_que_Resuelve": "El cliente necesita mas de 10 horas de autonomia o tiene una carga critica que no puede fallar.",
-    "Tipo_Cliente_Recomendado": "Comercio con operacion critica o cliente que prioriza independencia energetica sobre el costo inicial.",
+    "Beneficios": "La mayor capacidad de almacenamiento del catálogo estándar: más horas de autonomía sin necesidad de un diseño a medida.",
+    "Problema_que_Resuelve": "El cliente necesita más de 10 horas de autonomía o tiene una carga crítica que no puede fallar.",
+    "Tipo_Cliente_Recomendado": "Comercio con operación crítica o cliente que prioriza independencia energética sobre el costo inicial.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "51.2V 314Ah, 16kWh, DOD recomendado 80%, 10 anos de garantia, diseno apilable."
+    "Caracteristicas_Principales": "51.2V 314Ah, 16kWh, DOD recomendado 80%, 10 años de garantía, diseño apilable."
   },
   {
     "SKU": "SUNARK-EVC-7KW-001",
     "Imagen_Principal": "media_blueprint/SUNARK-EVC-7KW-001/principal.jpg",
-    "Nombre_Comercial": "Cargador de Vehiculo Electrico 7kW",
+    "Nombre_Comercial": "Cargador de Vehículo Eléctrico 7kW",
     "Categoria": "Cargador EV",
-    "Beneficios": "Carga el vehiculo electrico en casa usando la misma energia solar del sistema, sin depender de estaciones publicas.",
-    "Problema_que_Resuelve": "El cliente tiene o planea comprar un vehiculo electrico y quiere cargarlo con energia propia.",
-    "Tipo_Cliente_Recomendado": "Cliente de un kit hibrido de 10kW que tiene o va a adquirir un vehiculo electrico.",
+    "Beneficios": "Carga el vehículo eléctrico en casa usando la misma energía solar del sistema, sin depender de estaciones públicas.",
+    "Problema_que_Resuelve": "El cliente tiene o planea comprar un vehículo eléctrico y quiere cargarlo con energía propia.",
+    "Tipo_Cliente_Recomendado": "Cliente de un kit híbrido de 10kW que tiene o va a adquirir un vehículo eléctrico.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "7kW, wallbox monofasico, conector Type1 32A, pantalla 4.3 pulgadas, 10 anos de garantia."
+    "Caracteristicas_Principales": "7kW, wallbox monofásico, conector Type1 32A, pantalla 4.3 pulgadas, 10 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-200W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-200W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil A1",
+    "Nombre_Comercial": "Estación de Energía Portátil A1",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "Energia de emergencia instantanea sin instalacion ni electricista: la conectas y listo.",
-    "Problema_que_Resuelve": "El cliente aun no decide invertir en un sistema fijo pero quiere respaldo basico ya mismo.",
-    "Tipo_Cliente_Recomendado": "Individual, estudiante o cualquiera que necesite carga de celular y luz durante un apagon corto.",
+    "Beneficios": "Energía de emergencia instantánea sin instalación ni electricista: la conectas y listo.",
+    "Problema_que_Resuelve": "El cliente aún no decide invertir en un sistema fijo pero quiere respaldo básico ya mismo.",
+    "Tipo_Cliente_Recomendado": "Individual, estudiante o cualquiera que necesite carga de celular y luz durante un apagón corto.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "145Wh, salida AC 110V, DC y USB, 5 anos de garantia."
+    "Caracteristicas_Principales": "145Wh, salida AC 110V, DC y USB, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-500W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-500W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil A5",
+    "Nombre_Comercial": "Estación de Energía Portátil A5",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "Mas del triple de capacidad que la entrada de la linea, suficiente para varias horas de luces, router y carga de dispositivos.",
-    "Problema_que_Resuelve": "El cliente necesita mas autonomia portatil de la que da la version basica.",
-    "Tipo_Cliente_Recomendado": "Residencial que quiere respaldo portatil para varias horas, sin instalacion fija.",
+    "Beneficios": "Más del triple de capacidad que la entrada de la línea, suficiente para varias horas de luces, router y carga de dispositivos.",
+    "Problema_que_Resuelve": "El cliente necesita más autonomía portátil de la que da la versión básica.",
+    "Tipo_Cliente_Recomendado": "Residencial que quiere respaldo portátil para varias horas, sin instalación fija.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "520Wh, salida AC 110V, DC, USB y USB-C, 5 anos de garantia."
+    "Caracteristicas_Principales": "520Wh, salida AC 110V, DC, USB y USB-C, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-600W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-600W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil A6",
+    "Nombre_Comercial": "Estación de Energía Portátil A6",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "La misma bateria de 520Wh que la A5 pero con mayor potencia de salida, para conectar mas equipos a la vez.",
-    "Problema_que_Resuelve": "El cliente quiere alimentar equipos de mayor consumo simultaneo que los que soporta la A5.",
-    "Tipo_Cliente_Recomendado": "Residencial que ya conoce la linea A5 y quiere un upgrade de potencia.",
+    "Beneficios": "La misma batería de 520Wh que la A5 pero con mayor potencia de salida, para conectar más equipos a la vez.",
+    "Problema_que_Resuelve": "El cliente quiere alimentar equipos de mayor consumo simultáneo que los que soporta la A5.",
+    "Tipo_Cliente_Recomendado": "Residencial que ya conoce la línea A5 y quiere un upgrade de potencia.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "520Wh, mayor potencia de salida que la A5, USB, USB-C y TYP-C, 5 anos de garantia."
+    "Caracteristicas_Principales": "520Wh, mayor potencia de salida que la A5, USB, USB-C y TYP-C, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-1200W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-1200W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil T11",
+    "Nombre_Comercial": "Estación de Energía Portátil T11",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "Suficiente capacidad para mantener una nevera chica funcionando varias horas durante un apagon, sin instalacion fija.",
-    "Problema_que_Resuelve": "El cliente tiene un equipo critico (nevera chica, equipo medico portatil) y necesita respaldo confiable ya.",
-    "Tipo_Cliente_Recomendado": "Residencial con equipos criticos que no quiere o no puede instalar un sistema fijo todavia.",
+    "Beneficios": "Suficiente capacidad para mantener una nevera chica funcionando varias horas durante un apagón, sin instalación fija.",
+    "Problema_que_Resuelve": "El cliente tiene un equipo crítico (nevera chica, equipo médico portátil) y necesita respaldo confiable ya.",
+    "Tipo_Cliente_Recomendado": "Residencial con equipos críticos que no quiere o no puede instalar un sistema fijo todavía.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "1008Wh, 8 puertos USB, 2 USB-C, salida AC 110V, 5 anos de garantia."
+    "Caracteristicas_Principales": "1008Wh, 8 puertos USB, 2 USB-C, salida AC 110V, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-2400W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-2400W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil T20",
+    "Nombre_Comercial": "Estación de Energía Portátil T20",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "Soporta nevera y microondas o un A/C portatil chico al mismo tiempo: portabilidad con potencia real de respaldo.",
-    "Problema_que_Resuelve": "El cliente necesita alimentar varios equipos de consumo medio a la vez sin instalacion fija.",
-    "Tipo_Cliente_Recomendado": "Residencial con varios equipos criticos o negocio movil de tamano mediano.",
+    "Beneficios": "Soporta nevera y microondas o un A/C portátil chico al mismo tiempo: portabilidad con potencia real de respaldo.",
+    "Problema_que_Resuelve": "El cliente necesita alimentar varios equipos de consumo medio a la vez sin instalación fija.",
+    "Tipo_Cliente_Recomendado": "Residencial con varios equipos críticos o negocio móvil de tamaño mediano.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "2016Wh, salida AC 110V, USB-C y TYP-C de carga rapida, 5 anos de garantia."
+    "Caracteristicas_Principales": "2016Wh, salida AC 110V, USB-C y TYP-C de carga rápida, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-3000W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-3000W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil T30",
+    "Nombre_Comercial": "Estación de Energía Portátil T30",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "Pensada para negocios moviles: energia confiable para un puesto, food truck o feria durante toda la jornada.",
-    "Problema_que_Resuelve": "El cliente tiene un negocio movil y necesita energia portatil durante horas de operacion continua.",
-    "Tipo_Cliente_Recomendado": "Negocios moviles: puestos, food trucks, ferias, eventos.",
+    "Beneficios": "Pensada para negocios móviles: energía confiable para un puesto, food truck o feria durante toda la jornada.",
+    "Problema_que_Resuelve": "El cliente tiene un negocio móvil y necesita energía portátil durante horas de operación continua.",
+    "Tipo_Cliente_Recomendado": "Negocios móviles: puestos, food trucks, ferias, eventos.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "2688Wh, salida AC 110V, USB-C y TYP-C de carga rapida, 5 anos de garantia."
+    "Caracteristicas_Principales": "2688Wh, salida AC 110V, USB-C y TYP-C de carga rápida, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-STA-5376W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-STA-5376W-001/principal.jpg",
-    "Nombre_Comercial": "Estacion de Energia Portatil T50",
+    "Nombre_Comercial": "Estación de Energía Portátil T50",
     "Categoria": "Estacion Portatil",
-    "Beneficios": "El tope de la linea portatil: casi equivalente a un kit fijo de 5kW pero completamente movil.",
-    "Problema_que_Resuelve": "El cliente necesita la maxima capacidad portatil disponible, sin instalacion fija ni permisos.",
-    "Tipo_Cliente_Recomendado": "Negocio movil de mayor demanda energetica o cliente que prioriza flexibilidad sobre instalacion fija.",
+    "Beneficios": "El tope de la línea portátil: casi equivalente a un kit fijo de 5kW pero completamente móvil.",
+    "Problema_que_Resuelve": "El cliente necesita la máxima capacidad portátil disponible, sin instalación fija ni permisos.",
+    "Tipo_Cliente_Recomendado": "Negocio móvil de mayor demanda energética o cliente que prioriza flexibilidad sobre instalación fija.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "5376Wh, la mayor capacidad de la linea portatil, salida AC 110V, USB-C y TYP-C, 5 anos de garantia."
+    "Caracteristicas_Principales": "5376Wh, la mayor capacidad de la línea portátil, salida AC 110V, USB-C y TYP-C, 5 años de garantía."
   },
   {
     "SKU": "SUNEVO-CHG-100W-001",
     "Imagen_Principal": "media_blueprint/SUNEVO-CHG-100W-001/principal.jpg",
     "Nombre_Comercial": "Panel Solar Plegable 100W",
     "Categoria": "Cargador Solar Plegable",
-    "Beneficios": "Recarga las estaciones portatiles directamente del sol, sin depender de un tomacorriente.",
-    "Problema_que_Resuelve": "El cliente quiere que su estacion portatil se recargue sola durante el dia.",
-    "Tipo_Cliente_Recomendado": "Cliente de las estaciones A1, A5 o A6 que quiere autonomia solar real.",
+    "Beneficios": "Recarga las estaciones portátiles directamente del sol, sin depender de un tomacorriente.",
+    "Problema_que_Resuelve": "El cliente quiere que su estación portátil se recargue sola durante el día.",
+    "Tipo_Cliente_Recomendado": "Cliente de las estaciones A1, A5 o A6 que quiere autonomía solar real.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "100W, 4.97kg, se pliega a 550x585x30mm, 10 anos de garantia."
+    "Caracteristicas_Principales": "100W, 4.97kg, se pliega a 550x585x30mm, 10 años de garantía."
   },
   {
     "SKU": "SUNEVO-CHG-200W-001",
     "Imagen_Principal": "media_blueprint/SUNEVO-CHG-200W-001/principal.jpg",
     "Nombre_Comercial": "Panel Solar Plegable 200W",
     "Categoria": "Cargador Solar Plegable",
-    "Beneficios": "El doble de potencia de carga solar, pensado para la estacion T11 y su mayor capacidad de bateria.",
-    "Problema_que_Resuelve": "El cliente tiene una estacion T11 y quiere recargarla mas rapido con energia solar.",
-    "Tipo_Cliente_Recomendado": "Cliente de la estacion T11.",
+    "Beneficios": "El doble de potencia de carga solar, pensado para la estación T11 y su mayor capacidad de batería.",
+    "Problema_que_Resuelve": "El cliente tiene una estación T11 y quiere recargarla más rápido con energía solar.",
+    "Tipo_Cliente_Recomendado": "Cliente de la estación T11.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "200W, 9.5kg, se pliega a 567x585x55mm, 10 anos de garantia."
+    "Caracteristicas_Principales": "200W, 9.5kg, se pliega a 567x585x55mm, 10 años de garantía."
   },
   {
     "SKU": "SUNEVO-CHG-300W-001",
     "Imagen_Principal": "media_blueprint/SUNEVO-CHG-300W-001/principal.jpg",
     "Nombre_Comercial": "Panel Solar Plegable 300W",
     "Categoria": "Cargador Solar Plegable",
-    "Beneficios": "La mayor potencia de carga solar portatil del catalogo, para las estaciones T20, T30 y T50.",
-    "Problema_que_Resuelve": "El cliente tiene una estacion de alta capacidad (T20, T30 o T50) y quiere recargarla con energia solar lo mas rapido posible.",
-    "Tipo_Cliente_Recomendado": "Cliente de las estaciones T20, T30 o T50, incluyendo negocios moviles.",
+    "Beneficios": "La mayor potencia de carga solar portátil del catálogo, para las estaciones T20, T30 y T50.",
+    "Problema_que_Resuelve": "El cliente tiene una estación de alta capacidad (T20, T30 o T50) y quiere recargarla con energía solar lo más rápido posible.",
+    "Tipo_Cliente_Recomendado": "Cliente de las estaciones T20, T30 o T50, incluyendo negocios móviles.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "300W, 13.6kg, se pliega a 607x785x55mm, 10 anos de garantia."
+    "Caracteristicas_Principales": "300W, 13.6kg, se pliega a 607x785x55mm, 10 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-6KW-001",
     "Imagen_Principal": null,
-    "Nombre_Comercial": "Inversor Hibrido 6kW Solis",
+    "Nombre_Comercial": "Inversor Híbrido 6kW Solis",
     "Categoria": "Inversor",
-    "Beneficios": "Un paso mas de potencia sobre el 5kW Solis, misma marca reconocida y garantia extendida, para cargas ligeramente mayores.",
-    "Problema_que_Resuelve": "El cliente necesita un poco mas de capacidad que el tier 5kW pero no llega a justificar el salto a 8kW.",
-    "Tipo_Cliente_Recomendado": "Residencial de consumo medio-alto o comercio pequeno.",
+    "Beneficios": "Un paso más de potencia sobre el 5kW Solis, misma marca reconocida y garantía extendida, para cargas ligeramente mayores.",
+    "Problema_que_Resuelve": "El cliente necesita un poco más de capacidad que el tier 5kW pero no llega a justificar el salto a 8kW.",
+    "Tipo_Cliente_Recomendado": "Residencial de consumo medio-alto o comercio pequeño.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "6kW hibrido, MPPT 90-435Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "6kW híbrido, MPPT 90-435Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-8KW-001",
     "Imagen_Principal": null,
-    "Nombre_Comercial": "Inversor Hibrido 8kW Solis",
+    "Nombre_Comercial": "Inversor Híbrido 8kW Solis",
     "Categoria": "Inversor",
     "Beneficios": "Capacidad intermedia para negocios en crecimiento que quieren margen de potencia sin llegar al tier de 10kW.",
     "Problema_que_Resuelve": "El cliente tiene una carga comercial que un sistema de 5-6kW se queda corto para cubrir.",
-    "Tipo_Cliente_Recomendado": "Comercio pequeno-mediano con equipos de mayor consumo.",
+    "Tipo_Cliente_Recomendado": "Comercio pequeño-mediano con equipos de mayor consumo.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "8kW hibrido, MPPT 90-435Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "8kW híbrido, MPPT 90-435Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-12KW-001",
     "Imagen_Principal": null,
-    "Nombre_Comercial": "Inversor Hibrido 12kW Solis",
+    "Nombre_Comercial": "Inversor Híbrido 12kW Solis",
     "Categoria": "Inversor",
-    "Beneficios": "Potencia superior al tier estandar de 10kW para operaciones que necesitan margen adicional de carga simultanea.",
-    "Problema_que_Resuelve": "El cliente tiene una operacion critica con picos de consumo por encima de 10kW.",
-    "Tipo_Cliente_Recomendado": "Comercio establecido o instalacion con multiples equipos pesados.",
+    "Beneficios": "Potencia superior al tier estándar de 10kW para operaciones que necesitan margen adicional de carga simultánea.",
+    "Problema_que_Resuelve": "El cliente tiene una operación crítica con picos de consumo por encima de 10kW.",
+    "Tipo_Cliente_Recomendado": "Comercio establecido o instalación con múltiples equipos pesados.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "12kW hibrido, MPPT 150-450Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "12kW híbrido, MPPT 150-450Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-14KW-001",
     "Imagen_Principal": "media_blueprint/SOLIS-INV-14KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 14kW Solis",
+    "Nombre_Comercial": "Inversor Híbrido 14kW Solis",
     "Categoria": "Inversor",
-    "Beneficios": "Uno de los inversores hibridos de mayor capacidad del catalogo, para instalaciones de alta demanda.",
+    "Beneficios": "Uno de los inversores híbridos de mayor capacidad del catálogo, para instalaciones de alta demanda.",
     "Problema_que_Resuelve": "El cliente necesita cubrir una carga industrial o comercial grande sin dividir en varios inversores.",
-    "Tipo_Cliente_Recomendado": "Comercio grande o instalacion industrial ligera.",
+    "Tipo_Cliente_Recomendado": "Comercio grande o instalación industrial ligera.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "14kW hibrido, MPPT 150-450Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "14kW híbrido, MPPT 150-450Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOLIS-INV-16KW-001",
     "Imagen_Principal": "media_blueprint/SOLIS-INV-16KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 16kW Solis",
+    "Nombre_Comercial": "Inversor Híbrido 16kW Solis",
     "Categoria": "Inversor",
-    "Beneficios": "La opcion de mayor potencia de la linea Solis, tope del catalogo para proyectos de gran escala.",
-    "Problema_que_Resuelve": "El cliente tiene la mayor demanda energetica del catalogo y busca la marca premium.",
-    "Tipo_Cliente_Recomendado": "Instalacion comercial o industrial de gran escala.",
+    "Beneficios": "La opción de mayor potencia de la línea Solis, tope del catálogo para proyectos de gran escala.",
+    "Problema_que_Resuelve": "El cliente tiene la mayor demanda energética del catálogo y busca la marca premium.",
+    "Tipo_Cliente_Recomendado": "Instalación comercial o industrial de gran escala.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "16kW hibrido, MPPT 150-450Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "16kW híbrido, MPPT 150-450Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOSEN-INV-8KW-001",
     "Imagen_Principal": "media_blueprint/SOSEN-INV-8KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 8kW SoSen WiFi",
+    "Nombre_Comercial": "Inversor Híbrido 8kW SoSen WiFi",
     "Categoria": "Inversor",
     "Beneficios": "Alternativa de marca al tier 8kW, con monitoreo WiFi incluido y precio competitivo.",
-    "Problema_que_Resuelve": "El cliente busca capacidad de 8kW hibrido con presupuesto mas flexible que las marcas premium.",
-    "Tipo_Cliente_Recomendado": "Comercio pequeno-mediano sensible al precio.",
+    "Problema_que_Resuelve": "El cliente busca capacidad de 8kW híbrido con presupuesto más flexible que las marcas premium.",
+    "Tipo_Cliente_Recomendado": "Comercio pequeño-mediano sensible al precio.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "8kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "8kW híbrido con WiFi, MPPT 100-500Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOSEN-INV-10KW-001",
     "Imagen_Principal": "media_blueprint/SOSEN-INV-10KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 10kW SoSen WiFi",
+    "Nombre_Comercial": "Inversor Híbrido 10kW SoSen WiFi",
     "Categoria": "Inversor",
-    "Beneficios": "Tercera opcion de marca para el tier 10kW hibrido (junto a Solis e INHENERGY), con rango MPPT mas amplio.",
-    "Problema_que_Resuelve": "El cliente quiere comparar marcas en el tier 10kW hibrido antes de decidir.",
-    "Tipo_Cliente_Recomendado": "Comercio con consumo alto que evalua varias marcas.",
+    "Beneficios": "Tercera opción de marca para el tier 10kW híbrido (junto a Solis e INHENERGY), con rango MPPT más amplio.",
+    "Problema_que_Resuelve": "El cliente quiere comparar marcas en el tier 10kW híbrido antes de decidir.",
+    "Tipo_Cliente_Recomendado": "Comercio con consumo alto que evalúa varias marcas.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "10kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "10kW híbrido con WiFi, MPPT 100-500Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOSEN-INV-12KW-001",
     "Imagen_Principal": "media_blueprint/SOSEN-INV-12KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 12kW SoSen WiFi",
+    "Nombre_Comercial": "Inversor Híbrido 12kW SoSen WiFi",
     "Categoria": "Inversor",
-    "Beneficios": "Capacidad de 12kW con monitoreo remoto y precio mas accesible que la linea Solis equivalente.",
-    "Problema_que_Resuelve": "El cliente necesita 12kW hibrido con presupuesto mas ajustado.",
+    "Beneficios": "Capacidad de 12kW con monitoreo remoto y precio más accesible que la línea Solis equivalente.",
+    "Problema_que_Resuelve": "El cliente necesita 12kW híbrido con presupuesto más ajustado.",
     "Tipo_Cliente_Recomendado": "Comercio establecido sensible al precio.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "12kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "12kW híbrido con WiFi, MPPT 100-500Vdc, 5 años de garantía."
   },
   {
     "SKU": "SOSEN-INV-15KW-001",
     "Imagen_Principal": "media_blueprint/SOSEN-INV-15KW-001/principal.jpg",
-    "Nombre_Comercial": "Inversor Hibrido 15kW SoSen WiFi",
+    "Nombre_Comercial": "Inversor Híbrido 15kW SoSen WiFi",
     "Categoria": "Inversor",
-    "Beneficios": "La opcion de mayor potencia de la marca SoSen, para instalaciones grandes con presupuesto controlado.",
-    "Problema_que_Resuelve": "El cliente tiene una demanda alta y busca la opcion mas economica en ese rango de potencia.",
-    "Tipo_Cliente_Recomendado": "Instalacion comercial grande sensible al precio.",
+    "Beneficios": "La opción de mayor potencia de la marca SoSen, para instalaciones grandes con presupuesto controlado.",
+    "Problema_que_Resuelve": "El cliente tiene una demanda alta y busca la opción más económica en ese rango de potencia.",
+    "Tipo_Cliente_Recomendado": "Instalación comercial grande sensible al precio.",
     "Garantia_Anios": 5,
-    "Caracteristicas_Principales": "15kW hibrido con WiFi, MPPT 100-500Vdc, 5 anos de garantia."
+    "Caracteristicas_Principales": "15kW híbrido con WiFi, MPPT 100-500Vdc, 5 años de garantía."
   },
   {
     "SKU": "SUNARK-INV-5KW-002",
     "Imagen_Principal": "media_blueprint/SUNARK-INV-5KW-002/principal.jpg",
     "Nombre_Comercial": "Inversor Off-Grid 5kW SunArk (paralelizable)",
     "Categoria": "Inversor",
-    "Beneficios": "Misma capacidad que el HSI 5000U pero con opcion de conectar hasta 6 unidades en paralelo para crecer a futuro.",
-    "Problema_que_Resuelve": "El cliente podria necesitar mas potencia mas adelante y quiere un sistema que pueda escalar.",
+    "Beneficios": "Misma capacidad que el HSI 5000U pero con opción de conectar hasta 6 unidades en paralelo para crecer a futuro.",
+    "Problema_que_Resuelve": "El cliente podría necesitar más potencia más adelante y quiere un sistema que pueda escalar.",
     "Tipo_Cliente_Recomendado": "Residencial o comercio que planea crecer su consumo con el tiempo.",
     "Garantia_Anios": 3,
-    "Caracteristicas_Principales": "5kW off-grid, parallel 1-6 unidades, 3 anos de garantia."
+    "Caracteristicas_Principales": "5kW off-grid, parallel 1-6 unidades, 3 años de garantía."
   },
   {
     "SKU": "SUNARK-INV-6500W-001",
     "Imagen_Principal": "media_blueprint/SUNARK-INV-6500W-001/principal.jpg",
     "Nombre_Comercial": "Inversor Off-Grid 6.5kW SunArk",
     "Categoria": "Inversor",
-    "Beneficios": "Un tier intermedio entre 5kW y 8kW para cargas que no encajan exactamente en los tamanos estandar.",
+    "Beneficios": "Un tier intermedio entre 5kW y 8kW para cargas que no encajan exactamente en los tamaños estándar.",
     "Problema_que_Resuelve": "El cliente tiene una carga que el tier de 5kW no cubre pero el de 8kW le queda grande en presupuesto.",
-    "Tipo_Cliente_Recomendado": "Residencial de consumo alto o comercio pequeno.",
+    "Tipo_Cliente_Recomendado": "Residencial de consumo alto o comercio pequeño.",
     "Garantia_Anios": 3,
-    "Caracteristicas_Principales": "6.5kW off-grid, doble MPPT, split-phase, 3 anos de garantia."
+    "Caracteristicas_Principales": "6.5kW off-grid, doble MPPT, split-phase, 3 años de garantía."
   },
   {
     "SKU": "SUNARK-INV-8KW-001",
@@ -379,42 +379,42 @@
     "Nombre_Comercial": "Inversor Off-Grid 8kW SunArk",
     "Categoria": "Inversor",
     "Beneficios": "Mayor potencia off-grid antes de saltar al tier de 10kW, con doble MPPT y capacidad de paralelo.",
-    "Problema_que_Resuelve": "El cliente en zona sin red estable necesita mas de 6.5kW pero no llega a requerir 10kW.",
+    "Problema_que_Resuelve": "El cliente en zona sin red estable necesita más de 6.5kW pero no llega a requerir 10kW.",
     "Tipo_Cliente_Recomendado": "Comercio o vivienda en zona rural con consumo alto.",
     "Garantia_Anios": 3,
-    "Caracteristicas_Principales": "8kW off-grid, doble MPPT, parallel 1-6 unidades, 3 anos de garantia."
+    "Caracteristicas_Principales": "8kW off-grid, doble MPPT, parallel 1-6 unidades, 3 años de garantía."
   },
   {
     "SKU": "SUNARK-BAT-256-001",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-256-001/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 2.56kWh",
+    "Nombre_Comercial": "Banco de Baterías de Litio 2.56kWh",
     "Categoria": "Bateria",
-    "Beneficios": "La entrada mas economica de almacenamiento para complementar sistemas pequenos o ampliar autonomia por modulos.",
-    "Problema_que_Resuelve": "El cliente quiere anadir autonomia de forma incremental sin comprar una bateria grande de una vez.",
-    "Tipo_Cliente_Recomendado": "Residencial con sistema de entrada que quiere sumar autonomia paso a paso.",
+    "Beneficios": "La entrada más económica de almacenamiento para complementar sistemas pequeños o ampliar autonomía por módulos.",
+    "Problema_que_Resuelve": "El cliente quiere añadir autonomía de forma incremental sin comprar una batería grande de una vez.",
+    "Tipo_Cliente_Recomendado": "Residencial con sistema de entrada que quiere sumar autonomía paso a paso.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "25.6V 100Ah, 2.56kWh, formato rack mount, 10 anos de garantia."
+    "Caracteristicas_Principales": "25.6V 100Ah, 2.56kWh, formato rack mount, 10 años de garantía."
   },
   {
     "SKU": "SUNARK-BAT-480-001",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-480-001/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 4.8kWh (48V)",
+    "Nombre_Comercial": "Banco de Baterías de Litio 4.8kWh (48V)",
     "Categoria": "Bateria",
-    "Beneficios": "Formato rack mount de 48V para instalaciones que prefieren voltaje de bus mas alto y apilamiento en rack.",
+    "Beneficios": "Formato rack mount de 48V para instalaciones que prefieren voltaje de bus más alto y apilamiento en rack.",
     "Problema_que_Resuelve": "El cliente tiene o planea un sistema en formato rack (rack mount) en vez de wall mount.",
-    "Tipo_Cliente_Recomendado": "Comercio con sala tecnica o instalacion tipo rack.",
+    "Tipo_Cliente_Recomendado": "Comercio con sala técnica o instalación tipo rack.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "48V 100Ah, 4.8kWh, formato rack mount, 10 anos de garantia."
+    "Caracteristicas_Principales": "48V 100Ah, 4.8kWh, formato rack mount, 10 años de garantía."
   },
   {
     "SKU": "SUNARK-BAT-960-001",
     "Imagen_Principal": "media_blueprint/SUNARK-BAT-960-001/principal.jpg",
-    "Nombre_Comercial": "Banco de Baterias de Litio 9.6kWh (48V)",
+    "Nombre_Comercial": "Banco de Baterías de Litio 9.6kWh (48V)",
     "Categoria": "Bateria",
-    "Beneficios": "Capacidad casi equivalente a la bateria de 10.24kWh estandar, en formato rack mount de 48V.",
-    "Problema_que_Resuelve": "El cliente necesita autonomia alta en formato rack en vez de wall mount.",
-    "Tipo_Cliente_Recomendado": "Comercio con instalacion tipo rack y consumo alto.",
+    "Beneficios": "Capacidad casi equivalente a la batería de 10.24kWh estándar, en formato rack mount de 48V.",
+    "Problema_que_Resuelve": "El cliente necesita autonomía alta en formato rack en vez de wall mount.",
+    "Tipo_Cliente_Recomendado": "Comercio con instalación tipo rack y consumo alto.",
     "Garantia_Anios": 10,
-    "Caracteristicas_Principales": "48V 200Ah, 9.6kWh, formato rack mount, 10 anos de garantia."
+    "Caracteristicas_Principales": "48V 200Ah, 9.6kWh, formato rack mount, 10 años de garantía."
   }
 ]

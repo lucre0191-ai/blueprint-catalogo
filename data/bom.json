@@ -60,7 +60,7 @@
     "SKU": "SOLIS-INV-5KW-001",
     "Cantidad": 1,
     "Categoria": "Inversor",
-    "Descripcion": "Solis Hibrido 5kW"
+    "Descripcion": "Solis Híbrido 5kW"
   },
   {
     "Kit_ID": "K5-HYBRID",
@@ -88,7 +88,7 @@
     "SKU": "GEN-EST-5KW-001",
     "Cantidad": 1,
     "Categoria": "Estructura",
-    "Descripcion": "Estructura 5kW Hibrido"
+    "Descripcion": "Estructura 5kW Híbrido"
   },
   {
     "Kit_ID": "K5-HYBRID",
@@ -109,7 +109,7 @@
     "SKU": "SOLIS-INV-10KW-001",
     "Cantidad": 1,
     "Categoria": "Inversor",
-    "Descripcion": "Solis Hibrido 10kW WiFi"
+    "Descripcion": "Solis Híbrido 10kW WiFi"
   },
   {
     "Kit_ID": "K10-HYBRID",
@@ -284,7 +284,7 @@
     "SKU": "INHNRG-INV-10KW-001",
     "Cantidad": 1,
     "Categoria": "Inversor",
-    "Descripcion": "INHENERGY Hibrido 10kW WiFi"
+    "Descripcion": "INHENERGY Híbrido 10kW WiFi"
   },
   {
     "Kit_ID": "K10-HYBRID-INH",
@@ -431,7 +431,7 @@
     "SKU": "INHNRG-INV-10KW-001",
     "Cantidad": 1,
     "Categoria": "Inversor",
-    "Descripcion": "INHENERGY Hibrido 10kW WiFi"
+    "Descripcion": "INHENERGY Híbrido 10kW WiFi"
   },
   {
     "Kit_ID": "K10-HYBRID-INH-10",

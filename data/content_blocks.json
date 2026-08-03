@@ -10,7 +10,7 @@
     "Block_ID": "IDEAL-RESP-RESID-EN",
     "Block_Group": "IDEAL_RESPALDO_RESIDENCIAL",
     "Categoria": "Ideal_Para",
-    "Idioma": "Ingles",
+    "Idioma": "Inglés",
     "Texto": "Ideal for homes that experience frequent power outages and want to keep essential appliances running."
   },
   {
@@ -18,13 +18,13 @@
     "Block_Group": "IDEAL_OPERACION_COMERCIAL",
     "Categoria": "Ideal_Para",
     "Idioma": "Español",
-    "Texto": "Ideal para comercios y pequenas empresas que no pueden permitirse detener su operacion durante un apagon."
+    "Texto": "Ideal para comercios y pequeñas empresas que no pueden permitirse detener su operación durante un apagón."
   },
   {
     "Block_ID": "IDEAL-OPER-COMERCIAL-EN",
     "Block_Group": "IDEAL_OPERACION_COMERCIAL",
     "Categoria": "Ideal_Para",
-    "Idioma": "Ingles",
+    "Idioma": "Inglés",
     "Texto": "Ideal for businesses and small companies that cannot afford to stop operating during a power outage."
   },
   {
@@ -32,20 +32,20 @@
     "Block_Group": "IDEAL_PORTATIL",
     "Categoria": "Ideal_Para",
     "Idioma": "Español",
-    "Texto": "Ideal para quienes necesitan respaldo de energia inmediato, sin instalacion fija ni electricista."
+    "Texto": "Ideal para quienes necesitan respaldo de energía inmediato, sin instalación fija ni electricista."
   },
   {
     "Block_ID": "PUEDE-ALIM-BASICO-ES",
     "Block_Group": "PUEDE_ALIMENTAR_BASICO",
     "Categoria": "Que_Puede_Alimentar",
     "Idioma": "Español",
-    "Texto": "Puede alimentar nevera, luces, TV, router y ventiladores durante un apagon."
+    "Texto": "Puede alimentar nevera, luces, TV, router y ventiladores durante un apagón."
   },
   {
     "Block_ID": "PUEDE-ALIM-BASICO-EN",
     "Block_Group": "PUEDE_ALIMENTAR_BASICO",
     "Categoria": "Que_Puede_Alimentar",
-    "Idioma": "Ingles",
+    "Idioma": "Inglés",
     "Texto": "Can power a refrigerator, lights, TV, router and fans during a blackout."
   },
   {
@@ -53,20 +53,20 @@
     "Block_Group": "PUEDE_ALIMENTAR_COMERCIAL",
     "Categoria": "Que_Puede_Alimentar",
     "Idioma": "Español",
-    "Texto": "Puede alimentar la carga completa de un comercio pequeno, incluyendo aire acondicionado y equipos de oficina."
+    "Texto": "Puede alimentar la carga completa de un comercio pequeño, incluyendo aire acondicionado y equipos de oficina."
   },
   {
     "Block_ID": "GARANTIA-STD-ES",
     "Block_Group": "GARANTIA_ESTANDAR",
     "Categoria": "Garantia_Comercial",
     "Idioma": "Español",
-    "Texto": "Garantia de fabrica: hasta 25 anos en paneles solares, 5 a 10 anos en inversor y bateria segun el fabricante."
+    "Texto": "Garantía de fábrica: hasta 25 años en paneles solares, 5 a 10 años en inversor y batería según el fabricante."
   },
   {
     "Block_ID": "GARANTIA-STD-EN",
     "Block_Group": "GARANTIA_ESTANDAR",
     "Categoria": "Garantia_Comercial",
-    "Idioma": "Ingles",
+    "Idioma": "Inglés",
     "Texto": "Factory warranty: up to 25 years on solar panels, 5 to 10 years on inverter and battery depending on manufacturer."
   },
   {
@@ -74,13 +74,13 @@
     "Block_Group": "DISCLAIMER_DISPONIBILIDAD",
     "Categoria": "Disclaimer",
     "Idioma": "Español",
-    "Texto": "Los componentes pueden variar segun disponibilidad del proveedor al momento de la compra."
+    "Texto": "Los componentes pueden variar según disponibilidad del proveedor al momento de la compra."
   },
   {
     "Block_ID": "DISCLAIMER-DISP-EN",
     "Block_Group": "DISCLAIMER_DISPONIBILIDAD",
     "Categoria": "Disclaimer",
-    "Idioma": "Ingles",
+    "Idioma": "Inglés",
     "Texto": "Components may vary based on supplier availability at the time of purchase."
   },
   {
@@ -88,13 +88,13 @@
     "Block_Group": "CTA_EVALUACION",
     "Categoria": "Llamado_a_la_Accion",
     "Idioma": "Español",
-    "Texto": "Solicite una evaluacion gratuita de su consumo electrico antes de comprar."
+    "Texto": "Solicite una evaluación gratuita de su consumo eléctrico antes de comprar."
   },
   {
     "Block_ID": "CTA-EVAL-EN",
     "Block_Group": "CTA_EVALUACION",
     "Categoria": "Llamado_a_la_Accion",
-    "Idioma": "Ingles",
+    "Idioma": "Inglés",
     "Texto": "Request a free electricity consumption assessment before purchasing."
   }
 ]

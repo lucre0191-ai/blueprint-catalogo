@@ -28,6 +28,22 @@ function icon(name, cls = "") {
   return `<span class="ic ${cls}">${ICONS[name] || ""}</span>`;
 }
 
+/* Quita tildes/diacriticos para comparar texto libre (Aplicaciones,
+   Que_Puede_Alimentar) contra palabras clave sin depender de si el
+   dato de origen tiene o no tildes. Antes el matching (POWER_ICON_KW,
+   DIAG_NECESIDADES_POR_PERFIL.kw, DIAG_SUBPREGUNTA.boost) exigia que
+   ambos lados coincidieran caracter por caracter sin acentos -- al
+   corregir las tildes del Excel (Aplicaciones: "vehiculo" ->
+   "vehículo", "electrodomesticos" -> "electrodomésticos", etc.) ese
+   matching se habria roto en silencio. Normalizando los dos lados acá
+   el puntaje del Diagnostico y el icono de "Que puede alimentar"
+   quedan correctos sin importar si el texto de origen lleva tilde o
+   no, ahora o en el futuro. */
+const ACCENT_MARKS_RE = new RegExp("[\\u0300-\\u036f]", "g");
+function stripAccents(s) {
+  return (s || "").normalize("NFD").replace(ACCENT_MARKS_RE, "");
+}
+
 function mediaImage(path, label, sizeClass = "") {
   if (!path) {
     return `<div class="media-ph ${sizeClass}">${PLACEHOLDER_ICON}<span>Imagen pendiente</span></div>`;
@@ -138,8 +154,8 @@ const POWER_ICON_KW = [
   [["hogar", "casa", "residencia"], "house"],
 ];
 function powerIcon(label) {
-  const l = (label || "").toLowerCase();
-  for (const [kws, ic] of POWER_ICON_KW) if (kws.some((k) => l.includes(k))) return ic;
+  const l = stripAccents((label || "").toLowerCase());
+  for (const [kws, ic] of POWER_ICON_KW) if (kws.some((k) => l.includes(stripAccents(k)))) return ic;
   return "bolt";
 }
 
@@ -413,10 +429,13 @@ export function renderKits(ctx) {
     let rows = idx.catalogs.filter((c) => c.Mercado === market);
     if (linea) rows = rows.filter((c) => (idx.kitsById.get(c.Kit_ID) || {}).Linea === linea);
     if (q) {
-      const needle = q.toLowerCase();
+      // stripAccents en los dos lados: quien busca "vehiculo" sin tilde
+      // (lo mas comun al escribir rapido en el celular) igual encuentra
+      // "vehículo" ahora que el dato del Excel lleva tilde correcta.
+      const needle = stripAccents(q.toLowerCase());
       rows = rows.filter((c) => {
         const kit = idx.kitsById.get(c.Kit_ID) || {};
-        const hay = [c.Nombre_Comercial, c.Titulo, kit.Aplicaciones, kit.Cliente_Objetivo].filter(Boolean).join(" ").toLowerCase();
+        const hay = stripAccents([c.Nombre_Comercial, c.Titulo, kit.Aplicaciones, kit.Cliente_Objetivo].filter(Boolean).join(" ").toLowerCase());
         return hay.includes(needle);
       });
     }
@@ -873,8 +892,8 @@ function paintCatalogoExplorer(container, idx) {
     if (filters.marca) rows = rows.filter((p) => p.Marca === filters.marca);
     if (filters.tipo) rows = rows.filter((p) => p.Subcategoria === filters.tipo);
     if (filters.q) {
-      const needle = filters.q.toLowerCase();
-      rows = rows.filter((p) => [p.Nombre_Comercial_Tecnico, p.Modelo, p.Descripcion_Tecnica].filter(Boolean).join(" ").toLowerCase().includes(needle));
+      const needle = stripAccents(filters.q.toLowerCase());
+      rows = rows.filter((p) => stripAccents([p.Nombre_Comercial_Tecnico, p.Modelo, p.Descripcion_Tecnica].filter(Boolean).join(" ").toLowerCase()).includes(needle));
     }
     return rows;
   }
@@ -1209,13 +1228,13 @@ const DIAG_CONSUMO_W = {
 function diagScoreKit(kit, answers, perfil, subOpcion) {
   let score = 0;
   if ((perfil.lineas || []).includes(kit.Linea)) score += 3;
-  const apps = (kit.Aplicaciones || "").toLowerCase();
+  const apps = stripAccents((kit.Aplicaciones || "").toLowerCase());
   const necesidadesDef = DIAG_NECESIDADES_POR_PERFIL[perfil.key] || [];
   answers.necesidades.forEach((n) => {
     const def = necesidadesDef.find((d) => d.key === n);
-    if (def && def.kw.some((kw) => apps.includes(kw))) score += 2;
+    if (def && def.kw.some((kw) => apps.includes(stripAccents(kw)))) score += 2;
   });
-  if (subOpcion) (subOpcion.boost || []).forEach((kw) => { if (apps.includes(kw)) score += 1; });
+  if (subOpcion) (subOpcion.boost || []).forEach((kw) => { if (apps.includes(stripAccents(kw))) score += 1; });
   if (answers.duracion === "vivo_sin_red" && (kit.Tipo_Sistema === "Off-Grid" || kit.Linea === "Autonomia")) score += 2;
   if (answers.duracion === "todo_el_apagon" && (kit.Tipo_Sistema === "Hibrido" || kit.Linea === "Continuidad" || kit.Linea === "Operacion Critica")) score += 2;
   if (answers.duracion === "unas_horas" && (kit.Linea === "Portatil" || kit.Linea === "Respaldo")) score += 2;
