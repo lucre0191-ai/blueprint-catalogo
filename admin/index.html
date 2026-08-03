@@ -353,6 +353,7 @@
 
   function kitComponentImages(workbook, kitId) {
     const aoaBom = getAOA(workbook, "02_BOM");
+    const aoaMedia = getAOA(workbook, "MEDIA_LIBRARY");
     const media = mediaBySku(workbook);
     const byCategory = {};
     const allSkus = [];
@@ -369,11 +370,31 @@
       const sku = byCategory[categoria];
       return sku ? (media[sku] || null) : null;
     };
+    // Foto Hero propia del kit (Documento 06) + Hero_Film (Documento 05B,
+    // Cinematic Experience System): MEDIA_LIBRARY acepta filas donde
+    // SKU = Kit_ID, con Imagen_principal = hero-product, Imagen_2 =
+    // hero-scene y (columna 15, agregada para esto) Hero_Film = video,
+    // todavia vacio en casi todos los kits hasta que se genere con una IA
+    // cinematografica externa (Claude no genera video, ver Doc 05B).
+    // Antes esta funcion no leia estas 3 columnas -- por eso el Admin
+    // Publisher quedaba fuera de paridad con export_to_json.py apenas se
+    // agrego Hero Product/Hero Scene ahi; se corrige aca mismo.
+    let heroImg = null, heroSceneImg = null, heroFilm = null;
+    for (let r = 5; r <= aoaMedia.length; r++) {
+      if (cell(aoaMedia, r, 2) !== kitId) continue;
+      heroImg = cell(aoaMedia, r, 3) || null;
+      heroSceneImg = cell(aoaMedia, r, 4) || null;
+      heroFilm = cell(aoaMedia, r, 15) || null;
+      break;
+    }
     return {
       panelImg: imgFor("Panel Solar"),
       invImg: imgFor("Inversor"),
       batImg: imgFor("Bateria"),
       skuList: allSkus.join(", "),
+      heroImg,
+      heroSceneImg,
+      heroFilm,
     };
   }
 
@@ -384,7 +405,7 @@
     const allow = ["ID_Catalogo", "Kit_ID", "Nombre_Comercial", "Categoria (auto)", "Mercado",
       "Idioma", "Titulo", "Subtitulo", "Descripcion_Corta", "Ideal_Para (auto)",
       "Que_Puede_Alimentar (auto)", "Beneficios_Comerciales", "Garantia_Comercial (auto)",
-      "Imagen_Principal", "Imagen_Panel (auto)", "Imagen_Inversor (auto)",
+      "Imagen_Principal", "Imagen_Hero_Scene", "Video_Hero_Film", "Imagen_Panel (auto)", "Imagen_Inversor (auto)",
       "Imagen_Bateria (auto)", "Componentes_SKU (auto)", "Orden", "Estado",
       "Promesa_Valor (auto)", "Descripcion_Comercial (auto)",
       "Beneficio_01 (auto)", "Beneficio_02 (auto)", "Beneficio_03 (auto)",
@@ -417,7 +438,9 @@
           Que_Puede_Alimentar: kit.Aplicaciones || null,
           Beneficios_Comerciales: null,
           Garantia_Comercial: null,
-          Imagen_Principal: null,
+          Imagen_Principal: imgs.heroImg,
+          Imagen_Hero_Scene: imgs.heroSceneImg,
+          Video_Hero_Film: imgs.heroFilm,
           Imagen_Panel: imgs.panelImg,
           Imagen_Inversor: imgs.invImg,
           Imagen_Bateria: imgs.batImg,

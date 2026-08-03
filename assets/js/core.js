@@ -245,6 +245,29 @@ export function kitVisual(catalog) {
   return { image: null, mosaic: [] };
 }
 
+/** ---------------------------------------------------------------------
+ *  Hero Scene / Hero Film (Documento 05B — Cinematic Experience System).
+ *  ---------------------------------------------------------------------
+ *  Hero Scene: imagen fija que responde "que consigue el cliente" (el
+ *  kit en una situacion real de uso) — distinta de Hero Product
+ *  (kitImage/kitVisual arriba), que responde "que compra el cliente".
+ *  Hero Film: version cinematografica de la misma escena (video corto,
+ *  sin sonido, loop) — todavia no se genera con IA en este sitio (ver
+ *  Doc 05B, seccion "Implementacion": Claude prepara la arquitectura y
+ *  los prompts oficiales, pero no genera el video). Hero Scene funciona
+ *  como Hero Poster: la vista la usa como <video poster> y, mientras no
+ *  exista Hero Film, como imagen fija sola.
+ *
+ *  Orden de la Ficha del kit (Documento 06, seccion 9.2): Hero Scene
+ *  primero (seccion narrativa), Hero Product despues (mostrar la
+ *  solucion) — ver kitMedia() en views.js para ese segundo bloque, que
+ *  no cambia. Sin Hero Scene propia -> null; la vista omite la seccion
+ *  narrativa entera en vez de inventar o repetir otra imagen. */
+export function kitScene(catalog) {
+  if (!catalog) return { scene: null, film: null };
+  return { scene: clean(catalog.Imagen_Hero_Scene), film: clean(catalog.Video_Hero_Film) };
+}
+
 /** Componentes NO opcionales de un kit (lo que siempre viene incluido). */
 export function includedComponents(idx, kitId) {
   return (idx.kitComponents[kitId] || []).filter((c) => !c.Opcional);

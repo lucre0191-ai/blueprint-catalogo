@@ -18,9 +18,21 @@
 <!-- Ceremonia de entrada: el sitio recibe a cada visitante "apagado".
      Tocar/clicar el interruptor (o Enter/Espacio) restaura la luz.
      Se repite en cada carga del sitio a proposito: es parte del
-     mensaje, no solo una intro. Ver assets/app.js (wireBlackout). -->
+     mensaje, no solo una intro. Ver assets/app.js (wireBlackout).
+
+     Cinematic Opening (Documento "Blueprint - Guion Entrada", Doc 05B):
+     video de fondo opcional, 8s, sin sonido, en loop, con la imagen
+     actual de Cuba como poster. Mientras ese video no exista todavia
+     (blackout-cuba-cinematic.mp4 -- Claude no genera video, se genera
+     con una IA cinematografica externa segun el guion oficial), el
+     navegador simplemente muestra el poster: es visualmente identico
+     a la foto fija de siempre, cero riesgo de regresion. El .blackout-scene
+     de la hoja de estilos aplica por clase, no por etiqueta, asi que
+     funciona igual para <img> o <video> sin tocar el CSS. -->
 <div class="blackout" id="blackout" role="button" tabindex="0" aria-label="Toca o presiona Enter para restaurar la luz">
-  <img class="blackout-scene" src="assets/img/blackout-cuba.jpg" alt="" aria-hidden="true">
+  <video class="blackout-scene" poster="assets/img/blackout-cuba.jpg" autoplay muted loop playsinline aria-hidden="true">
+    <source src="assets/video/blackout-cuba-cinematic.mp4" type="video/mp4">
+  </video>
   <div class="blackout-scrim" aria-hidden="true"></div>
   <div class="blackout-burst" aria-hidden="true"></div>
   <div class="blackout-inner">

@@ -606,6 +606,30 @@ body.nav-open .main-nav a { padding: 10px 0; border-bottom: 1px solid var(--line
 .crumb .on { color: var(--text-muted); }
 .crumb .ic svg { width: 9px; height: 9px; }
 
+/* ---------- Hero Scene / Hero Film (Documento 05B, seccion narrativa de
+   la Ficha del kit -- ver kitSceneHero() en views.js). Full-bleed, con
+   scrim inferior para que el nombre del kit quede legible encima de
+   cualquier foto/video. Se omite del todo si el kit no tiene Hero Scene
+   propia (la funcion JS ya devuelve "" en ese caso). */
+.kit-scene-hero {
+  position: relative; width: 100%; aspect-ratio: 21/9; max-height: 60vh;
+  overflow: hidden; background: var(--bg-surface-2); margin-bottom: 4px;
+}
+@media (max-width: 720px) { .kit-scene-hero { aspect-ratio: 4/3; } }
+.kit-scene-media {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center; display: block;
+}
+.kit-scene-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(5,7,10,0) 40%, rgba(5,7,10,.75) 100%);
+}
+.kit-scene-caption {
+  position: absolute; left: 20px; right: 20px; bottom: 14px; margin: 0;
+  color: var(--text-primary); font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(16px, 2.4vw, 22px); text-shadow: 0 2px 10px rgba(0,0,0,.5);
+}
+
 .kit-top { display: grid; grid-template-columns: 1fr; gap: 26px; padding: 20px 0; }
 @media (min-width: 900px) { .kit-top { grid-template-columns: 1.2fr .8fr; } }
 .gallery-main { aspect-ratio: 4/3; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-surface-2); }
