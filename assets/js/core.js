@@ -17,6 +17,43 @@ export const DATA_FILES = [
   "config", "bom",
 ];
 
+/** ---------------------------------------------------------------------
+ *  Etiquetas de enums para mostrar (nunca para comparar).
+ *  ---------------------------------------------------------------------
+ *  Linea, Categoria y Tipo_Sistema son valores que vienen del Excel SIN
+ *  tildes a proposito (asi se guardaron desde el inicio del proyecto) y
+ *  se usan en todo el codigo como clave de comparacion exacta
+ *  (`kit.Linea === "Autonomia"`, `c.Categoria === "Bateria"`,
+ *  `kit.Tipo_Sistema === "Hibrido"`, iconos, filtros, puntaje del
+ *  diagnostico). Agregarles tilde en el dato origen rompe silenciosamente
+ *  esas comparaciones en todo el sitio. Estas funciones NO tocan el dato:
+ *  solo lo traducen a su forma correcta en español para mostrarlo al
+ *  usuario. Cualquier vista que muestre uno de estos valores crudo debe
+ *  pasar por aca en vez de imprimirlo directo. */
+const LINEA_LABELS = {
+  Autonomia: "Autonomía",
+  "Operacion Critica": "Operación Crítica",
+  Portatil: "Portátil",
+};
+export function lineaLabel(linea) {
+  return LINEA_LABELS[linea] || linea || "";
+}
+
+const CATEGORIA_LABELS = {
+  Bateria: "Batería",
+};
+export function categoriaLabel(categoria) {
+  return CATEGORIA_LABELS[categoria] || categoria || "";
+}
+
+const TIPO_SISTEMA_LABELS = {
+  Hibrido: "Híbrido",
+  Portatil: "Portátil",
+};
+export function tipoSistemaLabel(tipo) {
+  return TIPO_SISTEMA_LABELS[tipo] || tipo || "";
+}
+
 /** Carga los 11 JSON en paralelo. Si alguno falta, la app sigue viva
  *  con ese dataset en null (cada vista decide como degradar). */
 export async function loadAll() {

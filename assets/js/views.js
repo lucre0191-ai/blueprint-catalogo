@@ -10,6 +10,7 @@ import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
   kitWarrantyYears, kitVisual, buildKitViewModel, resolveContentBlock, state,
+  lineaLabel, categoriaLabel, tipoSistemaLabel,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -100,7 +101,7 @@ function kitCard(vm) {
     <article class="kit-card" data-kit-id="${escapeHtml(vm.id)}">
       <a class="kit-media" href="#/kit/${encodeURIComponent(vm.id)}">
         ${kitMedia(vm.catalog, vm.name, "cover", true)}
-        <span class="pill pill-dark">${escapeHtml(vm.linea || "Kit")}</span>
+        <span class="pill pill-dark">${escapeHtml(lineaLabel(vm.linea) || "Kit")}</span>
       </a>
       <div class="kit-body">
         <h3 class="kit-title"><a href="#/kit/${encodeURIComponent(vm.id)}">${escapeHtml(vm.title)}</a></h3>
@@ -111,11 +112,11 @@ function kitCard(vm) {
         <div class="kit-specs">
           <div class="cell"><span class="v">${fmtNum(vm.potenciaPanelKw)}</span><span class="k">kW panel${termHint("panel")}</span></div>
           <div class="cell"><span class="v">${fmtNum(vm.potenciaInversorKw)}</span><span class="k">kW inversor${termHint("inversor")}</span></div>
-          <div class="cell"><span class="v">${fmtNum(vm.bateriaKwh)}</span><span class="k">kWh bateria${termHint("bateria")}</span></div>
+          <div class="cell"><span class="v">${fmtNum(vm.bateriaKwh)}</span><span class="k">kWh batería${termHint("bateria")}</span></div>
         </div>
         <div class="kit-foot">
           <div class="kit-price">${vm.price ? `<span class="amount">$${vm.price}</span><span class="cur">USD · Valor del sistema</span>` : `<span class="amount muted">Consultar</span>`}</div>
-          <a class="btn btn-ghost btn-sm" href="#/kit/${encodeURIComponent(vm.id)}">Ver solucion ${icon("arrowRight")}</a>
+          <a class="btn btn-ghost btn-sm" href="#/kit/${encodeURIComponent(vm.id)}">Ver solución ${icon("arrowRight")}</a>
         </div>
       </div>
     </article>`;
@@ -182,7 +183,7 @@ function explodedCard(c) {
         ${img ? `<span class="exploded-zoom">${icon("search")}</span>` : ""}
       </button>
       <div class="exploded-body">
-        <span class="exploded-cat">${escapeHtml(c.Categoria || "")}</span>
+        <span class="exploded-cat">${escapeHtml(categoriaLabel(c.Categoria))}</span>
         <h4>${escapeHtml(c.Descripcion || c.SKU)}</h4>
         ${c.Marca || c.Modelo ? `<p class="exploded-brand">${escapeHtml([c.Marca, c.Modelo].filter(Boolean).join(" · "))}</p>` : ""}
         <div class="exploded-foot">
@@ -215,7 +216,7 @@ function productCard(product, media) {
     <article class="prod-card">
       <a class="prod-media" href="#/producto/${encodeURIComponent(product.SKU)}">
         ${mediaImage(image, product.Nombre_Comercial_Tecnico, "cover")}
-        <span class="pill pill-dark">${escapeHtml(product.Categoria || "")}</span>
+        <span class="pill pill-dark">${escapeHtml(categoriaLabel(product.Categoria))}</span>
       </a>
       <div class="prod-body">
         <h3 class="prod-title"><a href="#/producto/${encodeURIComponent(product.SKU)}">${escapeHtml(product.Nombre_Comercial_Tecnico || product.Modelo)}</a></h3>
@@ -303,18 +304,18 @@ export function renderHome(ctx) {
 
     <section class="hero">
       <div class="wrap hero-inner">
-        <p class="eyebrow">${icon("bolt")}Energia solar explicada sin vueltas</p>
-        <h1>Encuentra la solucion energetica adecuada para ti.</h1>
+        <p class="eyebrow">${icon("bolt")}Energía solar explicada sin vueltas</p>
+        <h1>Encuentra la solución energética adecuada para ti.</h1>
         <p class="lede">Aprende, compara y descubre la alternativa que mejor se adapta a tus necesidades.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Comenzar diagnostico</a>
+          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Comenzar diagnóstico</a>
           <a class="btn btn-ghost" href="#kits">Explorar soluciones ${icon("arrowRight")}</a>
         </div>
         <div class="hero-stats">
           <div class="stat"><span class="n">${stats.kitCount}</span><span class="l">Soluciones listas</span></div>
           <div class="stat"><span class="n">${stats.marketCount || "—"}</span><span class="l">Mercados</span></div>
           <div class="stat"><span class="n">${fmtNum(stats.kw)}</span><span class="l">kW disponibles</span></div>
-          <div class="stat"><span class="n">${stats.maxWarranty}</span><span class="l">Años de garantia</span></div>
+          <div class="stat"><span class="n">${stats.maxWarranty}</span><span class="l">Años de garantía</span></div>
         </div>
       </div>
     </section>
@@ -330,25 +331,25 @@ export function renderHome(ctx) {
         <a class="quick-access-card" href="#/diagnostico/mipyme">
           <span class="icon-circle">${icon("store")}</span>
           <h3>Mi negocio</h3>
-          <p>Para que la operacion no se detenga en cada apagon.</p>
+          <p>Para que la operación no se detenga en cada apagón.</p>
           <span class="qa-cta">Empezar ${icon("arrowRight")}</span>
         </a>
         <a class="quick-access-card" href="#/diagnostico">
           <span class="icon-circle">${icon("layers")}</span>
           <h3>Mi proyecto</h3>
-          <p>Algo mas especifico en mente — contanos que necesitas y te guiamos.</p>
+          <p>Algo más específico en mente — contanos qué necesitas y te guiamos.</p>
           <span class="qa-cta">Empezar ${icon("arrowRight")}</span>
         </a>
       </div>
     </section>
 
     <section class="section wrap">
-      <div class="section-head"><div><h2>¿Que problema queres resolver?</h2><p class="desc">Desde un apagon que te agarra con los chicos en casa, hasta un negocio que no puede parar.</p></div></div>
+      <div class="section-head"><div><h2>¿Qué problema querés resolver?</h2><p class="desc">Desde un apagón que te agarra con los chicos en casa, hasta un negocio que no puede parar.</p></div></div>
       <div class="cat-grid">
         ${lineas.map((l) => `
           <a class="cat-card" href="#/kits" data-linea="${escapeHtml(l)}">
             <span class="icon-circle">${icon(LINEA_ICON[l] || "bolt")}</span>
-            <span class="cat-name">${escapeHtml(l)}</span>
+            <span class="cat-name">${escapeHtml(lineaLabel(l))}</span>
             <span class="cat-count">${idx.kits.filter((k) => k.Linea === l).length} solucion${idx.kits.filter((k) => k.Linea === l).length === 1 ? "" : "es"}</span>
           </a>`).join("")}
       </div>
@@ -356,26 +357,26 @@ export function renderHome(ctx) {
 
     <section class="section wrap">
       <div class="section-head">
-        <div><h2>Las mas elegidas en ${escapeHtml(market || "tu zona")}</h2><p class="desc">Precio real, componentes reales — nada armado a ultimo momento.</p></div>
+        <div><h2>Las más elegidas en ${escapeHtml(market || "tu zona")}</h2><p class="desc">Precio real, componentes reales — nada armado a último momento.</p></div>
         <a class="btn btn-ghost" href="#/kits">Ver todas las soluciones ${icon("arrowRight")}</a>
       </div>
       <div class="kit-grid">
         ${destacados.length
           ? destacados.map((c) => kitCard(buildKitViewModel(idx, c.Kit_ID, { market }))).join("")
-          : `<div class="state-msg">Todavia no tenemos soluciones cargadas para ${escapeHtml(market || "esta zona")}. Escribinos y te ayudamos igual.</div>`}
+          : `<div class="state-msg">Todavía no tenemos soluciones cargadas para ${escapeHtml(market || "esta zona")}. Escribinos y te ayudamos igual.</div>`}
       </div>
     </section>
 
     ${beneficios.length ? `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Por que elegir esta solucion</h2></div></div>
+      <div class="section-head"><div><h2>Por qué elegir esta solución</h2></div></div>
       <div class="benefit-grid">
         ${beneficios.map((b) => `<div class="benefit"><span class="icon-circle sm">${icon("check")}</span><p>${escapeHtml(b)}.</p></div>`).join("")}
       </div>
     </section>` : ""}
 
     <section class="section wrap">
-      <div class="section-head"><div><h2>Por que elegir Blueprint</h2><p class="desc">No se trata solo de energia. Se trata de tranquilidad, de familia, de sueños que no se apagan.</p></div></div>
+      <div class="section-head"><div><h2>Por qué elegir Blueprint</h2><p class="desc">No se trata solo de energía. Se trata de tranquilidad, de familia, de sueños que no se apagan.</p></div></div>
       <div class="value-grid">
         ${valueProps.map(([ic, title, desc]) => `
           <div class="value-card">
@@ -389,7 +390,7 @@ export function renderHome(ctx) {
     <section class="quickband wrap">
       <a href="#/comparador">${icon("scale")}Comparar equipos</a>
       <a href="#/aprender">${icon("layers")}Ver todos los equipos</a>
-      ${waButton(config, "Hola, no se cual solucion me conviene. ¿Me pueden ayudar a elegir?", "No se cual elegir — ayudenme")}
+      ${waButton(config, "Hola, no sé cuál solución me conviene. ¿Me pueden ayudar a elegir?", "No sé cuál elegir — ayúdenme")}
     </section>
   `;
 
@@ -439,26 +440,26 @@ export function renderKits(ctx) {
       <div class="cat-hero-text">
         <span class="pill">Showroom Blueprint</span>
         <h1>Explora soluciones, no productos sueltos</h1>
-        <p class="desc">Cada kit es una solucion completa pensada para un tipo de necesidad. Compara, elegi la que se ajusta a tu situacion, y pedi tu cotizacion en el momento.</p>
+        <p class="desc">Cada kit es una solución completa pensada para un tipo de necesidad. Compara, elegí la que se ajusta a tu situación, y pedí tu cotización en el momento.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnostico</a>
+          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnóstico</a>
           <a class="btn btn-ghost" href="#comparador">${icon("scale")}Comparar soluciones</a>
         </div>
         <ul class="cat-indicadores">
-          <li>${icon("layers")}<span><strong>${stats.kitCount}</strong> soluciones disenadas</span></li>
-          <li>${icon("award")}<span>Hasta <strong>${stats.maxWarranty}</strong> anios de garantia</span></li>
+          <li>${icon("layers")}<span><strong>${stats.kitCount}</strong> soluciones diseñadas</span></li>
+          <li>${icon("award")}<span>Hasta <strong>${stats.maxWarranty}</strong> años de garantía</span></li>
           <li>${icon("scale")}<span>Disponible en <strong>${stats.marketCount}</strong> mercado${stats.marketCount === 1 ? "" : "s"}</span></li>
           <li>${icon("shield")}<span>Soporte real por WhatsApp</span></li>
         </ul>
       </div>
       <div class="cat-hero-media">
-        <img src="assets/img/scene-industrial.jpg" alt="Instalacion solar Blueprint en funcionamiento" loading="eager">
+        <img src="assets/img/scene-industrial.jpg" alt="Instalación solar Blueprint en funcionamiento" loading="eager">
       </div>
     </section>
 
     <section class="section wrap">
       <div class="section-head">
-        <div><h2>Todas las soluciones</h2><p class="desc">El precio es orientativo y no incluye instalacion, salvo que se indique lo contrario.</p></div>
+        <div><h2>Todas las soluciones</h2><p class="desc">El precio es orientativo y no incluye instalación, salvo que se indique lo contrario.</p></div>
       </div>
       <div class="filter-bar">
         <div class="market-tabs" id="market-tabs">
@@ -470,7 +471,7 @@ export function renderKits(ctx) {
         </div>
         <form class="search-inline" id="kits-search">
           <span class="sb-icon">${icon("search")}</span>
-          <input type="search" placeholder="Buscar por nombre o para que la queres..." value="${escapeHtml(state.searchQuery || "")}">
+          <input type="search" placeholder="Buscar por nombre o para qué la querés..." value="${escapeHtml(state.searchQuery || "")}">
         </form>
         <span class="count" id="kits-count"></span>
       </div>
@@ -478,39 +479,39 @@ export function renderKits(ctx) {
     </section>
 
     <section class="section wrap">
-      <div class="section-head"><div><h2>Por que elegir Blueprint</h2></div></div>
+      <div class="section-head"><div><h2>Por qué elegir Blueprint</h2></div></div>
       <div class="benefit-grid">
-        <div class="benefit"><span class="icon-circle">${icon("award")}</span><div><h4>Garantia real de fabrica</h4><p>Hasta ${stats.maxWarranty} anios segun el componente, nunca una promesa generica.</p></div></div>
+        <div class="benefit"><span class="icon-circle">${icon("award")}</span><div><h4>Garantía real de fábrica</h4><p>Hasta ${stats.maxWarranty} años según el componente, nunca una promesa genérica.</p></div></div>
         <div class="benefit"><span class="icon-circle">${icon("scale")}</span><div><h4>Comparas antes de decidir</h4><p>El comparador te muestra diferencias reales entre soluciones, sin tecnicismos.</p></div></div>
-        <div class="benefit"><span class="icon-circle">${icon("bolt")}</span><div><h4>Diagnostico honesto</h4><p>Te recomendamos segun tu necesidad real, con nivel de confianza calculado, no adivinado.</p></div></div>
-        <div class="benefit"><span class="icon-circle">${icon("shield")}</span><div><h4>Acompanamiento humano</h4><p>Un asesor real responde tus preguntas por WhatsApp antes y despues de comprar.</p></div></div>
+        <div class="benefit"><span class="icon-circle">${icon("bolt")}</span><div><h4>Diagnóstico honesto</h4><p>Te recomendamos según tu necesidad real, con nivel de confianza calculado, no adivinado.</p></div></div>
+        <div class="benefit"><span class="icon-circle">${icon("shield")}</span><div><h4>Acompañamiento humano</h4><p>Un asesor real responde tus preguntas por WhatsApp antes y después de comprar.</p></div></div>
       </div>
     </section>
 
     <section class="section wrap">
-      <div class="section-head"><div><h2>Como funciona</h2></div></div>
+      <div class="section-head"><div><h2>Cómo funciona</h2></div></div>
       <div class="proceso-grid">
-        <div class="proceso-step"><span class="proceso-num">1</span><h4>Elegis o te diagnosticamos</h4><p>Explora el catalogo libremente o dejanos recomendarte segun tu necesidad.</p></div>
-        <div class="proceso-step"><span class="proceso-num">2</span><h4>Comparas si queres</h4><p>Poné dos o tres soluciones lado a lado antes de decidir.</p></div>
-        <div class="proceso-step"><span class="proceso-num">3</span><h4>Pedis tu cotizacion</h4><p>Generamos el documento con datos reales, o hablas directo por WhatsApp.</p></div>
-        <div class="proceso-step"><span class="proceso-num">4</span><h4>Instalacion coordinada</h4><p>Un asesor te acompana en la puesta en marcha.</p></div>
+        <div class="proceso-step"><span class="proceso-num">1</span><h4>Elegís o te diagnosticamos</h4><p>Explora el catálogo libremente o dejanos recomendarte según tu necesidad.</p></div>
+        <div class="proceso-step"><span class="proceso-num">2</span><h4>Comparas si querés</h4><p>Poné dos o tres soluciones lado a lado antes de decidir.</p></div>
+        <div class="proceso-step"><span class="proceso-num">3</span><h4>Pedís tu cotización</h4><p>Generamos el documento con datos reales, o hablas directo por WhatsApp.</p></div>
+        <div class="proceso-step"><span class="proceso-num">4</span><h4>Instalación coordinada</h4><p>Un asesor te acompaña en la puesta en marcha.</p></div>
       </div>
     </section>
 
     <section class="section wrap">
       <div class="section-head"><div><h2>Preguntas frecuentes</h2></div></div>
       <div class="faq-list">
-        <details class="faq-item"><summary>El precio incluye instalacion?</summary><p>El precio mostrado es orientativo y no incluye instalacion, salvo que se indique lo contrario en la ficha del kit.</p></details>
-        ${disclaimer ? `<details class="faq-item"><summary>Los componentes pueden variar?</summary><p>${escapeHtml(disclaimer)}</p></details>` : ""}
-        <details class="faq-item"><summary>No estoy seguro que kit necesito, que hago?</summary><p>Arranca por el <a href="#diagnostico">diagnostico</a>: en unos pasos te recomendamos una solucion con nivel de confianza real, calculado sobre tus respuestas.</p></details>
-        <details class="faq-item"><summary>Como pido mas informacion?</summary><p>Escribinos directo por WhatsApp desde cualquier ficha de kit, o desde <a href="#contacto">Contacto</a>.</p></details>
+        <details class="faq-item"><summary>¿El precio incluye instalación?</summary><p>El precio mostrado es orientativo y no incluye instalación, salvo que se indique lo contrario en la ficha del kit.</p></details>
+        ${disclaimer ? `<details class="faq-item"><summary>¿Los componentes pueden variar?</summary><p>${escapeHtml(disclaimer)}</p></details>` : ""}
+        <details class="faq-item"><summary>No estoy seguro qué kit necesito, qué hago?</summary><p>Arranca por el <a href="#diagnostico">diagnóstico</a>: en unos pasos te recomendamos una solución con nivel de confianza real, calculado sobre tus respuestas.</p></details>
+        <details class="faq-item"><summary>¿Cómo pido más información?</summary><p>Escribinos directo por WhatsApp desde cualquier ficha de kit, o desde <a href="#contacto">Contacto</a>.</p></details>
       </div>
     </section>
 
     ${cta ? `
     <section class="cta-band wrap">
       <div><h3>${escapeHtml(cta)}</h3></div>
-      ${waButton(config, "Hola, quiero una evaluacion de mi consumo electrico antes de elegir un kit.", "Hablar con un asesor")}
+      ${waButton(config, "Hola, quiero una evaluación de mi consumo eléctrico antes de elegir un kit.", "Hablar con un asesor")}
     </section>` : ""}
   `;
 
@@ -598,7 +599,7 @@ export function renderKitDetail(ctx, params) {
   const shareUrl = `${location.origin}${location.pathname}#/kit/${encodeURIComponent(kit.Kit_ID)}`;
 
   ctx.container.innerHTML = `
-    <div class="crumb wrap"><a href="#/kits">Kits</a> ${icon("chevronRight")} <span>${escapeHtml(kit.Linea || "")}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(name)}</span></div>
+    <div class="crumb wrap"><a href="#/kits">Kits</a> ${icon("chevronRight")} <span>${escapeHtml(lineaLabel(kit.Linea))}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(name)}</span></div>
 
     <div class="wrap kit-top">
       <div class="gallery">
@@ -608,15 +609,15 @@ export function renderKitDetail(ctx, params) {
         <button type="button" class="gallery-main" style="view-transition-name:kit-hero-transition" data-lightbox-src="${escapeHtml(vm.image || "")}" data-lightbox-alt="${escapeHtml(name)}">${kitMedia(catalog, name, "cover")}</button>
       </div>
       <aside class="buy-card">
-        <span class="pill">${escapeHtml(kit.Linea || "Kit")}</span>
+        <span class="pill">${escapeHtml(lineaLabel(kit.Linea) || "Kit")}</span>
         <h1>${escapeHtml(name)}</h1>
         ${tagline ? `<p class="tagline">${escapeHtml(tagline)}</p>` : ""}
         ${badges.length ? `<ul class="badge-list">${badges.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}</ul>` : ""}
         <div class="spec-grid">
           <div class="spec-item"><span class="k">${icon("panel")}Panel${termHint("panel")}</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
           <div class="spec-item"><span class="k">${icon("bolt")}Inversor${termHint("inversor")}</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
-          <div class="spec-item"><span class="k">${icon("battery")}Bateria${termHint("bateria")}</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
-          <div class="spec-item"><span class="k">${icon("shield")}Garantia${termHint("garantia")}</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
+          <div class="spec-item"><span class="k">${icon("battery")}Batería${termHint("bateria")}</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
+          <div class="spec-item"><span class="k">${icon("shield")}Garantía${termHint("garantia")}</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
         </div>
         ${vm.garantiaComercial ? `<p class="warranty-note muted" style="font-size:13px;margin-top:-6px">${escapeHtml(vm.garantiaComercial)}</p>` : ""}
         <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD · Valor del sistema</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
@@ -631,7 +632,7 @@ export function renderKitDetail(ctx, params) {
     <section class="section wrap" id="resumen">
       <h3>Resumen comercial</h3>
       <div class="resumen-grid">
-        <div class="resumen-item"><span class="k">Tipo de sistema</span><span class="v">${escapeHtml(kit.Tipo_Sistema || "—")}</span></div>
+        <div class="resumen-item"><span class="k">Tipo de sistema</span><span class="v">${escapeHtml(tipoSistemaLabel(kit.Tipo_Sistema) || "—")}</span></div>
         <div class="resumen-item"><span class="k">Cantidad de paneles</span><span class="v">${panelCount || "—"}</span></div>
         <div class="resumen-item"><span class="k">Marca del inversor</span><span class="v">${escapeHtml(inversorComp?.Marca || "—")}</span></div>
         <div class="resumen-item"><span class="k">Marca de batería</span><span class="v">${escapeHtml(bateriaComp?.Marca || "—")}</span></div>
@@ -641,28 +642,28 @@ export function renderKitDetail(ctx, params) {
     </section>
 
     <div class="subnav wrap">
-      <a href="#incluye">Que incluye</a><a href="#alimenta">Que puede alimentar</a>
-      <a href="#autonomia">Autonomia</a>${garantiaCats.length ? `<a href="#garantias">Garantías</a>` : ""}${(vmInferior || vmSuperior) ? `<a href="#comparar">Comparar</a>` : ""}${optional.length ? `<a href="#ampliaciones">Ampliaciones</a>` : ""}
+      <a href="#incluye">Qué incluye</a><a href="#alimenta">Qué puede alimentar</a>
+      <a href="#autonomia">Autonomía</a>${garantiaCats.length ? `<a href="#garantias">Garantías</a>` : ""}${(vmInferior || vmSuperior) ? `<a href="#comparar">Comparar</a>` : ""}${optional.length ? `<a href="#ampliaciones">Ampliaciones</a>` : ""}
     </div>
 
     <section class="section wrap" id="incluye">
-      <h3>Que incluye — vista despiezada</h3>
+      <h3>Qué incluye — vista despiezada</h3>
       <p class="muted" style="margin:4px 0 18px">Cada componente real del kit, tal como viene armado. Pulsa una imagen para ampliarla.</p>
       <div class="exploded-grid">
-        ${explodedOrder(included).map(explodedCard).join("") || `<p class="muted">Sin datos de composicion.</p>`}
+        ${explodedOrder(included).map(explodedCard).join("") || `<p class="muted">Sin datos de composición.</p>`}
       </div>
     </section>
 
     <section class="section wrap two-col">
       <div id="alimenta">
-        <h3>Que puede alimentar</h3>
+        <h3>Qué puede alimentar</h3>
         ${feed.length
           ? `<div class="power-grid">${feed.map((f) => `<div class="power-item">${icon(powerIcon(f))}<span>${escapeHtml(f)}</span></div>`).join("")}</div>`
-          : `<p class="muted">No hay detalle cargado para este kit todavia.</p>`}
+          : `<p class="muted">No hay detalle cargado para este kit todavía.</p>`}
       </div>
       <div id="autonomia">
-        <h3>Autonomia${termHint("autonomia")}</h3>
-        <p class="autonomy-text">${escapeHtml(vm.autonomia || "Todavia no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
+        <h3>Autonomía${termHint("autonomia")}</h3>
+        <p class="autonomy-text">${escapeHtml(vm.autonomia || "Todavía no tenemos ese dato para este kit — preguntanos por WhatsApp y te lo confirmamos.")}</p>
       </div>
     </section>
 
@@ -696,16 +697,16 @@ export function renderKitDetail(ctx, params) {
 
     ${optional.length ? `
     <section class="section wrap" id="ampliaciones">
-      <h3>Opciones de ampliacion</h3>
-      <p class="muted" style="margin:4px 0 18px">Componentes opcionales reales de este kit, no genericos.</p>
+      <h3>Opciones de ampliación</h3>
+      <p class="muted" style="margin:4px 0 18px">Componentes opcionales reales de este kit, no genéricos.</p>
       <div class="upgrade-grid">
-        ${optional.map((c) => `<div class="upgrade-card"><span class="icon-circle sm">${icon("bolt")}</span><h4>${escapeHtml(c.Descripcion || c.SKU)}</h4><p>${escapeHtml(c.Categoria || "")}${c.Potencia_W ? " · " + c.Potencia_W + " W" : ""}</p><a href="#/producto/${encodeURIComponent(c.SKU)}" class="btn btn-ghost btn-sm">Ver componente</a></div>`).join("")}
+        ${optional.map((c) => `<div class="upgrade-card"><span class="icon-circle sm">${icon("bolt")}</span><h4>${escapeHtml(c.Descripcion || c.SKU)}</h4><p>${escapeHtml(categoriaLabel(c.Categoria))}${c.Potencia_W ? " · " + c.Potencia_W + " W" : ""}</p><a href="#/producto/${encodeURIComponent(c.SKU)}" class="btn btn-ghost btn-sm">Ver componente</a></div>`).join("")}
       </div>
     </section>` : ""}
 
     <section class="cta-band wrap">
-      <div><h3>¿Listo para tu independencia energetica?</h3><p class="muted">Un asesor tecnico te acompaña en todo el proceso.</p></div>
-      <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotizacion</a>
+      <div><h3>¿Listo para tu independencia energética?</h3><p class="muted">Un asesor técnico te acompaña en todo el proceso.</p></div>
+      <a class="btn btn-primary" href="#/cotizacion/${encodeURIComponent(kit.Kit_ID)}">${icon("pdf")}Generar cotización</a>
     </section>
 
     <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -787,9 +788,9 @@ export function renderCotizacion(ctx, params) {
   if (!kit) {
     ctx.container.innerHTML = `
       <section class="section wrap">
-        <div class="section-head"><div><h2>Cotizacion</h2><p class="desc">Todavia no elegiste una solucion. Arranca por el diagnostico o mira las soluciones disponibles.</p></div></div>
+        <div class="section-head"><div><h2>Cotización</h2><p class="desc">Todavía no elegiste una solución. Arranca por el diagnóstico o mira las soluciones disponibles.</p></div></div>
         <div class="cta-band wrap">
-          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnostico</a>
+          <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnóstico</a>
           <a class="btn btn-ghost" href="#kits">Ver todas las soluciones</a>
         </div>
       </section>`;
@@ -808,21 +809,21 @@ export function renderCotizacion(ctx, params) {
   // Documento 08). generateTechnicalPDF (pdfgen.js) queda sin usarse
   // aca a proposito -- solo se retiro el punto de acceso publico.
   ctx.container.innerHTML = `
-    <div class="crumb wrap"><a href="#/kit/${encodeURIComponent(kit.Kit_ID)}">${escapeHtml(name)}</a> ${icon("chevronRight")} <span class="on">Cotizacion</span></div>
+    <div class="crumb wrap"><a href="#/kit/${encodeURIComponent(kit.Kit_ID)}">${escapeHtml(name)}</a> ${icon("chevronRight")} <span class="on">Cotización</span></div>
     <section class="section wrap two-col">
       <div>
-        <span class="pill">${escapeHtml(kit.Linea || "Kit")}</span>
+        <span class="pill">${escapeHtml(lineaLabel(kit.Linea) || "Kit")}</span>
         <h1 style="margin:10px 0">${escapeHtml(name)}</h1>
         <div class="price-row">${price ? `<span class="amount">$${price}</span><span class="cur">USD · Valor del sistema</span>` : `<span class="amount muted">Precio a confirmar</span>`}</div>
         <div class="spec-grid" style="margin-top:18px">
           <div class="spec-item"><span class="k">${icon("panel")}Panel</span><span class="v">${fmtNum(kit.Potencia_Panel_kW)} kW</span></div>
           <div class="spec-item"><span class="k">${icon("bolt")}Inversor</span><span class="v">${fmtNum(kit.Potencia_Inversor_kW)} kW</span></div>
-          <div class="spec-item"><span class="k">${icon("battery")}Bateria</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
-          <div class="spec-item"><span class="k">${icon("shield")}Garantia</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
+          <div class="spec-item"><span class="k">${icon("battery")}Batería</span><span class="v">${fmtNum(kit.Bateria_kWh)} kWh</span></div>
+          <div class="spec-item"><span class="k">${icon("shield")}Garantía</span><span class="v">${warranty ? warranty + " años" : "—"}</span></div>
         </div>
       </div>
       <div class="buy-card">
-        <h3 style="margin-top:0">Tu cotizacion</h3>
+        <h3 style="margin-top:0">Tu cotización</h3>
         <p class="muted" style="font-size:13.5px">Generamos el documento en el momento a partir de nuestros datos reales — nunca es una captura vieja.</p>
         <div class="actions-col">
           <button class="btn btn-primary" id="btn-pdf-comercial">${icon("pdf")}Descargar ficha comercial (PDF)</button>
@@ -882,16 +883,16 @@ function paintCatalogoExplorer(container, idx) {
     const rows = apply();
     container.querySelector("#cat-grid").innerHTML = rows.length
       ? rows.map((p) => productCard(p, idx.mediaBySku.get(p.SKU))).join("")
-      : `<div class="state-msg">Ningun componente coincide con esos filtros.</div>`;
+      : `<div class="state-msg">Ningún componente coincide con esos filtros.</div>`;
     container.querySelector("#cat-count").textContent = `${rows.length} componente${rows.length === 1 ? "" : "s"}`;
     const tipoSelect = container.querySelector("#f-tipo");
-    tipoSelect.innerHTML = `<option value="">Tipo / subcategoria</option>` + tiposFor(filters.categoria).map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+    tipoSelect.innerHTML = `<option value="">Tipo / subcategoría</option>` + tiposFor(filters.categoria).map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
     tipoSelect.value = filters.tipo;
   }
 
   container.innerHTML = `
     <div class="filter-bar">
-      <select id="f-categoria"><option value="">Categoria</option>${categorias.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}</select>
+      <select id="f-categoria"><option value="">Categoría</option>${categorias.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}</select>
       <select id="f-marca"><option value="">Marca</option>${marcas.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("")}</select>
       <select id="f-tipo"></select>
       <form class="search-inline" id="cat-search"><span class="sb-icon">${icon("search")}</span><input type="search" placeholder="Buscar modelo..."></form>
@@ -914,7 +915,7 @@ function paintCatalogoExplorer(container, idx) {
 export function renderCatalogo(ctx) {
   ctx.container.innerHTML = `
     <section class="section wrap">
-      <div class="section-head"><div><h2>Cada pieza, por separado</h2><p class="desc">Paneles, inversores, baterias y accesorios — para quien ya sabe lo que busca, o quiere entender que trae cada solucion por dentro.</p></div></div>
+      <div class="section-head"><div><h2>Cada pieza, por separado</h2><p class="desc">Paneles, inversores, baterías y accesorios — para quien ya sabe lo que busca, o quiere entender qué trae cada solución por dentro.</p></div></div>
       <div id="cat-explorer"></div>
     </section>
   `;
@@ -932,9 +933,9 @@ export function renderCatalogo(ctx) {
    la Ficha de Kit. El Glosario usa el mismo contenido real que ya
    alimenta los "?" de ayuda en el resto del sitio (glossary.js). */
 const GLOSARIO_LABELS = {
-  panel: "Panel solar", inversor: "Inversor", bateria: "Bateria",
-  autonomia: "Autonomia", garantia: "Garantia", kw: "kW (kilovatio)",
-  kwh: "kWh (kilovatio-hora)", offgrid: "Off-Grid", hibrido: "Hibrido",
+  panel: "Panel solar", inversor: "Inversor", bateria: "Batería",
+  autonomia: "Autonomía", garantia: "Garantía", kw: "kW (kilovatio)",
+  kwh: "kWh (kilovatio-hora)", offgrid: "Off-Grid", hibrido: "Híbrido",
 };
 
 function paintGlosario(container) {
@@ -956,7 +957,7 @@ export function renderAprender(ctx) {
   function paint() {
     ctx.container.innerHTML = `
       <section class="section wrap">
-        <div class="section-head"><div><h2>Aprende con Blueprint</h2><p class="desc">Todo lo que necesitas para decidir con confianza, sin vueltas tecnicas ni letra chica.</p></div></div>
+        <div class="section-head"><div><h2>Aprende con Blueprint</h2><p class="desc">Todo lo que necesitas para decidir con confianza, sin vueltas técnicas ni letra chica.</p></div></div>
         <div class="chip-row">
           <button class="chip ${tab === "equipos" ? "on" : ""}" data-tab="equipos">${icon("layers")}Explorar equipos</button>
           <button class="chip ${tab === "glosario" ? "on" : ""}" data-tab="glosario">${icon("book")}Glosario</button>
@@ -1008,17 +1009,17 @@ export function renderProductDetail(ctx, params) {
   ].filter(([, v]) => v);
 
   ctx.container.innerHTML = `
-    <div class="crumb wrap"><a href="#/catalogo">Catalogo</a> ${icon("chevronRight")} <span>${escapeHtml(product.Categoria || "")}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(product.Nombre_Comercial_Tecnico || product.Modelo)}</span></div>
+    <div class="crumb wrap"><a href="#/catalogo">Catálogo</a> ${icon("chevronRight")} <span>${escapeHtml(categoriaLabel(product.Categoria))}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(product.Nombre_Comercial_Tecnico || product.Modelo)}</span></div>
     <div class="wrap kit-top">
       <div class="gallery">
         <div class="gallery-main">${mediaImage(gallery[0], product.Nombre_Comercial_Tecnico, "cover")}</div>
         ${gallery.length > 1 ? `<div class="gallery-strip">${gallery.slice(1).map((g) => mediaImage(g, product.Nombre_Comercial_Tecnico, "cover")).join("")}</div>` : ""}
       </div>
       <aside class="buy-card">
-        <span class="pill">${escapeHtml(product.Categoria || "")}</span>
+        <span class="pill">${escapeHtml(categoriaLabel(product.Categoria))}</span>
         <h1>${escapeHtml(product.Nombre_Comercial_Tecnico || product.Modelo)}</h1>
         <p class="tagline">${escapeHtml(showcase && showcase.Beneficios ? showcase.Beneficios : product.Descripcion_Tecnica || "")}</p>
-        ${waButton(config, `Hola, quiero mas informacion sobre ${product.Nombre_Comercial_Tecnico || product.Modelo} (${product.SKU}).`, "Consultar por WhatsApp")}
+        ${waButton(config, `Hola, quiero más información sobre ${product.Nombre_Comercial_Tecnico || product.Modelo} (${product.SKU}).`, "Consultar por WhatsApp")}
       </aside>
     </div>
 
@@ -1028,7 +1029,7 @@ export function renderProductDetail(ctx, params) {
         <table class="spec-table">${specs.map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`).join("")}</table>
       </div>
       <div>
-        ${showcase && showcase.Problema_que_Resuelve ? `<h3>Que problema resuelve</h3><p class="muted">${escapeHtml(showcase.Problema_que_Resuelve)}</p>` : ""}
+        ${showcase && showcase.Problema_que_Resuelve ? `<h3>Qué problema resuelve</h3><p class="muted">${escapeHtml(showcase.Problema_que_Resuelve)}</p>` : ""}
         ${showcase && showcase.Tipo_Cliente_Recomendado ? `<h3 style="margin-top:20px">Recomendado para</h3><p class="muted">${escapeHtml(showcase.Tipo_Cliente_Recomendado)}</p>` : ""}
       </div>
     </section>
@@ -1069,9 +1070,9 @@ export function renderProductDetail(ctx, params) {
 const DIAG_PERFILES = [
   { key: "residencial", label: "Residencial", desc: "Mi hogar, mi familia.", ic: "house", lineas: ["Respaldo", "Continuidad", "Autonomia"] },
   { key: "mipyme", label: "Micro o pequeño negocio", desc: "Restaurante, tienda, taller, oficina...", ic: "store", lineas: ["Continuidad", "Operacion Critica"] },
-  { key: "empresa", label: "Empresa", desc: "Produccion, turnos, operacion que no puede parar.", ic: "factory", lineas: ["Operacion Critica"] },
-  { key: "agricola", label: "Agrícola", desc: "Bombeo, riego, frio, procesamiento.", ic: "leaf", lineas: ["Operacion Critica", "Autonomia"] },
-  { key: "turismo", label: "Turismo", desc: "Hospedaje, restauracion, experiencia del huesped.", ic: "bed", lineas: ["Operacion Critica", "Continuidad"] },
+  { key: "empresa", label: "Empresa", desc: "Producción, turnos, operación que no puede parar.", ic: "factory", lineas: ["Operacion Critica"] },
+  { key: "agricola", label: "Agrícola", desc: "Bombeo, riego, frío, procesamiento.", ic: "leaf", lineas: ["Operacion Critica", "Autonomia"] },
+  { key: "turismo", label: "Turismo", desc: "Hospedaje, restauración, experiencia del huésped.", ic: "bed", lineas: ["Operacion Critica", "Continuidad"] },
   { key: "institucion", label: "Institución", desc: "Oficinas, servidores, salud, seguridad.", ic: "building", lineas: ["Operacion Critica"] },
   { key: "otro", label: "Otro", desc: "Algo distinto — igual te ayudamos a encontrarlo.", ic: "suitcase", lineas: ["Respaldo", "Continuidad", "Autonomia", "Operacion Critica", "Portatil"] },
 ];
@@ -1091,10 +1092,10 @@ const DIAG_LINEA_LABEL = {
 // inventado: es una inferencia razonable sobre ese tipo de negocio.
 const DIAG_SUBPREGUNTA = {
   mipyme: {
-    label: "¿A que se dedica tu negocio?",
+    label: "¿A qué se dedica tu negocio?",
     opciones: [
-      { key: "restaurante", label: "Restaurante o cafeteria", ic: "store", boost: ["negocio", "electrodomestico"] },
-      { key: "panaderia", label: "Panaderia o reposteria", ic: "store", boost: ["electrodomestico", "negocio"] },
+      { key: "restaurante", label: "Restaurante o cafetería", ic: "store", boost: ["negocio", "electrodomestico"] },
+      { key: "panaderia", label: "Panadería o repostería", ic: "store", boost: ["electrodomestico", "negocio"] },
       { key: "tienda", label: "Tienda o comercio", ic: "layers", boost: ["luces", "tv"] },
       { key: "oficina", label: "Oficina o estudio", ic: "layers", boost: ["electrodomestico", "oficina", "tv"] },
       { key: "taller", label: "Taller", ic: "bolt", boost: ["negocio", "carga completa"] },
@@ -1104,17 +1105,17 @@ const DIAG_SUBPREGUNTA = {
     ],
   },
   agricola: {
-    label: "¿Cual es tu actividad principal?",
+    label: "¿Cuál es tu actividad principal?",
     opciones: [
       { key: "bombeo", label: "Bombeo de agua", ic: "droplet", boost: ["negocio"] },
-      { key: "frio", label: "Frio / refrigeracion", ic: "fridge", boost: ["nevera"] },
+      { key: "frio", label: "Frío / refrigeración", ic: "fridge", boost: ["nevera"] },
       { key: "riego", label: "Riego", ic: "droplet", boost: ["negocio"] },
       { key: "procesamiento", label: "Procesamiento o empaque", ic: "layers", boost: ["negocio", "electrodomestico"] },
       { key: "otro", label: "Otra actividad", ic: "leaf", boost: [] },
     ],
   },
   turismo: {
-    label: "¿Que tipo de espacio es?",
+    label: "¿Qué tipo de espacio es?",
     opciones: [
       { key: "hotel", label: "Hotel / hospedaje", ic: "bed", boost: ["a/c", "electrodomestico"] },
       { key: "restaurante", label: "Restaurante / bar", ic: "store", boost: ["negocio", "electrodomestico"] },
@@ -1132,64 +1133,64 @@ const DIAG_NECESIDADES_POR_PERFIL = {
     { key: "luces", label: "Luces y ventiladores", ic: "bolt", kw: ["luces", "ventilador"] },
     { key: "tv", label: "TV e internet", ic: "tv", kw: ["tv", "router"] },
     { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
-    { key: "electrodomesticos", label: "Electrodomesticos / oficina en casa", ic: "plug", kw: ["electrodomestico", "oficina"] },
+    { key: "electrodomesticos", label: "Electrodomésticos / oficina en casa", ic: "plug", kw: ["electrodomestico", "oficina"] },
   ],
   mipyme: [
-    { key: "nevera", label: "Refrigeracion / neveras", ic: "fridge", kw: ["nevera", "refrigeracion"] },
-    { key: "luces", label: "Luces y ventilacion", ic: "bolt", kw: ["luces", "ventilador"] },
+    { key: "nevera", label: "Refrigeración / neveras", ic: "fridge", kw: ["nevera", "refrigeracion"] },
+    { key: "luces", label: "Luces y ventilación", ic: "bolt", kw: ["luces", "ventilador"] },
     { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
     { key: "oficina", label: "Equipos de oficina / PC", ic: "plug", kw: ["electrodomestico", "oficina"] },
-    { key: "negocio_completo", label: "Toda la operacion del negocio", ic: "store", kw: ["negocio", "carga completa"] },
-    { key: "vehiculo", label: "Cargar un vehiculo del negocio", ic: "car", kw: ["vehiculo"] },
+    { key: "negocio_completo", label: "Toda la operación del negocio", ic: "store", kw: ["negocio", "carga completa"] },
+    { key: "vehiculo", label: "Cargar un vehículo del negocio", ic: "car", kw: ["vehiculo"] },
   ],
   empresa: [
-    { key: "negocio_completo", label: "Toda la produccion / operacion", ic: "factory", kw: ["negocio", "carga completa"] },
-    { key: "vehiculo", label: "Flota / vehiculos electricos", ic: "car", kw: ["vehiculo"] },
+    { key: "negocio_completo", label: "Toda la producción / operación", ic: "factory", kw: ["negocio", "carga completa"] },
+    { key: "vehiculo", label: "Flota / vehículos eléctricos", ic: "car", kw: ["vehiculo"] },
     { key: "oficina", label: "Sistemas y oficinas", ic: "plug", kw: ["electrodomestico", "oficina"] },
-    { key: "ac", label: "Climatizacion", ic: "layers", kw: ["a/c", "aire"] },
+    { key: "ac", label: "Climatización", ic: "layers", kw: ["a/c", "aire"] },
   ],
   agricola: [
     { key: "bombeo", label: "Bombas de agua / riego", ic: "droplet", kw: ["negocio"] },
-    { key: "frio", label: "Frio / refrigeracion", ic: "fridge", kw: ["nevera", "refrigeracion"] },
-    { key: "luces", label: "Iluminacion", ic: "bolt", kw: ["luces"] },
+    { key: "frio", label: "Frío / refrigeración", ic: "fridge", kw: ["nevera", "refrigeracion"] },
+    { key: "luces", label: "Iluminación", ic: "bolt", kw: ["luces"] },
     { key: "electrodomesticos", label: "Equipos de procesamiento", ic: "plug", kw: ["electrodomestico"] },
-    { key: "negocio_completo", label: "Toda la explotacion", ic: "store", kw: ["negocio", "carga completa"] },
+    { key: "negocio_completo", label: "Toda la explotación", ic: "store", kw: ["negocio", "carga completa"] },
   ],
   turismo: [
     { key: "ac", label: "Aire acondicionado en habitaciones", ic: "layers", kw: ["a/c", "aire"] },
-    { key: "cocina", label: "Cocina / refrigeracion", ic: "fridge", kw: ["nevera", "electrodomestico"] },
-    { key: "lavanderia", label: "Lavanderia", ic: "plug", kw: ["electrodomestico"] },
-    { key: "internet", label: "Luces e internet para huespedes", ic: "tv", kw: ["luces", "tv", "router"] },
+    { key: "cocina", label: "Cocina / refrigeración", ic: "fridge", kw: ["nevera", "electrodomestico"] },
+    { key: "lavanderia", label: "Lavandería", ic: "plug", kw: ["electrodomestico"] },
+    { key: "internet", label: "Luces e internet para huéspedes", ic: "tv", kw: ["luces", "tv", "router"] },
     { key: "negocio_completo", label: "Todo el establecimiento", ic: "store", kw: ["negocio", "carga completa"] },
   ],
   institucion: [
     { key: "computadoras", label: "Computadoras y oficinas", ic: "plug", kw: ["electrodomestico", "oficina"] },
     { key: "servidores", label: "Servidores / continuidad de datos", ic: "layers", kw: ["negocio", "electrodomestico"] },
-    { key: "medicos", label: "Equipos medicos sensibles", ic: "fridge", kw: ["nevera", "electrodomestico"] },
-    { key: "comunicacion", label: "Comunicacion / internet", ic: "tv", kw: ["tv", "router"] },
-    { key: "seguridad", label: "Iluminacion y seguridad", ic: "bolt", kw: ["luces"] },
+    { key: "medicos", label: "Equipos médicos sensibles", ic: "fridge", kw: ["nevera", "electrodomestico"] },
+    { key: "comunicacion", label: "Comunicación / internet", ic: "tv", kw: ["tv", "router"] },
+    { key: "seguridad", label: "Iluminación y seguridad", ic: "bolt", kw: ["luces"] },
   ],
   otro: [
     { key: "nevera", label: "La nevera", ic: "fridge", kw: ["nevera"] },
     { key: "luces", label: "Luces y ventiladores", ic: "bolt", kw: ["luces", "ventilador"] },
     { key: "tv", label: "TV e internet", ic: "tv", kw: ["tv", "router"] },
     { key: "ac", label: "Aire acondicionado", ic: "layers", kw: ["a/c", "aire"] },
-    { key: "oficina", label: "Electrodomesticos / oficina", ic: "plug", kw: ["electrodomestico", "oficina"] },
+    { key: "oficina", label: "Electrodomésticos / oficina", ic: "plug", kw: ["electrodomestico", "oficina"] },
     { key: "negocio_completo", label: "Todo el negocio", ic: "store", kw: ["negocio", "carga completa"] },
-    { key: "vehiculo", label: "Cargar un vehiculo electrico", ic: "car", kw: ["vehiculo"] },
+    { key: "vehiculo", label: "Cargar un vehículo eléctrico", ic: "car", kw: ["vehiculo"] },
     { key: "celular", label: "Celular y radio", ic: "wifi", kw: ["celular", "radio"] },
   ],
 };
 
 const DIAG_DURACION = [
-  { key: "unas_horas", label: "Unas horas", desc: "El apagon es corto, con eso alcanza.", ic: "clock" },
-  { key: "todo_el_apagon", label: "Todo el apagon", desc: "A veces se va la luz por horas largas.", ic: "clock" },
-  { key: "vivo_sin_red", label: "Vivo sin red estable", desc: "Necesito autonomia real, no solo un respaldo.", ic: "battery" },
+  { key: "unas_horas", label: "Unas horas", desc: "El apagón es corto, con eso alcanza.", ic: "clock" },
+  { key: "todo_el_apagon", label: "Todo el apagón", desc: "A veces se va la luz por horas largas.", ic: "clock" },
+  { key: "vivo_sin_red", label: "Vivo sin red estable", desc: "Necesito autonomía real, no solo un respaldo.", ic: "battery" },
 ];
 
 const DIAG_ANALISIS_MSGS = [
   "Analizando tus necesidades…", "Revisando nuestras soluciones…", "Comparando alternativas reales…",
-  "Construyendo tu recomendacion…", "Calculando compatibilidad…", "Preparando tu resultado…",
+  "Construyendo tu recomendación…", "Calculando compatibilidad…", "Preparando tu resultado…",
 ];
 
 /* Consumo promedio de referencia (Watts), valores tipicos usados en
@@ -1260,7 +1261,7 @@ export function renderDiagnostico(ctx, params) {
       ctx.container.innerHTML = `
         <section class="section wrap diag-wrap">
           ${stepper()}
-          <div class="section-head"><div><h2>Encontremos juntos la solucion adecuada para vos</h2><p class="desc">Unas pocas preguntas — nada tecnico. Cada respuesta cambia la siguiente pregunta, para no hacerte perder tiempo.</p></div></div>
+          <div class="section-head"><div><h2>Encontremos juntos la solución adecuada para vos</h2><p class="desc">Unas pocas preguntas — nada técnico. Cada respuesta cambia la siguiente pregunta, para no hacerte perder tiempo.</p></div></div>
           <div class="diag-grid diag-grid-perfiles">
             ${DIAG_PERFILES.map((o) => `
               <button class="diag-card" data-perfil="${o.key}">
@@ -1408,7 +1409,7 @@ export function renderDiagnostico(ctx, params) {
     // apagon cortito + operacion critica de precio alto): nunca se
     // oculta, se lo decimos claro como pide el documento.
     const sugerencia = (answers.duracion === "unas_horas" && topKit && topKit.Precio_Sugerido_Reventa_USD > 3500)
-      ? "Lo que nos contaste sugiere una necesidad puntual, pero la solucion que mejor calza es una inversion mayor — capaz te conviene evaluar una instalacion por etapas. Hablemos y lo vemos juntos."
+      ? "Lo que nos contaste sugiere una necesidad puntual, pero la solución que mejor calza es una inversión mayor — capaz te conviene evaluar una instalación por etapas. Hablemos y lo vemos juntos."
       : null;
 
     const perfilLabel = perfil ? perfil.label.toLowerCase() : "vos";
@@ -1418,8 +1419,8 @@ export function renderDiagnostico(ctx, params) {
         ${stepper()}
         <div class="diag-result-head">
           <span class="pill">${icon(perfil.ic)}${escapeHtml(perfil.label)}${subOpcion ? " · " + escapeHtml(subOpcion.label) : ""}</span>
-          <h2>${exact ? `Esto es lo que mas se ajusta a lo que nos contaste` : "No encontramos una coincidencia exacta — te mostramos lo mas cercano"}</h2>
-          ${topKit ? `<p class="desc">Clasificamos tu necesidad como <strong>${escapeHtml(necesidadLabel)}</strong>. Calculado sobre nuestras soluciones reales para ${escapeHtml(perfilLabel)}, no una lista generica.</p>` : ""}
+          <h2>${exact ? `Esto es lo que más se ajusta a lo que nos contaste` : "No encontramos una coincidencia exacta — te mostramos lo más cercano"}</h2>
+          ${topKit ? `<p class="desc">Clasificamos tu necesidad como <strong>${escapeHtml(necesidadLabel)}</strong>. Calculado sobre nuestras soluciones reales para ${escapeHtml(perfilLabel)}, no una lista genérica.</p>` : ""}
           ${topKit ? `<div class="diag-confidence"><div class="diag-confidence-bar"><span style="width:${confianza}%"></span></div><span class="diag-confidence-label">${confianza}% de coincidencia con lo que nos contaste</span></div>` : ""}
           ${topKit ? `
           <div class="diag-facts">
@@ -1427,12 +1428,12 @@ export function renderDiagnostico(ctx, params) {
             <div class="diag-fact">
               <span class="diag-fact-label">Consumo estimado (aproximado)</span>
               <span class="diag-fact-value">~${demandaW.toLocaleString("en-US")} W</span>
-              <span class="diag-fact-note">Basado en promedios tipicos, no en una medicion real de tu consumo — un asesor puede afinarlo.</span>
+              <span class="diag-fact-note">Basado en promedios típicos, no en una medición real de tu consumo — un asesor puede afinarlo.</span>
             </div>` : ""}
             <div class="diag-fact">
-              <span class="diag-fact-label">Potencial de ampliacion</span>
-              <span class="diag-fact-value">${puedeAmpliar ? `Si, ${accesorios.length} opcion${accesorios.length === 1 ? "" : "es"} real${accesorios.length === 1 ? "" : "es"}` : "Sin ampliaciones cargadas para este kit"}</span>
-              <span class="diag-fact-note">${puedeAmpliar ? "Podes empezar por acá y crecer despues." : "Este kit ya viene en su configuracion completa."}</span>
+              <span class="diag-fact-label">Potencial de ampliación</span>
+              <span class="diag-fact-value">${puedeAmpliar ? `Sí, ${accesorios.length} opción${accesorios.length === 1 ? "" : "es"} real${accesorios.length === 1 ? "" : "es"}` : "Sin ampliaciones cargadas para este kit"}</span>
+              <span class="diag-fact-note">${puedeAmpliar ? "Podés empezar por acá y crecer después." : "Este kit ya viene en su configuración completa."}</span>
             </div>
           </div>` : ""}
         </div>
@@ -1445,13 +1446,13 @@ export function renderDiagnostico(ctx, params) {
 
         ${accesorios.length ? `
         <div class="diag-accesorios">
-          <h3>Accesorios que podrias sumar</h3>
+          <h3>Accesorios que podrías sumar</h3>
           <div class="chip-row">${accesorios.map((c) => `<span class="chip">${escapeHtml(c.Descripcion || c.SKU)}</span>`).join("")}</div>
         </div>` : ""}
 
         <div class="cta-band wrap" style="margin-top:8px">
           <div><h3>¿Ninguna te convence del todo?</h3><p class="muted">Un asesor real revisa tu caso y te arma una a medida.</p></div>
-          ${waButton(config, `Hola, hice el diagnostico en la web (perfil: ${perfil.label}) y quiero que un asesor revise mi caso.`, "Hablar con un asesor")}
+          ${waButton(config, `Hola, hice el diagnóstico en la web (perfil: ${perfil.label}) y quiero que un asesor revise mi caso.`, "Hablar con un asesor")}
         </div>
         <div style="text-align:center;margin-top:18px">
           <button class="btn btn-ghost" id="diag-restart">Volver a empezar</button>
@@ -1478,7 +1479,7 @@ export function renderComparador(ctx) {
   ].filter((c) => (comparador[c.key] || []).length);
 
   if (!cats.length) {
-    ctx.container.innerHTML = `<div class="wrap section"><div class="state-msg">No se pudo cargar el comparador tecnico.</div></div>`;
+    ctx.container.innerHTML = `<div class="wrap section"><div class="state-msg">No se pudo cargar el comparador técnico.</div></div>`;
     return;
   }
   let activeCat = cats[0].key;
@@ -1537,14 +1538,14 @@ export function renderComparador(ctx) {
         <div class="pick-slot">${b ? `<span class="pick-name">${escapeHtml(b.Marca)} ${escapeHtml(b.Modelo)}</span>` : `<span class="muted">Elegi un segundo producto</span>`}</div>
       </div>
       ${statRow(a, b, "Potencia_W", "Potencia", " W")}
-      ${statRow(a, b, "Garantia_Anios", "Garantia", " años")}
+      ${statRow(a, b, "Garantia_Anios", "Garantía", " años")}
       <div class="compare-row"><div class="compare-stat"><span class="val" style="font-size:13px">${escapeHtml(a.Descripcion_Tecnica || "")}</span></div><div class="compare-cat-label">Detalle</div><div class="compare-stat"><span class="val" style="font-size:13px">${b ? escapeHtml(b.Descripcion_Tecnica || "") : "—"}</span></div></div>
     `;
   }
 
   ctx.container.innerHTML = `
     <section class="section wrap">
-      <div class="section-head"><div><h2>¿Cual me conviene?</h2><p class="desc">Elegi una categoria y hasta 2 modelos para verlos lado a lado, en lenguaje simple.</p></div></div>
+      <div class="section-head"><div><h2>¿Cuál me conviene?</h2><p class="desc">Elegí una categoría y hasta 2 modelos para verlos lado a lado, en lenguaje simple.</p></div></div>
       <div class="chip-row" id="comp-cats">
         ${cats.map((c, i) => `<button class="chip ${i === 0 ? "on" : ""}" data-cat="${c.key}">${c.label} (${rowsOf(c.key).length})</button>`).join("")}
       </div>
@@ -1586,18 +1587,18 @@ export function renderContacto(ctx) {
       <div class="contact-info">
         <span class="eyebrow">Hablemos</span>
         <h1>Hablemos de tu proyecto</h1>
-        <p class="lede">Contanos que queres alimentar y te ayudamos a armar la solucion exacta.</p>
+        <p class="lede">Contanos qué querés alimentar y te ayudamos a armar la solución exacta.</p>
         <div class="info-row"><span class="icon-circle sm">${icon("whatsapp")}</span><div><div class="k">WhatsApp</div><div class="v">${config.WhatsApp_Ventas ? escapeHtml(config.WhatsApp_Ventas) : "No configurado"}</div></div></div>
-        <div class="info-row"><span class="icon-circle sm">${icon("layers")}</span><div><div class="k">Catalogo</div><div class="v">${stats.kitCount} kits activos en ${stats.marketCount || "—"} mercado${stats.marketCount === 1 ? "" : "s"}</div></div></div>
-        <div class="info-row"><span class="icon-circle sm">${icon("shield")}</span><div><div class="k">Garantia</div><div class="v">Hasta ${stats.maxWarranty} años segun componente</div></div></div>
+        <div class="info-row"><span class="icon-circle sm">${icon("layers")}</span><div><div class="k">Catálogo</div><div class="v">${stats.kitCount} kits activos en ${stats.marketCount || "—"} mercado${stats.marketCount === 1 ? "" : "s"}</div></div></div>
+        <div class="info-row"><span class="icon-circle sm">${icon("shield")}</span><div><div class="k">Garantía</div><div class="v">Hasta ${stats.maxWarranty} años según componente</div></div></div>
       </div>
       <div class="form-card" id="contact-form">
         <h3>Contanos tu proyecto</h3>
         <div class="field"><label>Nombre</label><input id="c-name" type="text" placeholder="Tu nombre"></div>
         <div class="field"><label>Tipo de proyecto</label>
-          <select id="c-type"><option>Residencial</option><option>Comercial</option><option>Portatil / emergencia</option><option>Movilidad electrica</option></select>
+          <select id="c-type"><option>Residencial</option><option>Comercial</option><option>Portátil / emergencia</option><option>Movilidad eléctrica</option></select>
         </div>
-        <div class="field"><label>Contanos que necesitas</label><textarea id="c-msg" rows="3" placeholder="Describi tu consumo o el equipo que queres alimentar..."></textarea></div>
+        <div class="field"><label>Contanos qué necesitás</label><textarea id="c-msg" rows="3" placeholder="Describí tu consumo o el equipo que querés alimentar..."></textarea></div>
         <button class="btn btn-primary" id="c-send" style="justify-content:center">${icon("whatsapp")}Enviar por WhatsApp</button>
         <p class="muted" style="font-size:12px">Este formulario abre WhatsApp con tu mensaje. Blueprint Viewer no tiene servidor ni base de datos: nada queda guardado aca.</p>
       </div>
@@ -1609,11 +1610,11 @@ export function renderContacto(ctx) {
     const type = ctx.container.querySelector("#c-type").value;
     const msg = ctx.container.querySelector("#c-msg").value.trim();
     const text = `Hola, soy ${name || "un cliente interesado"}. Tengo un proyecto ${type.toLowerCase()}. ${msg}`.trim();
-    if (!config.WhatsApp_Ventas) { alert("El numero de WhatsApp de ventas no esta configurado en SYSTEM_CONFIG."); return; }
+    if (!config.WhatsApp_Ventas) { alert("El número de WhatsApp de ventas no está configurado en SYSTEM_CONFIG."); return; }
     window.open(whatsappLink(config.WhatsApp_Ventas, text), "_blank");
   });
 }
 
 export function renderNotFound(ctx) {
-  ctx.container.innerHTML = `<div class="wrap section"><div class="state-msg">Pagina no encontrada. <a href="#/">Volver al inicio</a></div></div>`;
+  ctx.container.innerHTML = `<div class="wrap section"><div class="state-msg">Página no encontrada. <a href="#/">Volver al inicio</a></div></div>`;
 }

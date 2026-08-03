@@ -15,22 +15,22 @@
    ====================================================================== */
 
 export const GLOSSARY = {
-  panel: "El panel solar es el que \"agarra\" la luz del sol y la convierte en electricidad. Entre mas paneles tenga tu kit, mas energia puede generar mientras hay sol.",
-  inversor: "El inversor es el corazon del sistema: convierte la energia del panel o la bateria en la corriente que usan tus aparatos — la nevera, las luces, el televisor.",
-  bateria: "La bateria guarda la energia que no usaste durante el dia para dartela de noche, o justo cuando se va la corriente de la calle.",
-  autonomia: "La autonomia es cuanto tiempo puede aguantar tu casa funcionando con la bateria llena, sin sol y sin corriente — depende de cuantos aparatos tengas prendidos.",
+  panel: "El panel solar es el que \"agarra\" la luz del sol y la convierte en electricidad. Entre más paneles tenga tu kit, más energía puede generar mientras hay sol.",
+  inversor: "El inversor es el corazón del sistema: convierte la energía del panel o la batería en la corriente que usan tus aparatos — la nevera, las luces, el televisor.",
+  bateria: "La batería guarda la energía que no usaste durante el día para dártela de noche, o justo cuando se va la corriente de la calle.",
+  autonomia: "La autonomía es cuánto tiempo puede aguantar tu casa funcionando con la batería llena, sin sol y sin corriente — depende de cuántos aparatos tengas prendidos.",
   garantia: "Los años que el fabricante responde por el equipo si se daña por su cuenta, sin que sea culpa tuya.",
-  kw: "kW (kilovatio) mide que tan fuerte puede trabajar un equipo en un momento — entre mas kW tiene tu inversor, mas aparatos puede mover al mismo tiempo.",
-  kwh: "kWh (kilovatio-hora) mide cuanta energia se puede guardar o gastar en total — entre mas kWh tiene tu bateria, mas tiempo te dura la luz.",
+  kw: "kW (kilovatio) mide qué tan fuerte puede trabajar un equipo en un momento — entre más kW tiene tu inversor, más aparatos puede mover al mismo tiempo.",
+  kwh: "kWh (kilovatio-hora) mide cuánta energía se puede guardar o gastar en total — entre más kWh tiene tu batería, más tiempo te dura la luz.",
   offgrid: "Off-Grid quiere decir que el sistema puede funcionar sin depender de la corriente de la calle — pensado para donde el servicio es muy inestable.",
-  hibrido: "Hibrido quiere decir que el sistema usa el sol cuando hay, y la corriente de la calle o la bateria cuando no hay — lo mejor de los dos mundos.",
+  hibrido: "Híbrido quiere decir que el sistema usa el sol cuando hay, y la corriente de la calle o la batería cuando no hay — lo mejor de los dos mundos.",
 };
 
 /** Boton "?" inline. Se coloca justo despues de la etiqueta del
  *  termino (ej: "Inversor ${termHint('inversor')}"). */
 export function termHint(key) {
   if (!GLOSSARY[key]) return "";
-  return `<button type="button" class="term-hint" data-term="${key}" aria-label="Que es esto">?</button>`;
+  return `<button type="button" class="term-hint" data-term="${key}" aria-label="¿Qué es esto?">?</button>`;
 }
 
 /** Wire global (una sola vez, ver app.js): delegacion de eventos para
