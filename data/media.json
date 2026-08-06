@@ -252,10 +252,38 @@
     "FAQ": null
   },
   {
+    "Media_ID": "MEDIA-K-PORT-A1",
+    "SKU": "K-PORT-A1",
+    "Imagen_principal": "media_blueprint/kits/K-PORT-A1/hero-product.png",
+    "Imagen_2": "media_blueprint/kits/K-PORT-A1/hero-scene.png",
+    "Imagen_3": null,
+    "Datasheet": null,
+    "Manual": null,
+    "Catalogo": null,
+    "Video": null,
+    "Certificados": null,
+    "Garantia_Anios": null,
+    "FAQ": null
+  },
+  {
     "Media_ID": "MEDIA-K10-HYBRID",
     "SKU": "K10-HYBRID",
     "Imagen_principal": "media_blueprint/kits/K10-HYBRID/hero-product.png",
     "Imagen_2": "media_blueprint/kits/K10-HYBRID/hero-scene.png",
+    "Imagen_3": null,
+    "Datasheet": null,
+    "Manual": null,
+    "Catalogo": null,
+    "Video": null,
+    "Certificados": null,
+    "Garantia_Anios": null,
+    "FAQ": null
+  },
+  {
+    "Media_ID": "MEDIA-K-PORT-A5",
+    "SKU": "K-PORT-A5",
+    "Imagen_principal": "media_blueprint/kits/K-PORT-A5/hero-product.png",
+    "Imagen_2": "media_blueprint/kits/K-PORT-A5/hero-scene.png",
     "Imagen_3": null,
     "Datasheet": null,
     "Manual": null,

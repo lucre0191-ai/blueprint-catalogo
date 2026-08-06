@@ -61,16 +61,18 @@ html { scroll-behavior: smooth; }
    Se fija una duracion explicita y corta (dentro del maximo de 350ms
    del documento) en vez de dejar el default del navegador, que varia.
    Si el navegador no soporta la API esto simplemente no se aplica
-   nunca -- ver runRender() en app.js. */
+   nunca -- ver initViewTransitions() en assets/js/engines/animation-engine.js
+   (Animation Engine, regla de arquitectura "Engines", 2026-08-05). */
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
   animation-duration: 240ms;
   animation-timing-function: ease;
 }
 
 /* Entrada de secciones al hacer scroll (Documento 05). Ver
-   initScrollReveal() en core.js -- solo se aplica la clase reveal-io
-   a secciones que arrancan fuera de pantalla, asi que si JS no corre
-   por algun motivo, el contenido nunca queda oculto. */
+   initScrollReveal() en assets/js/engines/animation-engine.js
+   (Animation Engine) -- solo se aplica la clase reveal-io a secciones
+   que arrancan fuera de pantalla, asi que si JS no corre por algun
+   motivo, el contenido nunca queda oculto. */
 .reveal-io { opacity: 0; transform: translateY(16px); }
 .reveal-io.in-view { opacity: 1; transform: translateY(0); transition: opacity .3s ease, transform .3s ease; }
 

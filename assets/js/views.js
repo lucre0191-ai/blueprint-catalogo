@@ -9,11 +9,12 @@
 import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
-  kitWarrantyYears, kitVisual, kitScene, buildKitViewModel, resolveContentBlock, state,
+  kitWarrantyYears, kitVisual, buildKitViewModel, resolveContentBlock, state,
   lineaLabel, categoriaLabel, tipoSistemaLabel,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
+import { renderKitHero } from "./engines/hero-engine.js";
 // generateTechnicalPDF (pdfgen.js) ya no se usa desde el sitio publico
 // a proposito (ver renderCotizacion) -- queda disponible en el modulo
 // por si un futuro tool interno para vendedores lo necesita.
@@ -80,29 +81,11 @@ function kitMedia(catalog, label, sizeClass = "", compact = false) {
 /** Seccion narrativa "Hero Scene / Hero Film" al tope de la Ficha del
  *  kit (Documento 06, seccion 9.2: Hero Scene primero -- narrativa --,
  *  Hero Product despues -- ver kitMedia() arriba, que sigue igual mas
- *  abajo en la ficha). Documento 05B (Cinematic Experience System):
- *  Hero Scene funciona como Hero Poster de un Hero Film (video corto,
- *  sin sonido, loop, 8s) cuando exista; sin Hero Film todavia, se
- *  muestra como imagen fija sola. Sin Hero Scene propia -> "" (la ficha
- *  omite la seccion entera, nunca un placeholder generico en su lugar
- *  -- misma regla honesta que kitVisual() en core.js). */
-function kitSceneHero(catalog, name) {
-  const { scene, film } = kitScene(catalog);
-  if (!scene) return "";
-  const safeScene = escapeHtml(scene);
-  const alt = escapeHtml(name || "");
-  const visual = film
-    ? `<video class="kit-scene-media" autoplay muted loop playsinline poster="${safeScene}">
-         <source src="${escapeHtml(film)}" type="video/mp4">
-       </video>`
-    : `<img class="kit-scene-media" src="${safeScene}" alt="${alt}" loading="lazy">`;
-  return `
-    <section class="kit-scene-hero">
-      ${visual}
-      <div class="kit-scene-scrim" aria-hidden="true"></div>
-      <p class="kit-scene-caption">${alt}</p>
-    </section>`;
-}
+ *  abajo en la ficha). El armado real (datos + markup video/imagen) es
+ *  responsabilidad de Hero Engine (assets/js/engines/hero-engine.js) --
+ *  regla de arquitectura "Engines" (2026-08-05): toda experiencia
+ *  audiovisual vive en su propio Engine, nunca como funcion aislada
+ *  dentro de una vista. Ver renderKitHero() importado arriba. */
 
 function buildInquiryText(name, market, price) {
   const priceTxt = price ? `$${price} USD` : "precio a confirmar";
@@ -647,7 +630,7 @@ export function renderKitDetail(ctx, params) {
   ctx.container.innerHTML = `
     <div class="crumb wrap"><a href="#/kits">Kits</a> ${icon("chevronRight")} <span>${escapeHtml(lineaLabel(kit.Linea))}</span> ${icon("chevronRight")} <span class="on">${escapeHtml(name)}</span></div>
 
-    ${kitSceneHero(catalog, name)}
+    ${renderKitHero(catalog, name)}
 
     <div class="wrap kit-top">
       <div class="gallery">

@@ -252,11 +252,16 @@ export function kitVisual(catalog) {
  *  kit en una situacion real de uso) — distinta de Hero Product
  *  (kitImage/kitVisual arriba), que responde "que compra el cliente".
  *  Hero Film: version cinematografica de la misma escena (video corto,
- *  sin sonido, loop) — todavia no se genera con IA en este sitio (ver
- *  Doc 05B, seccion "Implementacion": Claude prepara la arquitectura y
- *  los prompts oficiales, pero no genera el video). Hero Scene funciona
- *  como Hero Poster: la vista la usa como <video poster> y, mientras no
- *  exista Hero Film, como imagen fija sola.
+ *  sin sonido, loop), generada kit por kit segun el guion de
+ *  `Blueprint_OS_Prompts_Hero_Film.docx`. Hero Scene funciona como Hero
+ *  Poster: mientras un kit no tenga Hero Film todavia, se muestra sola
+ *  como imagen fija.
+ *
+ *  Esta funcion solo resuelve los datos (capa de datos de core.js); el
+ *  markup video/imagen lo arma Hero Engine
+ *  (assets/js/engines/hero-engine.js -- renderKitHero()), que es quien
+ *  llama a esta funcion. Ver ese archivo para la regla de arquitectura
+ *  "Engines" (2026-08-05).
  *
  *  Orden de la Ficha del kit (Documento 06, seccion 9.2): Hero Scene
  *  primero (seccion narrativa), Hero Product despues (mostrar la
@@ -441,39 +446,12 @@ export function buildKitViewModel(idx, kitId, { market, lang = "Español" } = {}
 /* ---------------------------------------------------------------------
    Router hash-based: compatible con GitHub Pages (sin backend, sin
    configuracion de servidor). Formato: #/ruta/param
-   --------------------------------------------------------------------- */
-/** Entrada de secciones al hacer scroll (Documento 05: fade + ligero
- *  desplazamiento vertical, 300ms, nunca todas a la vez). Solo anima
- *  secciones que arrancan fuera del viewport -- lo que ya se ve al
- *  cargar la pantalla se muestra directo, sin parpadeo. Si el
- *  navegador no soporta IntersectionObserver, o el visitante pidio
- *  menos movimiento, todo se muestra sin animar (nunca depende de esto
- *  para ser legible). */
-export function initScrollReveal(container) {
-  if (!container || typeof IntersectionObserver !== "function") return;
-  const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefersReduced) return;
-  const els = container.querySelectorAll(".section, .cta-band");
-  if (!els.length) return;
-  const vh = window.innerHeight || 800;
-  const toObserve = [];
-  els.forEach((el) => {
-    if (el.getBoundingClientRect().top < vh * 0.92) return; // ya visible: se muestra directo
-    el.classList.add("reveal-io");
-    toObserve.push(el);
-  });
-  if (!toObserve.length) return;
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("in-view");
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
-  toObserve.forEach((el) => io.observe(el));
-}
 
+   Nota: el reveal-on-scroll (antes vivia aca como initScrollReveal) se
+   mudo a assets/js/engines/animation-engine.js -- es movimiento, no
+   dato ni ruteo, y ahora comparte una sola prefersReducedMotion() con
+   el resto del sitio (regla de arquitectura "Engines", 2026-08-05).
+   --------------------------------------------------------------------- */
 /** `runRender` envuelve cada render de ruta (navegar y pintar). Por
  *  defecto solo ejecuta la funcion tal cual; app.js pasa una version
  *  que ademas usa la View Transitions API del navegador para que
