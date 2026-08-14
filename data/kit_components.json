@@ -199,7 +199,7 @@
     },
     {
       "SKU": "SUNEVO-PKG-STD-001",
-      "Cantidad": 1,
+      "Cantidad": 0,
       "Categoria": "Empaque",
       "Descripcion": "SunEvo Safe Package",
       "Opcional": false,
@@ -460,7 +460,7 @@
   "K5-OFFGRID": [
     {
       "SKU": "SUNEVO-PAN-590W-001",
-      "Cantidad": 10,
+      "Cantidad": 9,
       "Categoria": "Panel Solar",
       "Descripcion": "Panel SunEvo 590W HBD",
       "Opcional": false,

@@ -25,7 +25,7 @@
     "Potencia_Inversor_kW": 3,
     "Potencia_Panel_kW": 3.54,
     "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 2540.5584375
+    "Precio_Sugerido_Reventa_USD": 2496.7865625
   },
   {
     "Kit_ID": "K5-HYBRID",
@@ -39,7 +39,7 @@
     "Potencia_Inversor_kW": 5,
     "Potencia_Panel_kW": 5.31,
     "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 4815.236875
+    "Precio_Sugerido_Reventa_USD": 4485.48875
   },
   {
     "Kit_ID": "K5-OFFGRID",
@@ -51,9 +51,9 @@
     "Autonomia_Aprox": "6-10 horas de respaldo, sin conexión a la red",
     "Estado": "Activo",
     "Potencia_Inversor_kW": 5,
-    "Potencia_Panel_kW": 5.9,
+    "Potencia_Panel_kW": 5.31,
     "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 3205.8909375
+    "Precio_Sugerido_Reventa_USD": 2968.06375
   },
   {
     "Kit_ID": "K10-HYBRID",
@@ -67,7 +67,7 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 10.24,
-    "Precio_Sugerido_Reventa_USD": 7831.1190625
+    "Precio_Sugerido_Reventa_USD": 7559.7334375
   },
   {
     "Kit_ID": "K10-HYBRID-INH",
@@ -81,7 +81,7 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 16,
-    "Precio_Sugerido_Reventa_USD": 6836.0384375
+    "Precio_Sugerido_Reventa_USD": 6564.6528125
   },
   {
     "Kit_ID": "K10-OFFGRID",
@@ -95,7 +95,7 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 10.24,
-    "Precio_Sugerido_Reventa_USD": 5823.4490625
+    "Precio_Sugerido_Reventa_USD": 5604.5896875
   },
   {
     "Kit_ID": "K-PORT-A1",
@@ -207,6 +207,6 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 10.24,
-    "Precio_Sugerido_Reventa_USD": 6398.3196875
+    "Precio_Sugerido_Reventa_USD": 6126.9340625
   }
 ]
