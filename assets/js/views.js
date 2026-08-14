@@ -568,6 +568,14 @@ export function renderKits(ctx) {
     state.searchQuery = e.target.value;
     paint();
   });
+
+  // CTA principal "Descargar catálogo comercial" (Documento 06, seccion
+  // 4.1 — PUB-06). `market` va como funcion, no como valor fijo: el
+  // visitante puede cambiar de pestaña de mercado (market-tabs) despues
+  // de que este boton ya se pinto, sin que la pantalla se vuelva a
+  // renderizar entera.
+  const catalogBtn = ctx.container.querySelector("#catalog-pdf-btn");
+  if (catalogBtn) attachCatalogButton(catalogBtn, { market: () => state.market });
 }
 
 /* =======================================================================
