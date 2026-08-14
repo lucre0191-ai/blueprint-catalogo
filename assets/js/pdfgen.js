@@ -13,20 +13,20 @@
      shareCommercialPDF(idx, data, kitId, market, config) -> comparte el PDF
    ====================================================================== */
 
-import { slug, whatsappLink } from "./core.js";
+import { slug, whatsappLink, lineaLabel, categoriaLabel } from "./core.js";
 import { commercialContent, technicalContent, fechaGeneracion } from "./pdfcontent.js";
 import { downloadBlob, shareFile } from "./exporters.js";
 
-const PAGE_W = 595.28; // A4 en puntos
-const PAGE_H = 841.89;
-const MARGIN = 42;
-const CONTENT_W = PAGE_W - MARGIN * 2;
+export const PAGE_W = 595.28; // A4 en puntos
+export const PAGE_H = 841.89;
+export const MARGIN = 42;
+export const CONTENT_W = PAGE_W - MARGIN * 2;
 
-const INK = [26, 30, 36];
-const MUTED = [110, 118, 128];
-const LINE = [223, 227, 232];
-const PANEL = [246, 247, 245];
-const ACCENT = [245, 166, 35]; // amber de marca
+export const INK = [26, 30, 36];
+export const MUTED = [110, 118, 128];
+export const LINE = [223, 227, 232];
+export const PANEL = [246, 247, 245];
+export const ACCENT = [245, 166, 35]; // amber de marca
 const BADGE_WARR_BG = [222, 242, 234];
 const BADGE_WARR_FG = [21, 122, 74];
 const BADGE_QTY_BG = [253, 240, 219];
@@ -34,8 +34,11 @@ const BADGE_QTY_FG = [158, 98, 15];
 
 /** Envoltura sobre jsPDF con helpers de layout con salto de pagina
  *  automatico — asi el generador no depende de cuantos componentes
- *  tenga un kit hoy ni de cuantos tenga en el futuro. */
-class DocWriter {
+ *  tenga un kit hoy ni de cuantos tenga en el futuro. Exportada para que
+ *  otros generadores de PDF (ej. catalog-pdf.js / PUB-06, Documento 06)
+ *  reutilicen el mismo motor de layout en vez de duplicarlo — regla de
+ *  arquitectura del proyecto ("nunca duplicar logica"). */
+export class DocWriter {
   constructor(doc) {
     this.doc = doc;
     this.y = MARGIN;
@@ -303,7 +306,7 @@ class DocWriter {
       c.Potencia_W ? `${c.Potencia_W} W` : (typeof c.Capacidad_kWh === "number" ? `${c.Capacidad_kWh} kWh` : null),
       c.Voltaje && c.Voltaje !== "-" ? c.Voltaje : null,
     ].filter(Boolean);
-    const metaLine = [c.Categoria, marcaModelo, ...specParts].filter(Boolean).join(" · ");
+    const metaLine = [categoriaLabel(c.Categoria), marcaModelo, ...specParts].filter(Boolean).join(" · ");
     const metaLines = this.doc.splitTextToSize(metaLine, textW);
     this.doc.text(metaLines.slice(0, 2), textX, startY + 28);
 
@@ -383,7 +386,7 @@ class DocWriter {
   }
 }
 
-function fetchAsDataURL(url) {
+export function fetchAsDataURL(url) {
   return fetch(url)
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -429,7 +432,7 @@ function loadImageEl(dataUrl) {
  *  object-fit:cover, para miniaturas cuadradas); `cover:false` encoge
  *  la imagen completa sin recortar (como object-fit:contain, para la
  *  foto Hero, que no debe perder ningun borde). */
-async function resizedDataURL(url, targetW, targetH, { cover = true, quality = 0.78 } = {}) {
+export async function resizedDataURL(url, targetW, targetH, { cover = true, quality = 0.78 } = {}) {
   const original = await fetchAsDataURL(url);
   const img = await loadImageEl(original);
   const canvas = document.createElement("canvas");
@@ -475,7 +478,7 @@ function drawLetterhead(w, content) {
   w.rule();
 }
 
-function drawFooters(doc, contact) {
+export function drawFooters(doc, contact) {
   const pages = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
     doc.setPage(i);
@@ -495,7 +498,7 @@ function drawFooters(doc, contact) {
   }
 }
 
-function newDoc() {
+export function newDoc() {
   const { jsPDF } = window.jspdf;
   return new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
 }
@@ -511,7 +514,7 @@ export async function buildCommercialDoc(idx, data, kitId, market) {
 
   drawLetterhead(w, content);
 
-  w.eyebrow(content.market ? `Kit ${content.kit.Linea || ""} · ${content.market}` : content.kit.Linea || "Kit solar");
+  w.eyebrow(content.market ? `Kit ${lineaLabel(content.kit.Linea)} · ${content.market}` : lineaLabel(content.kit.Linea) || "Kit solar");
   w.h1(content.name);
   if (content.tagline) w.p(content.tagline, { size: 12, color: INK, gap: 10 });
 
@@ -591,7 +594,7 @@ export async function buildTechnicalDoc(idx, data, kitId, market) {
 
   drawLetterhead(w, content);
 
-  w.eyebrow(content.market ? `Kit ${content.kit.Linea || ""} · ${content.market}` : content.kit.Linea || "Kit solar");
+  w.eyebrow(content.market ? `Kit ${lineaLabel(content.kit.Linea)} · ${content.market}` : lineaLabel(content.kit.Linea) || "Kit solar");
   w.h1(content.name);
   w.p(`ID de kit: ${content.kitId}`, { size: 9, color: MUTED, gap: 10 });
 
@@ -636,7 +639,7 @@ export async function buildTechnicalDoc(idx, data, kitId, market) {
   return { doc, content };
 }
 
-function ensureJsPDF() {
+export function ensureJsPDF() {
   if (!window.jspdf) throw new Error("jsPDF no cargo (revisa conexion / CDN bloqueado)");
 }
 

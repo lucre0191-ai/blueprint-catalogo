@@ -14,6 +14,7 @@ import {
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
+import { attachCatalogButton } from "./catalog-pdf.js";
 import { renderKitHero } from "./engines/hero-engine.js";
 // generateTechnicalPDF (pdfgen.js) ya no se usa desde el sitio publico
 // a proposito (ver renderCotizacion) -- queda disponible en el modulo
@@ -473,7 +474,9 @@ export function renderKits(ctx) {
         <div class="hero-actions">
           <a class="btn btn-primary" href="#diagnostico">${icon("bolt")}Hacer el diagnóstico</a>
           <a class="btn btn-ghost" href="#comparador">${icon("scale")}Comparar soluciones</a>
+          <button type="button" class="btn btn-ghost" id="catalog-pdf-btn">${icon("download")}Descargar catálogo comercial</button>
         </div>
+        <p class="cat-hero-aux">Soluciones, beneficios y acompañamiento. Sin precios desactualizados.</p>
         <ul class="cat-indicadores">
           <li>${icon("layers")}<span><strong>${stats.kitCount}</strong> soluciones diseñadas</span></li>
           <li>${icon("award")}<span>Hasta <strong>${stats.maxWarranty}</strong> años de garantía</span></li>

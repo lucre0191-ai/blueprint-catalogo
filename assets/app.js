@@ -14,7 +14,7 @@
    solo los conecta entre si: no reimplementa nada de eso.
    ====================================================================== */
 
-import { loadAll, buildIndices, initRouter, makeRoute } from "./js/core.js";
+import { loadAll, buildIndices, initRouter, makeRoute, state } from "./js/core.js";
 import {
   renderHome, renderKits, renderKitDetail, renderCatalogo,
   renderProductDetail, renderComparador, renderDiagnostico, renderAprender,
@@ -23,6 +23,7 @@ import {
 import { initGlossary } from "./js/glossary.js";
 import { initBlackoutEngine } from "./js/engines/blackout-engine.js";
 import { initViewTransitions, revealBody } from "./js/engines/animation-engine.js";
+import { attachCatalogButton } from "./js/catalog-pdf.js";
 
 const viewEl = document.getElementById("view");
 const navEl = document.getElementById("main-nav");
@@ -63,6 +64,16 @@ function initApp(data, idx) {
   if (toggle) {
     toggle.addEventListener("click", () => document.body.classList.toggle("nav-open"));
     navEl.addEventListener("click", (e) => { if (e.target.tagName === "A") document.body.classList.remove("nav-open"); });
+  }
+
+  // CTA secundario del footer (Documento 06, seccion 4.2 — PUB-06):
+  // vive fuera del router (footer estatico de index.html), asi que se
+  // conecta una sola vez aca. Mercado = el que este activo en pantalla
+  // (state.market), o el default del sitio si el visitante todavia no
+  // pasó por la seccion Kits.
+  const footerCatalogBtn = document.getElementById("footer-catalog-btn");
+  if (footerCatalogBtn) {
+    attachCatalogButton(footerCatalogBtn, { market: () => state.market || data.config.Mercado_Default });
   }
 
   revealBody();
