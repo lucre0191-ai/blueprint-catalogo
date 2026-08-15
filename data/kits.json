@@ -11,7 +11,7 @@
     "Potencia_Inversor_kW": 3,
     "Potencia_Panel_kW": 3.54,
     "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 2496.7865625
+    "Precio_Sugerido_Reventa_USD": 3463.900625
   },
   {
     "Kit_ID": "K5-HYBRID",
@@ -25,7 +25,7 @@
     "Potencia_Inversor_kW": 5,
     "Potencia_Panel_kW": 5.31,
     "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 4485.48875
+    "Precio_Sugerido_Reventa_USD": 5423.213125
   },
   {
     "Kit_ID": "K5-OFFGRID",
@@ -39,7 +39,7 @@
     "Potencia_Inversor_kW": 5,
     "Potencia_Panel_kW": 5.31,
     "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 2968.06375
+    "Precio_Sugerido_Reventa_USD": 3928.213125
   },
   {
     "Kit_ID": "K10-HYBRID",
@@ -53,7 +53,7 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 10.24,
-    "Precio_Sugerido_Reventa_USD": 7559.7334375
+    "Precio_Sugerido_Reventa_USD": 8452.025625
   },
   {
     "Kit_ID": "K10-HYBRID-INH",
@@ -67,7 +67,7 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 16,
-    "Precio_Sugerido_Reventa_USD": 6564.6528125
+    "Precio_Sugerido_Reventa_USD": 7471.650625
   },
   {
     "Kit_ID": "K10-OFFGRID",
@@ -81,7 +81,7 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 10.24,
-    "Precio_Sugerido_Reventa_USD": 5604.5896875
+    "Precio_Sugerido_Reventa_USD": 6525.775625
   },
   {
     "Kit_ID": "K-PORT-A1",
@@ -95,7 +95,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 209.7815625
+    "Precio_Sugerido_Reventa_USD": 207
   },
   {
     "Kit_ID": "K-PORT-A5",
@@ -109,7 +109,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 380.491875
+    "Precio_Sugerido_Reventa_USD": 375.1875
   },
   {
     "Kit_ID": "K-PORT-A6",
@@ -123,7 +123,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 419.8865625
+    "Precio_Sugerido_Reventa_USD": 414
   },
   {
     "Kit_ID": "K-PORT-T11",
@@ -137,7 +137,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 682.882578125
+    "Precio_Sugerido_Reventa_USD": 673.109375
   },
   {
     "Kit_ID": "K-PORT-T20",
@@ -151,7 +151,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 1222.735703125
+    "Precio_Sugerido_Reventa_USD": 1204.984375
   },
   {
     "Kit_ID": "K-PORT-T30",
@@ -165,7 +165,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 1501.416640625
+    "Precio_Sugerido_Reventa_USD": 1479.546875
   },
   {
     "Kit_ID": "K-PORT-T50",
@@ -179,7 +179,7 @@
     "Potencia_Inversor_kW": 0,
     "Potencia_Panel_kW": 0,
     "Bateria_kWh": 0,
-    "Precio_Sugerido_Reventa_USD": 2314.47921875
+    "Precio_Sugerido_Reventa_USD": 2280.59375
   },
   {
     "Kit_ID": "K10-HYBRID-INH-10",
@@ -193,6 +193,6 @@
     "Potencia_Inversor_kW": 10,
     "Potencia_Panel_kW": 10.62,
     "Bateria_kWh": 10.24,
-    "Precio_Sugerido_Reventa_USD": 6126.9340625
+    "Precio_Sugerido_Reventa_USD": 7040.400625
   }
 ]
