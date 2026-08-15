@@ -145,6 +145,7 @@ export function buildIndices(data) {
   const kitComponents = data.kit_components || {};
   const contentBlocks = data.content_blocks || [];
   const sellers = data.sellers || [];
+  const config = data.config || {};
 
   const productsBySku = new Map(products.map((p) => [p.SKU, p]));
   const mediaBySku = new Map(media.map((m) => [m.SKU, m]));
@@ -168,11 +169,23 @@ export function buildIndices(data) {
   }
 
   return {
-    products, kits, media, catalogs, showcase, biblioteca, contentBlocks, sellers,
+    products, kits, media, catalogs, showcase, biblioteca, contentBlocks, sellers, config,
     kitComponents,
     productsBySku, mediaBySku, showcaseBySku, bibliotecaBySku,
     kitsById, catalogsByKit, contentBlocksByGroup, sellersById,
   };
+}
+
+/** Interruptor unico de precios (SYSTEM_CONFIG!Mostrar_Precios, categoria
+ *  "Precios"). "No" explicito los oculta en todo el sitio (tarjetas,
+ *  ficha, cotizacion, ficha comercial PDF); cualquier otro valor -- o si
+ *  el parametro todavia no existe en el Excel -- los muestra, para que
+ *  instalaciones viejas sin este campo sigan funcionando igual que
+ *  siempre. Nunca toca Precio_Sugerido_Reventa_USD: el dato real sigue
+ *  intacto, solo cambia si se imprime o no. */
+export function pricesEnabled(idx) {
+  const raw = (idx && idx.config && idx.config.Mostrar_Precios) || "";
+  return String(raw).trim().toLowerCase() !== "no";
 }
 
 /** ---------------------------------------------------------------------
@@ -441,7 +454,7 @@ export function buildKitViewModel(idx, kitId, { market, lang = "Español" } = {}
     catalog && catalog.Garantia_Comercial,
     resolveContentBlock(idx, "GARANTIA_ESTANDAR", lang)
   );
-  const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
+  const price = pricesEnabled(idx) ? fmtUSD(kit.Precio_Sugerido_Reventa_USD) : null;
 
   return {
     id: kit.Kit_ID,

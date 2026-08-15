@@ -16,5 +16,6 @@
   "Company_Phone": null,
   "Company_Website": null,
   "Company_Tax_ID": null,
-  "Show_Tax_ID": "No"
+  "Show_Tax_ID": "No",
+  "Mostrar_Precios": "No"
 }

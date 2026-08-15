@@ -10,7 +10,7 @@ import {
   clean, firstOf, fmtUSD, fmtNum, whatsappLink, escapeHtml, img,
   catalogFor, marketsFrom, includedComponents, optionalComponents,
   kitWarrantyYears, kitVisual, buildKitViewModel, resolveContentBlock, state,
-  lineaLabel, categoriaLabel, tipoSistemaLabel,
+  lineaLabel, categoriaLabel, tipoSistemaLabel, pricesEnabled,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -848,7 +848,7 @@ export function renderCotizacion(ctx, params) {
   const market = state.market || config.Mercado_Default;
   const catalog = catalogFor(idx, kit.Kit_ID, market);
   const warranty = kitWarrantyYears(idx, kit.Kit_ID);
-  const price = fmtUSD(kit.Precio_Sugerido_Reventa_USD);
+  const price = pricesEnabled(idx) ? fmtUSD(kit.Precio_Sugerido_Reventa_USD) : null;
   const name = firstOf(catalog && catalog.Nombre_Comercial, kit.Nombre_Comercial);
 
   // Solo ficha comercial: nunca especificacion tecnica ni enlaces de

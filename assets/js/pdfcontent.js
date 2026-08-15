@@ -9,7 +9,7 @@
 
 import {
   clean, firstOf, fmtUSD, catalogFor, includedComponents, optionalComponents,
-  kitWarrantyYears, kitVisual,
+  kitWarrantyYears, kitVisual, tipoSistemaLabel, pricesEnabled,
 } from "./core.js";
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
@@ -105,7 +105,7 @@ export function commercialContent(idx, data, kitId, market) {
     benefits,
     specs,
     autonomia: kit.Autonomia_Aprox || null,
-    price: fmtUSD(kit.Precio_Sugerido_Reventa_USD),
+    price: pricesEnabled(idx) ? fmtUSD(kit.Precio_Sugerido_Reventa_USD) : null,
     // Antes esta ficha llevaba "includedLines"/"optionalLines" (texto
     // plano tipo "6x Panel SunEvo 590W HBD") para dibujar con bullets().
     // Se retiro: pdfgen.js ahora dibuja cada componente con su foto real
@@ -129,7 +129,7 @@ export function technicalContent(idx, data, kitId, market) {
     ["Capacidad de bateria", kit.Bateria_kWh ? `${kit.Bateria_kWh} kWh` : null],
     ["Autonomia estimada", kit.Autonomia_Aprox],
     ["Garantia (max. componente)", warranty ? `${warranty} años` : null],
-    ["Tipo de sistema", kit.Tipo_Sistema],
+    ["Tipo de sistema", tipoSistemaLabel(kit.Tipo_Sistema)],
   ].filter(([, v]) => v);
 
   // Antes armaba "componentRows"/"optionalRows" (filas de texto para una
