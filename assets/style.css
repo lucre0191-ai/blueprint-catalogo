@@ -830,6 +830,18 @@ body.lightbox-open { overflow: hidden; }
 .footer-catalog-btn { background: none; border: none; color: var(--text-faint); font-family: var(--font-mono); font-size: 11.5px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 6px; }
 .footer-catalog-btn:hover { color: var(--text-primary); }
 .footer-catalog-btn .ic svg { width: 13px; height: 13px; }
+.footer-catalog-row { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.footer-seller-select { background: var(--bg-surface-2); border: 1px solid var(--line); border-radius: var(--radius); color: var(--text-faint); font-family: var(--font-mono); font-size: 11px; padding: 3px 6px; cursor: pointer; }
+.footer-seller-select:hover { color: var(--text-primary); }
+
+/* ---------- selector de vendedor, seccion Kits (personalizacion PUB-06 V2) ----------
+   Deja elegir para que vendedor se genera el catalogo sin tener que armar
+   el link ?seller=CODIGO a mano -- pensado para cuando quien administra el
+   sitio necesita generarlo y reenviarlo como archivo (ej. conectividad
+   limitada del vendedor). Oculto por CSS/JS si no hay vendedores activos. */
+.catalog-seller-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); }
+.catalog-seller-row label { text-transform: uppercase; letter-spacing: .04em; }
+.catalog-seller-select { background: var(--bg-surface-2); border: 1px solid var(--line-bright); border-radius: var(--radius); color: var(--text-primary); font-family: var(--font-mono); font-size: 11.5px; padding: 4px 8px; cursor: pointer; }
 
 /* ---------- toast del catalogo comercial (PUB-06, Doc 06 seccion 27) ----------
    Confirmacion/error discretos que no bloquean el boton de descarga. */

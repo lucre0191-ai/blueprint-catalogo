@@ -23,7 +23,7 @@ import {
 import { initGlossary } from "./js/glossary.js";
 import { initBlackoutEngine } from "./js/engines/blackout-engine.js";
 import { initViewTransitions, revealBody } from "./js/engines/animation-engine.js";
-import { attachCatalogButton } from "./js/catalog-pdf.js";
+import { attachCatalogButton, populateSellerSelect } from "./js/catalog-pdf.js";
 
 const viewEl = document.getElementById("view");
 const navEl = document.getElementById("main-nav");
@@ -72,8 +72,13 @@ function initApp(data, idx) {
   // (state.market), o el default del sitio si el visitante todavia no
   // pasó por la seccion Kits.
   const footerCatalogBtn = document.getElementById("footer-catalog-btn");
+  const footerSellerSelect = document.getElementById("footer-seller-select");
+  populateSellerSelect(footerSellerSelect, data.sellers);
   if (footerCatalogBtn) {
-    attachCatalogButton(footerCatalogBtn, { market: () => state.market || data.config.Mercado_Default });
+    attachCatalogButton(footerCatalogBtn, {
+      market: () => state.market || data.config.Mercado_Default,
+      sellerSelect: footerSellerSelect,
+    });
   }
 
   revealBody();

@@ -1517,7 +1517,22 @@ export async function generateCommercialCatalog({ market, seller, language = "Es
    5. UI — estados del boton de descarga
    -------------------------------------------------------------------- */
 
-export function attachCatalogButton(el, { market } = {}) {
+/** Arma las <option> de un selector de vendedor a partir de sellers.json
+ *  (solo filas activas). value="" es siempre "uso general" (contacto
+ *  corporativo, sin personalizar) -- nunca queda un vendedor
+ *  seleccionado por accidente/por defecto. */
+export function populateSellerSelect(selectEl, sellers) {
+  if (!selectEl) return;
+  const active = (sellers || []).filter((s) => s && s.seller_id);
+  selectEl.innerHTML =
+    `<option value="">Uso general (sin vendedor)</option>` +
+    active.map((s) => `<option value="${s.seller_id}">${s.nombre || s.seller_id}</option>`).join("");
+  // Si no hay ningun vendedor cargado todavia, no tiene sentido mostrar
+  // el selector (evita un dropdown vacio con una sola opcion).
+  selectEl.hidden = active.length === 0;
+}
+
+export function attachCatalogButton(el, { market, sellerSelect } = {}) {
   if (!el || el.dataset.catalogWired) return;
   el.dataset.catalogWired = "1";
   const normalLabel = el.innerHTML;
@@ -1531,8 +1546,12 @@ export function attachCatalogButton(el, { market } = {}) {
       const resolvedMarket = typeof market === "function" ? market() : market;
       // Personalizacion por vendedor (Doc 06 V2 seccion 10): se lee al
       // momento del clic, no al pintar el boton, por si el visitante
-      // llego con el link generico y despues navega con ?seller=...
-      const sellerId = (hashQuery().seller || "").trim() || null;
+      // llego con el link generico y despues navega con ?seller=... La
+      // eleccion manual del selector (cuando existe y tiene un valor)
+      // manda sobre la URL: asi quien administra el sitio puede generar
+      // el catalogo de cualquier vendedor sin tener que armar el link.
+      const selectValue = sellerSelect ? (sellerSelect.value || "").trim() : "";
+      const sellerId = selectValue || (hashQuery().seller || "").trim() || null;
       await generateCommercialCatalog({ market: resolvedMarket, seller: sellerId });
       showCatalogToast("Catálogo listo.");
     } catch (err) {

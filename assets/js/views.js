@@ -14,7 +14,7 @@ import {
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
-import { attachCatalogButton } from "./catalog-pdf.js";
+import { attachCatalogButton, populateSellerSelect } from "./catalog-pdf.js";
 import { renderKitHero } from "./engines/hero-engine.js";
 // generateTechnicalPDF (pdfgen.js) ya no se usa desde el sitio publico
 // a proposito (ver renderCotizacion) -- queda disponible en el modulo
@@ -476,6 +476,10 @@ export function renderKits(ctx) {
           <a class="btn btn-ghost" href="#comparador">${icon("scale")}Comparar soluciones</a>
           <button type="button" class="btn btn-ghost" id="catalog-pdf-btn">${icon("download")}Descargar catálogo comercial</button>
         </div>
+        <div class="catalog-seller-row">
+          <label for="catalog-seller-select">Generar para</label>
+          <select id="catalog-seller-select" class="catalog-seller-select" hidden></select>
+        </div>
         <p class="cat-hero-aux">Soluciones, beneficios y acompañamiento. Sin precios desactualizados.</p>
         <ul class="cat-indicadores">
           <li>${icon("layers")}<span><strong>${stats.kitCount}</strong> soluciones diseñadas</span></li>
@@ -575,7 +579,9 @@ export function renderKits(ctx) {
   // de que este boton ya se pinto, sin que la pantalla se vuelva a
   // renderizar entera.
   const catalogBtn = ctx.container.querySelector("#catalog-pdf-btn");
-  if (catalogBtn) attachCatalogButton(catalogBtn, { market: () => state.market });
+  const sellerSelect = ctx.container.querySelector("#catalog-seller-select");
+  populateSellerSelect(sellerSelect, data.sellers);
+  if (catalogBtn) attachCatalogButton(catalogBtn, { market: () => state.market, sellerSelect });
 }
 
 /* =======================================================================
