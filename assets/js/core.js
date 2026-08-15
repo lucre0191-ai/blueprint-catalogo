@@ -14,7 +14,7 @@
 export const DATA_FILES = [
   "products", "kits", "kit_components", "media", "showcase",
   "catalogs", "content_blocks", "comparador", "biblioteca_tecnica",
-  "config", "bom",
+  "config", "bom", "sellers",
 ];
 
 /** ---------------------------------------------------------------------
@@ -144,12 +144,14 @@ export function buildIndices(data) {
   const biblioteca = data.biblioteca_tecnica || [];
   const kitComponents = data.kit_components || {};
   const contentBlocks = data.content_blocks || [];
+  const sellers = data.sellers || [];
 
   const productsBySku = new Map(products.map((p) => [p.SKU, p]));
   const mediaBySku = new Map(media.map((m) => [m.SKU, m]));
   const showcaseBySku = new Map(showcase.map((s) => [s.SKU, s]));
   const bibliotecaBySku = new Map(biblioteca.map((b) => [b.SKU, b]));
   const kitsById = new Map(kits.map((k) => [k.Kit_ID, k]));
+  const sellersById = new Map(sellers.map((s) => [s.seller_id, s]));
 
   const catalogsByKit = new Map();
   for (const c of catalogs) {
@@ -166,11 +168,29 @@ export function buildIndices(data) {
   }
 
   return {
-    products, kits, media, catalogs, showcase, biblioteca, contentBlocks,
+    products, kits, media, catalogs, showcase, biblioteca, contentBlocks, sellers,
     kitComponents,
     productsBySku, mediaBySku, showcaseBySku, bibliotecaBySku,
-    kitsById, catalogsByKit, contentBlocksByGroup,
+    kitsById, catalogsByKit, contentBlocksByGroup, sellersById,
   };
+}
+
+/** ---------------------------------------------------------------------
+ *  Vendedor activo (Documento 06 V2, seccion 10 — Personalizacion por
+ *  vendedor). Un seller_id valido y activo hace que PUB-06 V2 muestre su
+ *  contacto (nombre/WhatsApp) en vez del contacto corporativo, y que el
+ *  QR final apunte a su WhatsApp -- asi un vendedor que comparte el
+ *  catalogo con un prospecto no pierde la atribucion del lead.
+ *
+ *  Regla dura de seguridad (seccion 10.5): `sellerId` viene de un
+ *  parametro de URL, nunca se confia a ciegas. Solo se acepta si existe
+ *  una fila con ese seller_id EXACTO en sellers.json (15_VENDEDORES,
+ *  ya filtrado a activos por el exportador) -- cualquier otro valor
+ *  cae a null y la vista usa el fallback corporativo (config.json). */
+export function sellerFor(idx, sellerId) {
+  if (!sellerId) return null;
+  const s = idx.sellersById.get(sellerId);
+  return s || null;
 }
 
 /** Catalogo comercial de un kit para un mercado dado (o el primero
@@ -459,6 +479,19 @@ export function buildKitViewModel(idx, kitId, { market, lang = "Español" } = {}
  *  corte (Documento 05: "el usuario nunca debe sentir que cambia de
  *  pagina"). Mantenerlo opcional aca deja el router testeable sin DOM
  *  real (jsdom no siempre implementa startViewTransition). */
+/** Parametros de query dentro del hash (`#/kits?market=CU&seller=CARLOS01`).
+ *  El router de abajo corta todo lo que sigue al "?" para resolver la
+ *  ruta, asi que hasta ahora esos parametros se leian pero se tiraban.
+ *  Cualquier vista (o PUB-06 V2, Documento 06 seccion 10) puede llamar
+ *  esto para leer `seller`/`market` sin duplicar el parseo. */
+export function hashQuery() {
+  const hash = location.hash.replace(/^#/, "");
+  const qIndex = hash.indexOf("?");
+  if (qIndex === -1) return {};
+  const params = new URLSearchParams(hash.slice(qIndex + 1));
+  return Object.fromEntries(params.entries());
+}
+
 export function initRouter(routes, fallback, runRender = (fn) => fn()) {
   function currentPath() {
     const hash = location.hash.replace(/^#/, "") || "/";

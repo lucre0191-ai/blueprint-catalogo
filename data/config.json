@@ -8,5 +8,13 @@
   "Mercado_Default": "Cuba",
   "Ruta_Base_Imagenes": "media_blueprint/",
   "WhatsApp_Ventas": "+18498294672",
-  "Contacto_Nombre": "Lisandra"
+  "Contacto_Nombre": "Lisandra",
+  "Company_Display_Name": "Nostradamus GCS, SRL",
+  "Brand_Name": "Blueprint OS",
+  "Company_Country": "Republica Dominicana",
+  "Company_Email": null,
+  "Company_Phone": null,
+  "Company_Website": null,
+  "Company_Tax_ID": null,
+  "Show_Tax_ID": "No"
 }

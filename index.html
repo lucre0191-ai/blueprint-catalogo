@@ -10,6 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<!-- QR del CTA final del Catalogo Comercial V2 (Documento 06 V2, seccion 19).
+     Libreria pura JS (kazuhikoarase/qrcode-generator, MIT): entrega la matriz
+     de modulos, catalog-pdf.js la dibuja directo con doc.rect() -- sin canvas
+     ni imagen intermedia, asi el QR siempre sale nitido a cualquier tamano. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/2.0.4/qrcode.min.js" defer></script>
 </head>
 <body>
 

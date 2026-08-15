@@ -152,5 +152,61 @@
     "Categoria": "Servicio",
     "Idioma": "Español",
     "Texto": "Cuando el proyecto lo requiere, pueden coordinarse servicios adicionales como nacionalización, despacho, transporte local, instalación o puesta en marcha."
+  },
+  {
+    "Block_ID": "CATV2-VALUE-HEAD-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "Comprar energía no debería significar comprar incertidumbre."
+  },
+  {
+    "Block_ID": "CATV2-VALUE-BODY-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "Comprar una solución energética no termina al elegir los equipos. Una operación también exige validar la configuración, negociar condiciones, coordinar documentación y mantener visibilidad sobre la logística. Nuestro trabajo es ayudarte a tomar una mejor decisión y acompañar las etapas contratadas con mayor claridad."
+  },
+  {
+    "Block_ID": "CATV2-BLACKBOX-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "Tu compra no debería convertirse en una caja negra después del pago."
+  },
+  {
+    "Block_ID": "CATV2-TRACE-INTRO-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "Durante la operación puedes recibir, según el alcance contratado:"
+  },
+  {
+    "Block_ID": "CATV2-SELECTOR-INTRO-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "No tienes que elegir solo por potencia. Podemos ayudarte a configurar la solución según tus cargas, consumo y nivel de respaldo esperado."
+  },
+  {
+    "Block_ID": "CATV2-SUPPLY-INTRO-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "Evaluamos alternativas con proveedores y fabricantes disponibles en distintos mercados de suministro según configuración, disponibilidad, costo y ruta logística."
+  },
+  {
+    "Block_ID": "CATV2-FINAL-CTA-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "Configuración personalizada · Cotización según alcance · Sin precios desactualizados"
+  },
+  {
+    "Block_ID": "CATV2-LEGAL-SHORT-ES",
+    "Block_Group": "CATALOGO_V2",
+    "Categoria": "Catalogo_V2",
+    "Idioma": "Español",
+    "Texto": "La información de este catálogo es comercial y orientativa. La configuración final, disponibilidad, marcas, modelos, garantías, autonomía estimada, condiciones logísticas, tiempos y alcance de servicios se confirman en la cotización y documentación de cada operación."
   }
 ]

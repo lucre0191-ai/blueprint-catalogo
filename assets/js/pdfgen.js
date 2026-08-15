@@ -478,6 +478,12 @@ function drawLetterhead(w, content) {
   w.rule();
 }
 
+/** `contact.label` (default "Contacto") y `contact.code` son opcionales,
+ *  usados por el Catalogo Comercial V2 (Documento 06 V2, seccion 10) para
+ *  mostrar "Asesor: NOMBRE · WhatsApp: X · Codigo: SELLER_ID" cuando el
+ *  PDF se genero con un vendedor valido en la URL, sin duplicar esta
+ *  funcion -- la ficha por-kit (que no pasa label/code) sigue viendo
+ *  exactamente el mismo formato "Contacto: ..." de siempre. */
 export function drawFooters(doc, contact) {
   const pages = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
@@ -488,9 +494,11 @@ export function drawFooters(doc, contact) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);
+    const label = contact.label || "Contacto";
     const contactBits = [
-      contact.contactName ? `Contacto: ${contact.contactName}` : null,
+      contact.contactName ? `${label}: ${contact.contactName}` : null,
       contact.whatsapp ? `WhatsApp: ${contact.whatsapp}` : null,
+      contact.code ? `Código: ${contact.code}` : null,
     ].filter(Boolean);
     const contactLine = contactBits.length ? contactBits.join(" · ") : contact.brand;
     doc.text(contactLine, MARGIN, PAGE_H - MARGIN + 18);
