@@ -1,21 +1,7 @@
 [
   {
-    "Kit_ID": "K3-OFFGRID",
-    "Nombre_Comercial": "Respaldo Esencial 3K",
-    "Linea": "Respaldo",
-    "Tipo_Sistema": "Off-Grid",
-    "Cliente_Objetivo": "Residencial básico",
-    "Aplicaciones": "Nevera, luces, TV, router, ventiladores",
-    "Autonomia_Aprox": "4-6 horas de respaldo en apagón típico",
-    "Estado": "Activo",
-    "Potencia_Inversor_kW": 5,
-    "Potencia_Panel_kW": 3.54,
-    "Bateria_kWh": 5.12,
-    "Precio_Sugerido_Reventa_USD": 2677.7103125
-  },
-  {
     "Kit_ID": "K3-OFF-3KWINV",
-    "Nombre_Comercial": "Respaldo Esencial 3K Lite",
+    "Nombre_Comercial": "Respaldo Esencial 3K",
     "Linea": "Respaldo",
     "Tipo_Sistema": "Off-Grid",
     "Cliente_Objetivo": "Residencial básico, presupuesto ajustado",
