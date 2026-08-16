@@ -88,6 +88,10 @@ const COPY = {
 
   criticalHeadline: "Cuando la red falla, tu negocio debe poder continuar.",
   criticalBody: "Diseñada para comercios, MIPYMES y operaciones donde la continuidad eléctrica es fundamental para proteger productividad, servicio e ingresos.",
+  // Doc 06 V2 seccion 30.5 (texto exacto): la familia 10K no debe leerse
+  // como si la unica solucion fuera la variante representante mostrada
+  // arriba (Off-Grid).
+  criticalFamilyNote: "Una familia de soluciones 10 kW para negocios y operaciones críticas, configurable según necesidad, autonomía, integración con red, disponibilidad y presupuesto.",
   criticalFeed: "Cargas críticas y equipos prioritarios del negocio, según evaluación.",
   criticalVariantsNote: "Las marcas y configuraciones se seleccionan según disponibilidad, compatibilidad, alcance y presupuesto de la operación.",
 
@@ -261,16 +265,21 @@ function iconChipRow(w, texts, opts = {}) {
   const chipH = 34;
   const gap = 8;
   const color = opts.color || ACCENT;
+  // xOffset/maxWidth (Doc 06 V2 seccion 30.4) permiten reusar este mismo
+  // componente dentro de una columna angosta (5K comparativo) y no solo a
+  // ancho completo (3K/10K/portatiles) — default = comportamiento previo.
+  const startX = opts.xOffset != null ? opts.xOffset : MARGIN;
+  const maxW = opts.maxWidth != null ? opts.maxWidth : CONTENT_W;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7.6);
   const widths = texts.map((t) => {
     const lines = doc.splitTextToSize(t, 74);
     return { t, lines, w: Math.max(52, Math.max(...lines.map((l) => doc.getTextWidth(l))) + 30) };
   });
-  let x = MARGIN;
+  let x = startX;
   w.ensure(chipH + 6);
   widths.forEach(({ t, lines, w: cw }) => {
-    if (x + cw > PAGE_W - MARGIN) { x = MARGIN; w.y += chipH + gap; w.ensure(chipH + gap); }
+    if (x + cw > startX + maxW) { x = startX; w.y += chipH + gap; w.ensure(chipH + gap); }
     doc.setDrawColor(...LINE);
     doc.setFillColor(...PANEL);
     doc.roundedRect(x, w.y, cw, chipH, 6, 6, "FD");
@@ -771,41 +780,48 @@ async function identityRow(w, items) {
  *  columna, para que quede claro que es un extra, no un cuarto
  *  protagonista igual a los demas. */
 async function drawEvHighlight(w, evItem) {
+  // Ronda de pulido (Doc 06 V2 seccion 30.6): el cargador EV es un
+  // componente diferencial, no un accesorio secundario — debe leerse con
+  // el mismo peso visual que un protagonista, no como una nota al pie.
+  // Se agranda el bloque (46 -> 60), se separa "Cargador EV AC" de la
+  // potencia "7 kW" como en la ficha de bateria/inversor/paneles, y se
+  // agrega la etiqueta "Incluido en esta configuracion".
   const { doc } = w;
-  const h = 46;
-  w.ensure(h + 8);
+  const h = 60;
+  w.ensure(h + 10);
   const y = w.y;
   doc.setFillColor(...PANEL);
   doc.setDrawColor(...ACCENT);
-  doc.setLineWidth(1.1);
-  doc.roundedRect(MARGIN, y, CONTENT_W, h, 6, 6, "FD");
-  const thumb = h - 12;
+  doc.setLineWidth(1.3);
+  doc.roundedRect(MARGIN, y, CONTENT_W, h, 7, 7, "FD");
+  const thumb = h - 14;
   let drew = false;
   if (evItem.image) {
     try {
       const { dataUrl } = await resizedDataURL(evItem.image, thumb * 3, thumb * 3, { cover: false, quality: 0.8 });
-      doc.addImage(dataUrl, "JPEG", MARGIN + 6, y + 6, thumb, thumb);
+      doc.addImage(dataUrl, "JPEG", MARGIN + 7, y + 7, thumb, thumb);
       drew = true;
     } catch (err) { /* fallback abajo */ }
   }
   if (!drew) {
     doc.setDrawColor(...LINE);
     doc.setFillColor(255, 255, 255);
-    doc.roundedRect(MARGIN + 6, y + 6, thumb, thumb, 3, 3, "FD");
+    doc.roundedRect(MARGIN + 7, y + 7, thumb, thumb, 4, 4, "FD");
   }
-  const tx = MARGIN + 6 + thumb + 12;
+  const tx = MARGIN + 7 + thumb + 14;
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.4);
+  doc.setFontSize(7.6);
   doc.setTextColor(...ACCENT);
-  doc.text("ADICIONAL DESTACADO", tx, y + 16);
+  doc.text("ADICIONAL DESTACADO · INCLUIDO EN ESTA CONFIGURACIÓN", tx, y + 17);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(13);
   doc.setTextColor(...INK);
-  doc.text(evItem.label || "Cargador EV", tx, y + 29);
+  doc.text(`Cargador EV AC · ${evItem.label || ""}`.trim(), tx, y + 33);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
+  doc.setFontSize(8.2);
   doc.setTextColor(...MUTED);
-  doc.text(evItem.sublabel || "Cargador EV", tx, y + 40);
+  const subLines = doc.splitTextToSize(evItem.sublabel || "Cargador EV", CONTENT_W - (tx - MARGIN) - 10).slice(0, 1);
+  doc.text(subLines, tx, y + 46);
   w.y = y + h + 10;
 }
 
@@ -840,44 +856,71 @@ function chipList(w, texts, opts = {}) {
 }
 
 /** Dos columnas con vinetas (reutilizado en la pagina de alcance). */
+/** Icono para cada linea de acompañamiento/servicio (Doc 06 V2 seccion
+ *  30.8: "usar cards/iconos, no dos listas largas flotando sobre
+ *  blanco"). Reutiliza el mismo set de glifos que la pagina de
+ *  confianza (criteria/negotiation/logistics/coordination/shield/route)
+ *  — nunca inventa un icono nuevo por termino. */
+const SERVICE_ICON_MAP = [
+  [/diagn[oó]stico|selecci[oó]n|configuraci[oó]n|validaci[oó]n|levantamiento/i, "criteria"],
+  [/negociaci[oó]n/i, "negotiation"],
+  [/coordinaci[oó]n documental|documentaci[oó]n|instalaci[oó]n|puesta en marcha/i, "coordination"],
+  [/log[ií]stica|nacionalizaci[oó]n|despacho|transporte/i, "logistics"],
+  [/seguimiento|hitos|comparaci[oó]n de alternativas/i, "route"],
+  [/incidencia|mantenimiento|posventa/i, "shield"],
+];
+function serviceIcon(text) {
+  const hit = SERVICE_ICON_MAP.find(([re]) => re.test(text || ""));
+  return hit ? hit[1] : "criteria";
+}
+
 function twoColumnBullets(w, leftTitle, leftItems, rightTitle, rightItems) {
   const { doc } = w;
-  const gap = 20;
+  const gap = 16;
+  const pad = 14;
   const colW = (CONTENT_W - gap) / 2;
-  const lineH = 12.5;
+  const lineH = 13;
   function measure(items, width) {
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9.3);
-    let hh = 0;
-    items.forEach((it) => { hh += doc.splitTextToSize(it, width - 14).length * lineH + 3; });
-    return hh;
+    doc.setFontSize(9);
+    let hh = 30;
+    items.forEach((it) => { hh += Math.max(1, doc.splitTextToSize(it, width - pad * 2 - 20).length) * lineH + 5; });
+    return hh + pad;
   }
   const leftH = measure(leftItems, colW);
   const rightH = measure(rightItems, colW);
-  const blockH = Math.max(leftH, rightH) + 26;
-  w.ensure(blockH);
+  const blockH = Math.max(leftH, rightH);
+  w.ensure(blockH + 6);
   const startY = w.y;
-  function drawCol(x, title, items) {
-    let y = startY;
+  function drawCol(x, title, items, accentColor) {
+    doc.setDrawColor(...LINE);
+    doc.setFillColor(...PANEL);
+    doc.roundedRect(x, startY, colW, blockH, 8, 8, "FD");
+    doc.setFillColor(...accentColor);
+    doc.roundedRect(x, startY, colW, 5, 8, 8, "F");
+    doc.rect(x, startY + 3, colW, 2, "F");
+    let y = startY + pad + 10;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10.5);
     doc.setTextColor(...INK);
-    doc.text(title, x, y);
-    y += 16;
+    doc.text(title, x + pad, y);
+    y += 18;
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9.3);
+    doc.setFontSize(9);
     items.forEach((it) => {
-      const lines = doc.splitTextToSize(it, colW - 14);
-      doc.setFillColor(...ACCENT);
-      doc.circle(x + 3, y - 3.2, 1.4, "F");
+      const lines = doc.splitTextToSize(it, colW - pad * 2 - 20);
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(...LINE);
+      doc.circle(x + pad + 7, y - 3.4, 8, "FD");
+      drawGlyph(doc, serviceIcon(it), x + pad + 7, y - 3.4, 5.4, accentColor);
       doc.setTextColor(...INK);
-      doc.text(lines, x + 11, y);
-      y += lines.length * lineH + 3;
+      doc.text(lines, x + pad + 22, y);
+      y += lines.length * lineH + 5;
     });
   }
-  drawCol(MARGIN, leftTitle, leftItems);
-  drawCol(MARGIN + colW + gap, rightTitle, rightItems);
-  w.y = startY + blockH;
+  drawCol(MARGIN, leftTitle, leftItems, TEAL);
+  drawCol(MARGIN + colW + gap, rightTitle, rightItems, NAVY);
+  w.y = startY + blockH + 8;
 }
 
 /** Estima (sin dibujar) cuanto ocupa una tarjeta de identidad de kit fijo,
@@ -888,11 +931,11 @@ function twoColumnBullets(w, leftTitle, leftItems, rightTitle, rightItems) {
  *  minimo. */
 function estimateFixedKitCardHeight(doc, { hasEv, description, feed, hasContext }) {
   let hh = 20 + 16; // titulo + linea de configuracion
-  if (hasContext) hh += 150 + 12; // imagen de contexto/solucion
+  if (hasContext) hh += 190 + 12; // imagen de contexto/solucion
   const idColW = (CONTENT_W - 10 * 2) / 3;
   const idThumb = Math.min(172, idColW - 8);
   hh += idThumb + 22 + 22 + 14 + 6; // identityRow (bateria/inversor/panel, hasta 2 lineas de label)
-  if (hasEv) hh += 46 + 8; // bloque EV destacado
+  if (hasEv) hh += 60 + 8; // bloque EV destacado
   if (description) {
     doc.setFont("helvetica", "normal"); doc.setFontSize(9.3);
     hh += doc.splitTextToSize(description, CONTENT_W).length * 13 + 8;
@@ -912,7 +955,7 @@ function estimateFixedKitCardHeight(doc, { hasEv, description, feed, hasContext 
  *  (seccion 16) — el CTA usa el texto de reemplazo fijo. `badge` pinta un
  *  pill corto junto al titulo (ej. "SOLUCIÓN BÁSICA", Doc 06 V2 mockup
  *  aprobado, pagina 5). */
-async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, badge } = {}) {
+async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, badge, excludeImg, skipContext } = {}) {
   const { doc } = w;
   const copy = resolveCommercialCopy(idx, kit.Kit_ID, market);
   if (!copy) return;
@@ -923,7 +966,13 @@ async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, bad
   // se considera componente comun secundario... debe ser visible porque
   // cambia el valor de uso de la solucion").
   const allItems = items;
-  const contextImg = kitContextImage(idx, kit.Kit_ID, market);
+  // skipContext: la pagina de Operacion Critica 10K dibuja ademas las
+  // mini-tarjetas de variantes debajo (seccion 30.5) — la imagen de
+  // contexto es opcional en el documento (seccion 12.3: "puede
+  // incorporar"), no obligatoria como en 3K (seccion 5), y sumar las dos
+  // cosas en la misma pagina empujaba las variantes a una pagina nueva
+  // casi vacia (Regla B). Se prioriza mostrar la familia completa.
+  const contextImg = skipContext ? null : kitContextImage(idx, kit.Kit_ID, market, excludeImg);
 
   // KEEP_TOGETHER: reserva el bloque completo antes de dibujar nada.
   w.ensure(estimateFixedKitCardHeight(doc, { hasEv: !!evItem, description, feed, hasContext: !!contextImg }) + (evItem ? 36 : 0));
@@ -971,7 +1020,10 @@ async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, bad
   // columnas angostas comparativas, donde no hay espacio para que
   // respire.
   if (contextImg) {
-    const ctxH = 150;
+    // Ronda de pulido (Doc 06 V2 seccion 30.2, prioridad #1: "ampliar
+    // imagenes" antes que agregar texto) — 150 -> 190pt para que la
+    // escena tenga presencia editorial real, no una franja decorativa.
+    const ctxH = 190;
     w.ensure(ctxH + 12);
     try {
       const { dataUrl } = await resizedDataURL(contextImg, CONTENT_W * 1.6, ctxH * 1.6, { cover: true, quality: 0.8 });
@@ -1080,11 +1132,21 @@ function drawQRCode(doc, text, x, y, sizePt) {
  *  — mismo orden de prioridad que la portada (Hero Scene primero, foto
  *  principal como respaldo), pero acotado a un solo Kit_ID. Null si el
  *  kit no tiene ninguna de las dos: nunca se inventa ni se toma prestada
- *  la foto de otro kit. */
-function kitContextImage(idx, kitId, market) {
+ *  la foto de otro kit.
+ *  `excludeUrl` (Doc 06 V2 seccion 30.3, ronda de pulido): la portada ya
+ *  usa la Hero Scene del primer kit de la primera familia (Respaldo 3K
+ *  siempre va primero) — si ese mismo kit vuelve a pedir imagen de
+ *  contexto, mostrar la misma foto dos veces se siente como relleno, no
+ *  como composicion editorial. Si la primera opcion coincide con la
+ *  portada, se usa la segunda opcion real (nunca se inventa una nueva). */
+function kitContextImage(idx, kitId, market, excludeUrl) {
   const catalog = resolveCatalogRecord(idx, kitId, market);
   if (!catalog) return null;
-  return clean(catalog.Imagen_Hero_Scene) || clean(catalog.Imagen_Principal) || null;
+  const scene = clean(catalog.Imagen_Hero_Scene);
+  const principal = clean(catalog.Imagen_Principal);
+  if (scene && scene !== excludeUrl) return scene;
+  if (principal && principal !== excludeUrl) return principal;
+  return scene || principal || null;
 }
 
 function pickCoverImage(idx, market, families) {
@@ -1133,15 +1195,54 @@ async function buildCoverPage(w, idx, market, families, generatedAt, brandName) 
   doc.text(subLines, MARGIN, w.y);
   w.y += subLines.length * 17 + 20;
 
+  // Ronda de pulido (Doc 06 V2 seccion 30.1): "la portada conserva una
+  // zona inferior excesivamente vacia" — el w.image() generico (contain,
+  // altura fija 320) casi nunca llenaba el maxH real porque las fotos
+  // hero son panoramicas: la altura terminaba determinada por el ancho,
+  // no por el maxH. Aca la hero se dibuja a "cover" (sangre controlada,
+  // seccion 0.4: "hero/escena: cover") con una altura calculada para
+  // llenar el espacio real disponible hasta la franja de cierre inferior,
+  // en vez de un numero fijo que deja aire de sobra.
+  const bottomReserve = 118; // frase de cierre + banda + fecha/footer
+  const heroH = Math.max(300, Math.min(430, PAGE_H - MARGIN - bottomReserve - w.y));
   const coverImg = pickCoverImage(idx, market, families);
-  await w.image(coverImg, CONTENT_W, 320);
+  w.ensure(heroH + 12);
+  try {
+    const { dataUrl } = await resizedDataURL(coverImg, CONTENT_W * 1.5, heroH * 1.5, { cover: true, quality: 0.85 });
+    doc.addImage(dataUrl, "JPEG", MARGIN, w.y, CONTENT_W, heroH);
+    w.y += heroH + 12;
+  } catch (err) {
+    console.warn("No se pudo incrustar la imagen de portada:", coverImg, err);
+  }
 
-  w.gap(8);
+  w.gap(6);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
   doc.setTextColor(...ACCENT);
   doc.text(COPY.coverClosing, MARGIN, w.y);
-  w.y += 22;
+  w.y += 24;
+
+  // Banda inferior discreta (Doc 06 V2 seccion 0.2 PAGINA 1: "una banda
+  // inferior discreta con Evaluacion / Configuracion / Acompañamiento")
+  // — compone deliberadamente el resto de la pagina en vez de dejarlo
+  // en blanco.
+  const stages = ["Evaluación", "Configuración", "Acompañamiento"];
+  w.ensure(20);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.6);
+  doc.setTextColor(...TEAL);
+  let sx = MARGIN;
+  stages.forEach((s, i) => {
+    doc.text(s.toUpperCase(), sx, w.y);
+    sx += doc.getTextWidth(s.toUpperCase()) + 10;
+    if (i < stages.length - 1) {
+      doc.setDrawColor(...LINE);
+      doc.setLineWidth(1);
+      doc.line(sx, w.y - 3, sx + 12, w.y - 3);
+      sx += 22;
+    }
+  });
+  w.y += 20;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
@@ -1302,10 +1403,10 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
   // imagen -- por eso este bloque reimplementa (compacto) el cuerpo de
   // la tarjeta en vez de llamar a buildFixedKitCard con CONTENT_W fijo.
   const { doc } = w;
-  const { kit, idea, siblingNote, badgeText, badgeColor } = column;
+  const { kit, idea, siblingNote, badgeText, badgeColor, excludeImg } = column;
   const copy = resolveCommercialCopy(idx, kit.Kit_ID, market);
   if (!copy) return;
-  const { vm, description, autonomia } = copy;
+  const { vm, description, autonomia, feed } = copy;
   const { items, evItem } = resolveThreeComponents(idx, kit.Kit_ID);
   const allItems = (evItem ? [...items, evItem] : items).slice(0, 3);
 
@@ -1341,7 +1442,9 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
 
   // Identidad compacta: hasta 3 items en columna (imagen chica + texto),
   // apilados verticalmente para que quepan en el ancho de columna.
-  const thumb = 40;
+  // Ronda de pulido (Doc 06 V2 seccion 30.4: "aumentar tamano de imagenes
+  // principales y de componentes"): 40 -> 52pt.
+  const thumb = 52;
   for (const it of allItems) {
     w.ensure(thumb + 6);
     const rowY = w.y;
@@ -1378,7 +1481,7 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
   // aprobado muestra una foto de escena tambien en la version columna
   // (pagina "Continuidad y autonomia 5K"), no solo en las tarjetas a
   // ancho completo; sin esto la columna queda mayormente texto.
-  const contextImg = kitContextImage(idx, kit.Kit_ID, market);
+  const contextImg = kitContextImage(idx, kit.Kit_ID, market, excludeImg);
   if (contextImg) {
     const ctxH = 110;
     w.ensure(ctxH + 10);
@@ -1397,6 +1500,21 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
     w.ensure(dLines.length * 11 + 6);
     doc.text(dLines, xOffset, w.y);
     w.y += dLines.length * 11 + 8;
+  }
+
+  // Aplicaciones de uso en icono compacto (Doc 06 V2 seccion 30.4:
+  // "incorporar iconos/aplicaciones de uso cuando ayuden a ocupar la
+  // pagina de manera util") — mismo contenido real que "Ideal para" en
+  // 3K/10K (Que_Puede_Alimentar), nunca texto inventado.
+  if (feed && feed.length) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.8);
+    doc.setTextColor(...MUTED);
+    w.ensure(12);
+    doc.text("IDEAL PARA", xOffset, w.y);
+    w.y += 10;
+    iconChipRow(w, feed.slice(0, 4), { xOffset, maxWidth: colWidth, color: badgeColor || ACCENT });
+    w.gap(2);
   }
 
   if (autonomia) {
@@ -1444,24 +1562,95 @@ async function buildCriticalPage(w, idx, market, config, kits) {
   const refGroup = groups[0];
   if (!refGroup) return;
 
-  await buildFixedKitCard(w, idx, refGroup.representative, market, config, {});
+  await buildFixedKitCard(w, idx, refGroup.representative, market, config, { skipContext: true });
 
+  // Ronda de pulido (Doc 06 V2 seccion 30.5): la familia 10K no debe
+  // leerse como si la unica solucion fuera la variante Off-Grid que se
+  // dibujo arriba como ejemplo — el encabezado deja explicito que es una
+  // familia configurable y las variantes pasan de "pildoras" con solo
+  // nombre/capacidad a mini-tarjetas que dejan ver tipo, inversor,
+  // bateria y presencia de EV de un vistazo.
+  w.gap(2);
+  w.rule();
   w.ensure(24);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9.5);
   doc.setTextColor(...INK);
   doc.text("Configuraciones disponibles según necesidad y disponibilidad", MARGIN, w.y);
   w.y += 16;
+  w.p(COPY.criticalFamilyNote, { size: 8.4, color: MUTED, gap: 8 });
 
-  const chipTexts = kits.map((k) => {
-    const { items } = resolveThreeComponents(idx, k.Kit_ID);
-    const bat = items.find((i) => i.meta === "Batería");
-    const inv = items.find((i) => i.meta === "Inversor");
-    const invLabel = inv ? (inv.sublabel || "").split(" · ")[0] : "";
-    return [invLabel, bat ? bat.label : ""].filter(Boolean).join(" · ") || k.Nombre_Comercial;
-  });
-  chipList(w, chipTexts);
+  await buildVariantCards(w, idx, market, kits);
   w.p(COPY.criticalVariantsNote, { size: 7.8, color: MUTED, gap: 6 });
+}
+
+/** Mini-tarjetas comparativas de variantes de una familia (Doc 06 V2
+ *  seccion 30.5: "no limitarse a mostrar simples pildoras... cada
+ *  variante debe permitir entender de un vistazo tipo, inversor,
+ *  capacidad de bateria y presencia de EV"). Nunca repite la ficha
+ *  completa de bateria/inversor/paneles (eso ya se mostro para el
+ *  representante arriba) — solo el diferencial relevante entre
+ *  variantes, con badge EV cuando el BOM real de esa variante lo
+ *  incluya. */
+async function buildVariantCards(w, idx, market, kits) {
+  const { doc } = w;
+  const cols = 2;
+  const gap = 12;
+  const colW = (CONTENT_W - gap) / cols;
+  const cardH = 66;
+  for (let i = 0; i < kits.length; i += cols) {
+    const row = kits.slice(i, i + cols);
+    w.ensure(cardH + gap);
+    const startY = w.y;
+    row.forEach((k, ci) => {
+      const x = MARGIN + ci * (colW + gap);
+      const copy = resolveCommercialCopy(idx, k.Kit_ID, market);
+      if (!copy) return;
+      const { vm } = copy;
+      const { evItem } = resolveThreeComponents(idx, k.Kit_ID);
+      const isHybrid = vm.tipoSistema === "Hibrido";
+      const stripColor = isHybrid ? ACCENT : TEAL;
+
+      doc.setDrawColor(...LINE);
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(x, startY, colW, cardH, 6, 6, "FD");
+      doc.setFillColor(...stripColor);
+      doc.roundedRect(x, startY, 5, cardH, 2, 2, "F");
+
+      const tx = x + 14;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(...INK);
+      const nameLines = doc.splitTextToSize(vm.name, colW - 24).slice(0, 1);
+      doc.text(nameLines, tx, startY + 15);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7.4);
+      doc.setTextColor(...stripColor);
+      doc.text((isHybrid ? "HÍBRIDO" : "OFF-GRID") + (vm.potenciaInversorKw ? ` · ${vm.potenciaInversorKw} kW` : ""), tx, startY + 27);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.8);
+      doc.setTextColor(...MUTED);
+      const specLine = [
+        vm.bateriaKwh > 0 ? `${vm.bateriaKwh} kWh batería` : null,
+        vm.potenciaPanelKw > 0 ? `${vm.potenciaPanelKw} kWp FV` : null,
+      ].filter(Boolean).join(" · ");
+      if (specLine) doc.text(specLine, tx, startY + 39);
+
+      if (evItem) {
+        const label = "+ CARGADOR EV";
+        const bw = doc.getTextWidth(label) * (6.2 / 7.8) + 14;
+        doc.setFillColor(...ACCENT);
+        doc.roundedRect(tx, startY + 46, bw, 14, 3, 3, "F");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(6.2);
+        doc.setTextColor(35, 22, 0);
+        doc.text(label, tx + 7, startY + 55);
+      }
+    });
+    w.y = startY + cardH + gap;
+  }
 }
 
 function buildPortableIntroBlock(w, idx) {
@@ -1642,6 +1831,15 @@ function splitPortableBatches(kits) {
 /** Tarjeta-modulo "¿Cual necesitas?" que rellena el cuadrante sobrante de
  *  portatiles (Doc 06 V2, seccion 0.2 PAGINA 8) — mismas dimensiones que
  *  una tarjeta portatil para no romper el alto de fila. */
+// Ronda de pulido (Doc 06 V2 seccion 30.7): "ampliar el bloque, reforzar
+// WhatsApp/QR, aprovechar mejor el espacio inferior". Las 3 preguntas
+// cortas son texto ya aprobado en el documento (seccion 0.2 PAGINA 8),
+// no se inventa copy nuevo.
+const PORTABLE_SELECTOR_QUESTIONS = [
+  "¿Qué quieres alimentar?",
+  "¿Cuántas horas?",
+  "¿Necesitas moverlo?",
+];
 function portableSelectorModule(config) {
   return {
     height: (doc, colW) => {
@@ -1656,23 +1854,56 @@ function portableSelectorModule(config) {
       doc.setFillColor(...NAVY);
       doc.roundedRect(x, y, colW, rowH, 5, 5, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(9.6);
+      doc.setFontSize(11);
       doc.setTextColor(255, 255, 255);
-      const qLines = doc.splitTextToSize("¿No sabes cuál necesitas?", colW - 20);
-      doc.text(qLines, x + 10, y + 22);
+      const qLines = doc.splitTextToSize("¿No sabes cuál necesitas?", colW - 24);
+      doc.text(qLines, x + 12, y + 24);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.6);
+      doc.setFontSize(7.8);
       doc.setTextColor(230, 234, 240);
-      const bodyLines = doc.splitTextToSize("Te ayudamos a elegir la solución ideal según tu consumo y uso.", colW - 20);
-      doc.text(bodyLines, x + 10, y + 22 + qLines.length * 11 + 8);
-      const whatsapp = firstOf(config && config.WhatsApp_Ventas);
+      const bodyLines = doc.splitTextToSize("Te ayudamos a elegir la solución ideal según tu consumo y uso.", colW - 24);
+      let qy = y + 24 + qLines.length * 12 + 12;
+      doc.text(bodyLines, x + 12, qy);
+      qy += bodyLines.length * 10 + 10;
+
+      // Las 3 preguntas cortas llenan el espacio medio del modulo con
+      // contenido funcional real (nunca relleno inventado).
       const btnY = y + rowH - 24;
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(1);
+      PORTABLE_SELECTOR_QUESTIONS.forEach((q) => {
+        if (qy > btnY - 14) return; // no invadir la zona del boton
+        doc.circle(x + 16, qy - 3, 2.6, "S");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8.2);
+        doc.setTextColor(255, 255, 255);
+        doc.text(q, x + 26, qy);
+        qy += 15;
+      });
+
+      const whatsapp = firstOf(config && config.WhatsApp_Ventas);
+      const msg = "Hola, no estoy seguro qué kit portátil necesito. ¿Me ayudan a elegir?";
+
+      // QR reforzado (seccion 30.7): visible y funcional cuando hay
+      // WhatsApp configurado, no solo el boton de texto — se calcula a
+      // partir de donde terminaron las preguntas (nunca un offset fijo
+      // que pueda solaparse con contenido variable) y solo se dibuja si
+      // hay espacio real antes del boton.
+      const qrSize = Math.min(46, colW - 24);
+      const qrX = x + (colW - qrSize) / 2;
+      const qrY = qy + 6;
+      let qrDrawn = false;
+      if (whatsapp && qrY + qrSize + 8 <= btnY) {
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(qrX - 6, qrY - 6, qrSize + 12, qrSize + 12, 4, 4, "F");
+        qrDrawn = drawQRCode(doc, whatsappLink(whatsapp, msg), qrX, qrY, qrSize);
+      }
+
       doc.setFillColor(...ACCENT);
       doc.roundedRect(x + 10, btnY, colW - 20, 17, 3, 3, "F");
       doc.setFont("helvetica", "bold");
       doc.setFontSize(7);
       doc.setTextColor(35, 22, 0);
-      const msg = "Hola, no estoy seguro qué kit portátil necesito. ¿Me ayudan a elegir?";
       if (whatsapp) {
         doc.textWithLink("Contáctanos por WhatsApp", x + 18, btnY + 11.5, { url: whatsappLink(whatsapp, msg) });
       } else {
@@ -1862,6 +2093,11 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
   const w = new DocWriter(doc);
 
   // 1. Portada
+  // Se calcula aca (ademas de dentro de buildCoverPage) para poder
+  // excluirla mas abajo de las imagenes de contexto de kits individuales
+  // (Doc 06 V2 seccion 30.3: "evitar reutilizar exactamente la misma
+  // imagen hero de la portada").
+  const coverImg = pickCoverImage(idx, resolvedMarket, families);
   await buildCoverPage(w, idx, resolvedMarket, families, generatedAt, brandName);
 
   // 2. Confianza + trazabilidad (fusionada — Doc 06 V2 Ronda Visual Final,
@@ -1900,7 +2136,7 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
       : null;
     h1(w, "Respaldo esencial");
     await buildFixedKitCard(w, idx, main.representative, resolvedMarket, config, {
-      siblingNote, badge: "Solución básica",
+      siblingNote, badge: "Solución básica", excludeImg: coverImg,
     });
   }
 
@@ -1918,6 +2154,7 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
         idea: "Genera y almacena energía con respaldo para reducir interrupciones y aprovechar mejor la energía disponible.",
         badgeText: "Continuidad 5K Híbrido",
         badgeColor: ACCENT,
+        excludeImg: coverImg,
         siblingNote: groups[0].siblings.length || groups.length > 1
           ? `También disponible: ${[...groups[0].siblings, ...groups.slice(1).map((g) => g.representative)].map((s) => s.Nombre_Comercial).join(", ")}.`
           : null,
@@ -1930,6 +2167,7 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
         idea: "Pensada para reducir la dependencia de una red inestable mediante producción y almacenamiento propios.",
         badgeText: "Autonomía 5K Off-Grid",
         badgeColor: TEAL,
+        excludeImg: coverImg,
         siblingNote: groups[0].siblings.length || groups.length > 1
           ? `También disponible: ${[...groups[0].siblings, ...groups.slice(1).map((g) => g.representative)].map((s) => s.Nombre_Comercial).join(", ")}.`
           : null,
