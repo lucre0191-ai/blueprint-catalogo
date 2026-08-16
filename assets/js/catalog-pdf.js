@@ -51,6 +51,14 @@ import {
   PAGE_W, PAGE_H, MARGIN, CONTENT_W, INK, MUTED, LINE, PANEL, ACCENT,
 } from "./pdfgen.js";
 
+/* Ronda visual final (Doc 06 V2, seccion 0.1) — design tokens nuevos que
+   no existian en el motor compartido (pdfgen.js). Se declaran locales a
+   este modulo (no se tocan los colores de la ficha por-kit) para no
+   arriesgar una regresion visual en pdfgen.js. */
+const NAVY = [30, 58, 95];
+const TEAL = [15, 118, 110];
+const SUCCESS = [34, 197, 94];
+
 /* ----------------------------------------------------------------------
    0. COPY fijo — Documento 06 V2. Texto palabra por palabra tal como esta
       en el documento fuente (secciones 3, 4 y 9). El resto del copy
@@ -109,13 +117,172 @@ const COPY = {
 
 /* Bloques 2x2 de "por que acompañado" (Doc 06 V2, seccion 4, PAGINA 2).
    Copy corto y fijo — no vive en Excel porque son 4 frases estructurales,
-   no contenido editorial que cambie por Linea o mercado. */
+   no contenido editorial que cambie por Linea o mercado. Tercer elemento
+   es la clave de icono (drawGlyph) — iconografia minimalista pedida en
+   la Ronda Visual Final (seccion 0.1). */
 const WHY_BLOCKS = [
-  ["Compra con criterio", "Validamos configuración, componentes y condiciones antes de avanzar."],
-  ["Negociación directa", "Coordinamos cotizaciones y condiciones con proveedores y fabricantes disponibles."],
-  ["Visibilidad logística", "Damos seguimiento a los principales hitos, documentos y actores de la operación dentro del alcance contratado."],
-  ["Un solo punto de coordinación", "Reducimos la necesidad de gestionar por separado proveedor, documentación, logística y seguimiento."],
+  ["Compra con criterio", "Validamos configuración, componentes y condiciones antes de avanzar.", "criteria"],
+  ["Negociación directa", "Coordinamos cotizaciones y condiciones con proveedores y fabricantes disponibles.", "negotiation"],
+  ["Visibilidad logística", "Damos seguimiento a los principales hitos, documentos y actores de la operación dentro del alcance contratado.", "logistics"],
+  ["Un solo punto de coordinación", "Reducimos la necesidad de gestionar por separado proveedor, documentación, logística y seguimiento.", "coordination"],
 ];
+
+/* Mapa de palabras clave -> icono, para pintar "Ideal para" / "Que puede
+   alimentar" y "Usalos para" como chips con glyph en vez de vinetas de
+   texto plano (Doc 06 V2, seccion 0.1: "iconografia funcional"). No es
+   exhaustivo a proposito: cualquier texto sin match cae al icono
+   generico ("spark"), nunca rompe el render. */
+const FEED_ICON_MAP = [
+  [/neveras?|refrigeraci[oó]n/i, "fridge"],
+  [/iluminaci[oó]n|luces?|luz/i, "light"],
+  [/wi.?fi|router|conectividad/i, "wifi"],
+  [/tv|entretenimiento|televisor/i, "tv"],
+  [/electrodom[eé]sticos?|microondas|lavadora|a\/?c|aire acondicionado/i, "appliance"],
+  [/apag[oó]n(es)?/i, "blackout"],
+  [/viaj(e|es)|movilidad/i, "travel"],
+  [/camping/i, "camping"],
+  [/evento(s)?/i, "events"],
+  [/trabajo m[oó]vil|negocio m[oó]vil|oficina/i, "mobile-work"],
+  [/router|celulares?|carga(dor)?/i, "wifi"],
+];
+function iconForFeed(text) {
+  const hit = FEED_ICON_MAP.find(([re]) => re.test(text || ""));
+  return hit ? hit[1] : "spark";
+}
+
+/** Iconos lineales minimalistas dibujados con primitivas nativas de
+ *  jsPDF (circle/rect/roundedRect/line/triangle) — sin libreria de
+ *  paths/SVG, para no sumar una dependencia nueva solo para esto (Doc 06
+ *  V2 seccion 0.1: "iconos lineales", "sensacion tecnologica, sobria y
+ *  premium"). Cada glyph se dibuja centrado en (cx,cy) con radio util r.
+ *  Si `key` no esta mapeado, cae a un punto simple — nunca lanza. */
+function drawGlyph(doc, key, cx, cy, r, color) {
+  doc.setDrawColor(...color);
+  doc.setFillColor(...color);
+  doc.setLineWidth(Math.max(0.9, r * 0.13));
+  const s = r * 0.62;
+  switch (key) {
+    case "criteria":
+      doc.line(cx - s, cy, cx - s * 0.15, cy + s * 0.7);
+      doc.line(cx - s * 0.15, cy + s * 0.7, cx + s, cy - s * 0.6);
+      break;
+    case "negotiation":
+      doc.circle(cx - s * 0.42, cy, s * 0.44, "S");
+      doc.circle(cx + s * 0.42, cy, s * 0.44, "S");
+      break;
+    case "logistics":
+      doc.rect(cx - s, cy - s * 0.35, s * 1.15, s * 0.7, "S");
+      doc.rect(cx + s * 0.15, cy - s * 0.1, s * 0.55, s * 0.45, "S");
+      doc.circle(cx - s * 0.55, cy + s * 0.5, s * 0.16, "F");
+      doc.circle(cx + s * 0.45, cy + s * 0.5, s * 0.16, "F");
+      break;
+    case "coordination":
+      doc.circle(cx, cy - s * 0.62, s * 0.15, "F");
+      doc.circle(cx - s * 0.62, cy + s * 0.4, s * 0.15, "F");
+      doc.circle(cx + s * 0.62, cy + s * 0.4, s * 0.15, "F");
+      doc.line(cx, cy - s * 0.62, cx - s * 0.62, cy + s * 0.4);
+      doc.line(cx, cy - s * 0.62, cx + s * 0.62, cy + s * 0.4);
+      doc.line(cx - s * 0.62, cy + s * 0.4, cx + s * 0.62, cy + s * 0.4);
+      break;
+    case "fridge":
+      doc.roundedRect(cx - s * 0.55, cy - s, s * 1.1, s * 2, 2, 2, "S");
+      doc.line(cx - s * 0.55, cy - s * 0.15, cx + s * 0.55, cy - s * 0.15);
+      break;
+    case "light":
+      doc.circle(cx, cy - s * 0.2, s * 0.55, "S");
+      doc.line(cx - s * 0.28, cy + 0.42 * s + 0.15 * s, cx + s * 0.28, cy + 0.42 * s + 0.15 * s);
+      doc.line(cx - s * 0.18, cy + 0.42 * s + 0.4 * s, cx + s * 0.18, cy + 0.42 * s + 0.4 * s);
+      break;
+    case "wifi":
+      doc.circle(cx, cy + s * 0.55, s * 0.11, "F");
+      doc.line(cx - s * 0.5, cy + s * 0.15, cx, cy - s * 0.2);
+      doc.line(cx, cy - s * 0.2, cx + s * 0.5, cy + s * 0.15);
+      doc.line(cx - s * 0.25, cy + s * 0.32, cx, cy + s * 0.05);
+      doc.line(cx, cy + s * 0.05, cx + s * 0.25, cy + s * 0.32);
+      break;
+    case "tv":
+      doc.roundedRect(cx - s, cy - s * 0.65, s * 2, s * 1.2, 2, 2, "S");
+      doc.line(cx - s * 0.35, cy + s * 0.85, cx + s * 0.35, cy + s * 0.85);
+      break;
+    case "appliance":
+      doc.roundedRect(cx - s * 0.7, cy - s, s * 1.4, s * 2, 2, 2, "S");
+      doc.line(cx - s * 0.7, cy - s * 0.35, cx + s * 0.7, cy - s * 0.35);
+      doc.circle(cx, cy + s * 0.35, s * 0.35, "S");
+      break;
+    case "blackout":
+      doc.line(cx + s * 0.25, cy - s, cx - s * 0.35, cy + s * 0.1);
+      doc.line(cx - s * 0.35, cy + s * 0.1, cx + s * 0.1, cy + s * 0.1);
+      doc.line(cx + s * 0.1, cy + s * 0.1, cx - s * 0.25, cy + s);
+      break;
+    case "travel":
+      doc.triangle(cx - s, cy + s * 0.25, cx + s * 0.85, cy - s * 0.25, cx + s * 0.35, cy + s * 0.55, "S");
+      break;
+    case "camping":
+      doc.triangle(cx, cy - s, cx - s, cy + s * 0.7, cx + s, cy + s * 0.7, "S");
+      doc.line(cx, cy - s, cx, cy + s * 0.7);
+      break;
+    case "events":
+      doc.circle(cx, cy, s * 0.32, "F");
+      doc.line(cx, cy - s, cx, cy - s * 0.5);
+      doc.line(cx, cy + s * 0.5, cx, cy + s);
+      doc.line(cx - s, cy, cx - s * 0.5, cy);
+      doc.line(cx + s * 0.5, cy, cx + s, cy);
+      break;
+    case "mobile-work":
+      doc.roundedRect(cx - s, cy - s * 0.45, s * 2, s * 1.1, 2, 2, "S");
+      doc.roundedRect(cx - s * 0.35, cy - s * 0.85, s * 0.7, s * 0.4, 1, 1, "S");
+      break;
+    case "globe":
+      doc.circle(cx, cy, s, "S");
+      doc.line(cx, cy - s, cx, cy + s);
+      doc.line(cx - s, cy, cx + s, cy);
+      break;
+    case "route":
+      doc.circle(cx - s, cy, s * 0.16, "F");
+      doc.circle(cx + s, cy, s * 0.16, "F");
+      doc.line(cx - s * 0.84, cy, cx + s * 0.84, cy);
+      break;
+    case "shield":
+      doc.roundedRect(cx - s * 0.75, cy - s, s * 1.5, s * 1.2, 2, 2, "S");
+      doc.triangle(cx - s * 0.75, cy + s * 0.15, cx + s * 0.75, cy + s * 0.15, cx, cy + s, "S");
+      break;
+    default:
+      doc.circle(cx, cy, s * 0.4, "F");
+  }
+}
+
+/** Chip pequeño con icono + texto (una linea) — usado para "Ideal para" /
+ *  "Que puede alimentar" (3K) y "Usalos para" (portatiles), Doc 06 V2
+ *  seccion 0.1 ("iconografia funcional" en vez de vinetas de texto). Se
+ *  distribuyen en filas que envuelven segun el ancho disponible. */
+function iconChipRow(w, texts, opts = {}) {
+  if (!texts || !texts.length) return;
+  const { doc } = w;
+  const chipH = 34;
+  const gap = 8;
+  const color = opts.color || ACCENT;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.6);
+  const widths = texts.map((t) => {
+    const lines = doc.splitTextToSize(t, 74);
+    return { t, lines, w: Math.max(52, Math.max(...lines.map((l) => doc.getTextWidth(l))) + 30) };
+  });
+  let x = MARGIN;
+  w.ensure(chipH + 6);
+  widths.forEach(({ t, lines, w: cw }) => {
+    if (x + cw > PAGE_W - MARGIN) { x = MARGIN; w.y += chipH + gap; w.ensure(chipH + gap); }
+    doc.setDrawColor(...LINE);
+    doc.setFillColor(...PANEL);
+    doc.roundedRect(x, w.y, cw, chipH, 6, 6, "FD");
+    drawGlyph(doc, iconForFeed(t), x + 15, w.y + 17, 8, color);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.3);
+    doc.setTextColor(...INK);
+    doc.text(lines.slice(0, 2), x + 28, w.y + (lines.length > 1 ? 13 : 19));
+    x += cw + gap;
+  });
+  w.y += chipH + 10;
+}
 
 /* Timeline de trazabilidad (Doc 06 V2, seccion 4, PAGINA 3). */
 const TRACE_STEPS = [
@@ -419,17 +586,18 @@ function bigBlockGrid(w, pairs) {
     const rowPairs = pairs.slice(i, i + cols);
     const rowH = Math.max(...rowPairs.map(([, d]) => cellHeight(d)));
     w.ensure(rowH + gap);
-    rowPairs.forEach(([title, desc], ci) => {
+    rowPairs.forEach(([title, desc, iconKey], ci) => {
       const x = MARGIN + ci * (colW + gap);
       doc.setDrawColor(...LINE);
       doc.setFillColor(...PANEL);
       doc.roundedRect(x, w.y, colW, rowH, 8, 8, "FD");
-      doc.setFillColor(...ACCENT);
-      doc.circle(x + 18, w.y + 20, 5, "F");
+      doc.setFillColor(...TEAL);
+      doc.circle(x + 19, w.y + 20, 10, "F");
+      drawGlyph(doc, iconKey || "criteria", x + 19, w.y + 20, 7.2, [255, 255, 255]);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(11);
       doc.setTextColor(...INK);
-      doc.text(title, x + 30, w.y + 24);
+      doc.text(title, x + 36, w.y + 24);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9.2);
       doc.setTextColor(...MUTED);
@@ -470,6 +638,36 @@ function timeline(w, steps) {
     });
     w.y += 30 + 10;
   });
+}
+
+/** Tira visual de ruta (globo -> nodo -> nodo) — Doc 06 V2 seccion 7/9,
+ *  "Atendemos operaciones desde y hacia" del mockup aprobado. Generico a
+ *  proposito: nunca fija un pais como origen/destino unico. */
+function drawRouteStrip(w, labels) {
+  const { doc } = w;
+  const n = labels.length;
+  const h = 54;
+  w.ensure(h + 10);
+  const gap = 10;
+  const colW = (CONTENT_W - gap * (n - 1)) / n;
+  const y0 = w.y;
+  labels.forEach((label, i) => {
+    const cx = MARGIN + i * (colW + gap) + colW / 2;
+    doc.setFillColor(...TEAL);
+    doc.circle(cx, y0 + 16, 14, "F");
+    drawGlyph(doc, i === 0 ? "globe" : i === n - 1 ? "route" : "coordination", cx, y0 + 16, 9, [255, 255, 255]);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.8);
+    doc.setTextColor(...INK);
+    const lines = doc.splitTextToSize(label, colW);
+    doc.text(lines, cx, y0 + 40, { align: "center" });
+    if (i < n - 1) {
+      doc.setDrawColor(...ACCENT);
+      doc.setLineWidth(1.4);
+      doc.line(cx + 16, y0 + 16, cx + colW - 2, y0 + 16);
+    }
+  });
+  w.y = y0 + h;
 }
 
 /** Matriz de seleccion por necesidad — tabla de 3 columnas con fondo
@@ -519,7 +717,11 @@ async function identityRow(w, items) {
   const n = items.length;
   const gap = 10;
   const colW = (CONTENT_W - gap * (n - 1)) / n;
-  const thumb = Math.min(66, colW - 6);
+  // Imagenes protagonistas grandes (Doc 06 V2, Ronda Visual Final seccion
+  // 0.1: "imagenes de producto protagonistas", mockup aprobado) — antes
+  // 66pt fijo dejaba demasiado aire vacio debajo en paginas de un solo
+  // kit; ahora escala con el ancho de columna disponible.
+  const thumb = Math.min(172, colW - 8);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   const maxLabelLines = Math.max(1, ...items.map((it) => doc.splitTextToSize(it.label || "", colW).slice(0, 2).length));
@@ -560,6 +762,51 @@ async function identityRow(w, items) {
     doc.text(subLines.slice(0, 1), x, startY + thumb + 22 + labelLines.length * 11);
   }
   w.y = startY + rowH;
+}
+
+/** Bloque "ADICIONAL DESTACADO" para el Cargador EV — Doc 06 V2, seccion
+ *  5A/12.2-C: separado de los 3 protagonistas, con su propia imagen real,
+ *  potencia y borde de acento (nunca escondido dentro de "tambien
+ *  incluye"). Se dibuja como una tira horizontal, no como una 4ta
+ *  columna, para que quede claro que es un extra, no un cuarto
+ *  protagonista igual a los demas. */
+async function drawEvHighlight(w, evItem) {
+  const { doc } = w;
+  const h = 46;
+  w.ensure(h + 8);
+  const y = w.y;
+  doc.setFillColor(...PANEL);
+  doc.setDrawColor(...ACCENT);
+  doc.setLineWidth(1.1);
+  doc.roundedRect(MARGIN, y, CONTENT_W, h, 6, 6, "FD");
+  const thumb = h - 12;
+  let drew = false;
+  if (evItem.image) {
+    try {
+      const { dataUrl } = await resizedDataURL(evItem.image, thumb * 3, thumb * 3, { cover: true, quality: 0.8 });
+      doc.addImage(dataUrl, "JPEG", MARGIN + 6, y + 6, thumb, thumb);
+      drew = true;
+    } catch (err) { /* fallback abajo */ }
+  }
+  if (!drew) {
+    doc.setDrawColor(...LINE);
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(MARGIN + 6, y + 6, thumb, thumb, 3, 3, "FD");
+  }
+  const tx = MARGIN + 6 + thumb + 12;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.4);
+  doc.setTextColor(...ACCENT);
+  doc.text("ADICIONAL DESTACADO", tx, y + 16);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...INK);
+  doc.text(evItem.label || "Cargador EV", tx, y + 29);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text(evItem.sublabel || "Cargador EV", tx, y + 40);
+  w.y = y + h + 10;
 }
 
 /** Chips compactos que envuelven en varias filas — usado para variantes
@@ -641,13 +888,17 @@ function twoColumnBullets(w, leftTitle, leftItems, rightTitle, rightItems) {
  *  minimo. */
 function estimateFixedKitCardHeight(doc, { hasEv, description, feed }) {
   let hh = 20 + 16; // titulo + linea de configuracion
-  hh += 66 + 36 + 10; // identityRow (bateria/inversor/panel [+EV])
+  const idColW = (CONTENT_W - 10 * 2) / 3;
+  const idThumb = Math.min(172, idColW - 8);
+  hh += idThumb + 22 + 22 + 14 + 6; // identityRow (bateria/inversor/panel, hasta 2 lineas de label)
+  if (hasEv) hh += 46 + 8; // bloque EV destacado
   if (description) {
     doc.setFont("helvetica", "normal"); doc.setFontSize(9.3);
     hh += doc.splitTextToSize(description, CONTENT_W).length * 13 + 8;
   }
   if (feed && feed.length) {
-    hh += 14 + Math.min(feed.length, 4) * 13 + 4;
+    const rows = Math.ceil(feed.length / 3);
+    hh += 14 + rows * 44;
   }
   hh += 24; // nota de autonomia
   hh += 30 + 10; // CTA
@@ -657,22 +908,39 @@ function estimateFixedKitCardHeight(doc, { hasEv, description, feed }) {
 /** Tarjeta de kit fijo con identidad de 3 (o 4) protagonistas — Doc 06 V2
  *  seccion 5A. `width` permite renderizarla en columna completa o en la
  *  mitad de una pagina comparativa (Paginas 5/6). Nunca dibuja precio
- *  (seccion 16) — el CTA usa el texto de reemplazo fijo. */
-async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote } = {}) {
+ *  (seccion 16) — el CTA usa el texto de reemplazo fijo. `badge` pinta un
+ *  pill corto junto al titulo (ej. "SOLUCIÓN BÁSICA", Doc 06 V2 mockup
+ *  aprobado, pagina 5). */
+async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, badge } = {}) {
   const { doc } = w;
   const copy = resolveCommercialCopy(idx, kit.Kit_ID, market);
   if (!copy) return;
   const { vm, description, feed, autonomia } = copy;
   const { items, evItem } = resolveThreeComponents(idx, kit.Kit_ID);
-  const allItems = evItem ? [...items, evItem] : items;
+  // El EV NO se mezcla en la fila de 3 protagonistas: se dibuja aparte,
+  // marcado como "ADICIONAL DESTACADO" (Doc 06 V2 seccion 5A/12.2-C: "no
+  // se considera componente comun secundario... debe ser visible porque
+  // cambia el valor de uso de la solucion").
+  const allItems = items;
 
   // KEEP_TOGETHER: reserva el bloque completo antes de dibujar nada.
-  w.ensure(estimateFixedKitCardHeight(doc, { hasEv: !!evItem, description, feed }));
+  w.ensure(estimateFixedKitCardHeight(doc, { hasEv: !!evItem, description, feed }) + (evItem ? 36 : 0));
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
   doc.setTextColor(...INK);
   doc.text(vm.name, MARGIN, w.y);
+  if (badge) {
+    const bw = doc.getTextWidth(badge.toUpperCase()) + 16;
+    const bx = MARGIN + doc.getTextWidth(vm.name) + 12;
+    doc.setFillColor(...PANEL);
+    doc.setDrawColor(...LINE);
+    doc.roundedRect(bx, w.y - 11, bw, 16, 8, 8, "FD");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.2);
+    doc.setTextColor(...TEAL);
+    doc.text(badge.toUpperCase(), bx + 8, w.y - 1);
+  }
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(...MUTED);
@@ -694,15 +962,17 @@ async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote } = 
 
   await identityRow(w, allItems);
 
+  if (evItem) await drawEvHighlight(w, evItem);
+
   if (description) w.p(description, { size: 9.3, color: INK, gap: 8 });
 
   if (feed && feed.length) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);
-    doc.text("QUÉ PUEDE ALIMENTAR", MARGIN, w.y);
+    doc.text("IDEAL PARA MANTENER", MARGIN, w.y);
     w.y += 12;
-    w.bullets(feed.slice(0, 4));
+    iconChipRow(w, feed.slice(0, 6));
   }
 
   if (autonomia) {
@@ -846,53 +1116,58 @@ async function buildCoverPage(w, idx, market, families, generatedAt, brandName) 
   doc.text(`Catálogo comercial · Información actualizada al ${fechaLarga(generatedAt)}`, MARGIN, w.y);
 }
 
-function buildWhyPage(w, idx) {
-  h1(w, resolveCatalogBlock(idx, "CATV2-VALUE-HEAD-ES", COPY.valueHeadline));
-  w.ensure(46);
+/** PAGINA 2 fusionada — Confianza + trazabilidad (Doc 06 V2, seccion 0.1/
+ *  0.2, "PAGINA 2": "Fusionar las paginas actuales 2 y 3"). Mitad superior
+ *  = por-que-acompañado (grilla 2x2 con icono), mitad inferior = timeline
+ *  de trazabilidad + banda compacta de servicios adicionales. Layout
+ *  deliberadamente compacto (fuentes/gaps mas chicos que la V1 de estas
+ *  dos secciones) para que quepa TODO en una sola pagina densa en vez de
+ *  dos paginas con aire de sobra. */
+function buildTrustTracePage(w, idx) {
   const { doc } = w;
+  h1(w, resolveCatalogBlock(idx, "CATV2-VALUE-HEAD-ES", COPY.valueHeadline));
+
+  w.ensure(40);
   doc.setDrawColor(...ACCENT);
-  doc.setLineWidth(2.4);
-  doc.line(MARGIN, w.y, MARGIN, w.y + 36);
+  doc.setLineWidth(2.2);
+  doc.line(MARGIN, w.y, MARGIN, w.y + 30);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(12.5);
+  doc.setFontSize(11);
   doc.setTextColor(...INK);
-  const lines = doc.splitTextToSize(COPY.valueEmphasis, CONTENT_W - 24);
-  doc.text(lines, MARGIN + 16, w.y + 14);
-  w.y += Math.max(40, lines.length * 17 + 14);
-  w.gap(10);
+  const emphLines = doc.splitTextToSize(COPY.valueEmphasis, CONTENT_W - 24);
+  doc.text(emphLines, MARGIN + 16, w.y + 12);
+  w.y += Math.max(34, emphLines.length * 14 + 10);
+  w.gap(8);
 
   bigBlockGrid(w, WHY_BLOCKS);
 
-  w.gap(6);
-  w.ensure(30);
+  w.gap(4);
+  w.ensure(22);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11.5);
+  doc.setFontSize(10.5);
   doc.setTextColor(...INK);
   const closeLines = doc.splitTextToSize(resolveCatalogBlock(idx, "CATV2-BLACKBOX-ES", COPY.blackboxMessage), CONTENT_W);
   doc.text(closeLines, MARGIN, w.y);
-  w.y += closeLines.length * 15 + 6;
-}
+  w.y += closeLines.length * 13 + 10;
 
-function buildTracePage(w, idx) {
-  h1(w, COPY.traceHeadline);
+  w.rule();
+
+  h1WithoutGapReset(w, "TRAZABILIDAD EN CADA ETAPA");
   timeline(w, TRACE_STEPS);
-  w.gap(6);
-  w.p(resolveCatalogBlock(idx, "CATV2-TRACE-INTRO-ES", COPY.traceIntro), { size: 10.5, bold: true, color: INK, gap: 8 });
-  w.bullets(TRACE_BULLETS);
   w.gap(4);
-  const { doc } = w;
-  w.ensure(30);
+
+  w.ensure(22);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
   doc.text("SERVICIOS ADICIONALES DISPONIBLES SEGÚN OPERACIÓN", MARGIN, w.y);
   w.y += 12;
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(8.6);
+  doc.setFontSize(8.4);
   doc.setTextColor(...INK);
   const addLines = doc.splitTextToSize(TRACE_ADDITIONAL, CONTENT_W);
   doc.text(addLines, MARGIN, w.y);
-  w.y += addLines.length * 12 + 6;
+  w.y += addLines.length * 12 + 4;
 }
 
 function buildSelectorPage(w, idx, families, commonImages) {
@@ -917,6 +1192,40 @@ function buildSelectorPage(w, idx, families, commonImages) {
   w.__pendingCommonItems = commonItems;
 
   w.p(COPY.commonBandPrecision, { size: 7.6, color: MUTED, gap: 4 });
+
+  // Banda de confianza — mockup aprobado, pagina 4: escudo + marcas con
+  // las que se trabaja hoy (leidas de products.json real, nunca a mano).
+  w.__pendingTrustBadge = true;
+}
+/** Banda de confianza con icono de escudo + marcas reales con las que se
+ *  trabaja (Doc 06 V2, mockup aprobado pagina 4). Las marcas salen de
+ *  products.json (nunca hardcodeadas) — se excluye "Generico" porque no
+ *  es una marca comercial reconocible para el cliente. */
+function drawTrustBadgeBand(w, idx) {
+  const { doc } = w;
+  const brands = [...new Set((idx.products || []).map((p) => p.Marca).filter((m) => m && m !== "Generico"))];
+  const text = "Trabajamos con equipos de marcas reconocidas y componentes certificados para garantizar seguridad y rendimiento.";
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  const lines = doc.splitTextToSize(text, CONTENT_W - 56);
+  const h = Math.max(40, lines.length * 12 + 20);
+  w.ensure(h + 8);
+  doc.setFillColor(...NAVY);
+  doc.roundedRect(MARGIN, w.y, CONTENT_W, h, 6, 6, "F");
+  doc.setFillColor(255, 255, 255);
+  doc.circle(MARGIN + 22, w.y + h / 2, 11, "F");
+  drawGlyph(doc, "shield", MARGIN + 22, w.y + h / 2, 7.5, NAVY);
+  doc.setTextColor(255, 255, 255);
+  doc.text(lines, MARGIN + 42, w.y + h / 2 - (lines.length - 1) * 6 + 3);
+  w.y += h + 10;
+  if (brands.length) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.setTextColor(...MUTED);
+    w.ensure(16);
+    doc.text(brands.join("   ·   ") + "   ·   y más", MARGIN, w.y);
+    w.y += 16;
+  }
 }
 function h1WithoutGapReset(w, text) {
   w.ensure(24);
@@ -960,12 +1269,26 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
   // imagen -- por eso este bloque reimplementa (compacto) el cuerpo de
   // la tarjeta en vez de llamar a buildFixedKitCard con CONTENT_W fijo.
   const { doc } = w;
-  const { kit, idea, siblingNote } = column;
+  const { kit, idea, siblingNote, badgeText, badgeColor } = column;
   const copy = resolveCommercialCopy(idx, kit.Kit_ID, market);
   if (!copy) return;
   const { vm, description, autonomia } = copy;
   const { items, evItem } = resolveThreeComponents(idx, kit.Kit_ID);
   const allItems = (evItem ? [...items, evItem] : items).slice(0, 3);
+
+  // Banda de color superior — diferencia visualmente Hibrido vs Off-Grid
+  // (Doc 06 V2, mockup aprobado pagina 6: "CONTINUIDAD 5K HIBRIDO" en
+  // naranja, "AUTONOMIA 5K OFF-GRID" en verde/teal).
+  if (badgeText) {
+    w.ensure(26);
+    doc.setFillColor(...(badgeColor || ACCENT));
+    doc.roundedRect(xOffset, w.y, colWidth, 20, 4, 4, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.4);
+    doc.setTextColor(255, 255, 255);
+    doc.text(badgeText.toUpperCase(), xOffset + 9, w.y + 13.5);
+    w.y += 30;
+  }
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12.5);
@@ -1210,13 +1533,14 @@ async function buildPortableCard(w, idx, kit, market, config, x, colW) {
  *  imagen real que 3-4 en una sola linea con el ancho A4). Cada tarjeta
  *  se reserva completa antes de dibujar (nunca se corta entre paginas,
  *  seccion 13.3). */
-async function buildPortableGrid(w, idx, market, config, kits) {
+async function buildPortableGrid(w, idx, market, config, kits, trailingCard) {
   const { doc } = w;
   const cols = 2;
   const gap = 16;
   const colW = (CONTENT_W - gap) / cols;
   for (let i = 0; i < kits.length; i += cols) {
     const row = kits.slice(i, i + cols);
+    const isLastRow = i + cols >= kits.length;
     const heights = row.map((k) => {
       const copy = resolveCommercialCopy(idx, k.Kit_ID, market);
       const usos = (copy && copy.feed && copy.feed.length ? copy.feed : []).slice(0, 3).join(" · ");
@@ -1225,15 +1549,82 @@ async function buildPortableGrid(w, idx, market, config, kits) {
       const panelPlegable = comps.find((c) => c.Categoria === CAT_PANEL_PLEGABLE);
       return measurePortableCard(doc, k, estacion, panelPlegable, usos, colW).height;
     });
-    const rowH = Math.max(...heights);
+    // Modulo funcional en la celda vacia de la ultima fila impar (Doc 06
+    // V2, seccion 0.2 PAGINA 8: "usar el cuarto cuadrante para un modulo
+    // funcional"). Nunca se deja una tarjeta huerfana sola en su fila.
+    const needsTrailing = isLastRow && row.length < cols && trailingCard;
+    const trailingH = needsTrailing ? trailingCard.height(doc, colW) : 0;
+    const rowH = Math.max(...heights, trailingH);
     w.ensure(rowH + gap);
     const startY = w.y;
     for (let ci = 0; ci < row.length; ci++) {
       w.y = startY;
       await buildPortableCard(w, idx, row[ci], market, config, MARGIN + ci * (colW + gap), colW);
     }
+    if (needsTrailing) {
+      w.y = startY;
+      await trailingCard.draw(w, MARGIN + row.length * (colW + gap), colW, rowH);
+    }
     w.y = startY + rowH + gap;
   }
+}
+
+/** Divide portatiles en lotes de pagina evitando siempre 6+1 (Doc 06 V2,
+ *  seccion 0.3 Regla F): 1-4 -> una sola pagina; 5-8 -> dos paginas
+ *  balanceadas (ceil/floor, nunca 4+1 ni 6+1); mas de 8 -> lotes de 4. */
+function splitPortableBatches(kits) {
+  const n = kits.length;
+  if (n <= 4) return [kits];
+  if (n <= 8) {
+    const first = Math.ceil(n / 2);
+    return [kits.slice(0, first), kits.slice(first)];
+  }
+  const batches = [];
+  for (let i = 0; i < n; i += 4) batches.push(kits.slice(i, i + 4));
+  return batches;
+}
+
+/** Tarjeta-modulo "¿Cual necesitas?" que rellena el cuadrante sobrante de
+ *  portatiles (Doc 06 V2, seccion 0.2 PAGINA 8) — mismas dimensiones que
+ *  una tarjeta portatil para no romper el alto de fila. */
+function portableSelectorModule(config) {
+  return {
+    height: (doc, colW) => {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.6);
+      return 70 + 14 + 11 * 4 + 8 + 17;
+    },
+    draw: async (w, x, colW, rowH) => {
+      const { doc } = w;
+      const y = w.y;
+      doc.setDrawColor(...LINE);
+      doc.setFillColor(...NAVY);
+      doc.roundedRect(x, y, colW, rowH, 5, 5, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9.6);
+      doc.setTextColor(255, 255, 255);
+      const qLines = doc.splitTextToSize("¿No sabes cuál necesitas?", colW - 20);
+      doc.text(qLines, x + 10, y + 22);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.6);
+      doc.setTextColor(230, 234, 240);
+      const bodyLines = doc.splitTextToSize("Te ayudamos a elegir la solución ideal según tu consumo y uso.", colW - 20);
+      doc.text(bodyLines, x + 10, y + 22 + qLines.length * 11 + 8);
+      const whatsapp = firstOf(config && config.WhatsApp_Ventas);
+      const btnY = y + rowH - 24;
+      doc.setFillColor(...ACCENT);
+      doc.roundedRect(x + 10, btnY, colW - 20, 17, 3, 3, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7);
+      doc.setTextColor(35, 22, 0);
+      const msg = "Hola, no estoy seguro qué kit portátil necesito. ¿Me ayudan a elegir?";
+      if (whatsapp) {
+        doc.textWithLink("Contáctanos por WhatsApp", x + 18, btnY + 11.5, { url: whatsappLink(whatsapp, msg) });
+      } else {
+        doc.text("Contáctanos por WhatsApp", x + 18, btnY + 11.5);
+      }
+    },
+  };
 }
 
 function buildSupplyPage(w, idx, config) {
@@ -1246,6 +1637,11 @@ function buildSupplyPage(w, idx, config) {
   doc.text("Red de suministro internacional y regional", MARGIN, w.y);
   w.y += 16;
   w.p(resolveCatalogBlock(idx, "CATV2-SUPPLY-INTRO-ES", COPY.supplyIntro), { size: 9.3, color: MUTED, gap: 10 });
+
+  // Ruta visual generica (nunca un pais fijo como origen/destino unico —
+  // Doc 06 V2 seccion 7/25: "No nombrar China o Republica Dominicana como
+  // unicos origenes obligatorios del sistema").
+  drawRouteStrip(w, ["Origen del suministro", "Coordinación Blueprint", "Destino de la operación"]);
   chipList(w, COPY.supplyExample.split(" · "));
 
   w.gap(4);
@@ -1375,6 +1771,23 @@ function buildTrustAndCtaPage(w, idx, config, seller) {
 
   w.rule();
   w.p(resolveCatalogBlock(idx, "CATV2-LEGAL-SHORT-ES", COPY.legalShort), { size: 7.4, color: MUTED, gap: 4 });
+
+  // Cierre deliberado — banda navy de alto contraste con el lema de marca
+  // (Doc 06 V2, seccion 0.2 PAGINA 10: "la zona inferior puede usar un
+  // bloque navy o teal... para que el cierre se sienta deliberado y no
+  // como texto suelto en una hoja vacia").
+  const bandH = 34;
+  w.ensure(bandH + 4);
+  doc.setFillColor(...NAVY);
+  doc.rect(MARGIN, w.y, CONTENT_W, bandH, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(255, 255, 255);
+  doc.text("Tu energía. ", MARGIN + 18, w.y + bandH / 2 + 4);
+  const w1 = doc.getTextWidth("Tu energía. ");
+  doc.setTextColor(...ACCENT);
+  doc.text("Tu independencia.", MARGIN + 18 + w1, w.y + bandH / 2 + 4);
+  w.y += bandH;
 }
 
 /* ----------------------------------------------------------------------
@@ -1396,15 +1809,12 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
   // 1. Portada
   await buildCoverPage(w, idx, resolvedMarket, families, generatedAt, brandName);
 
-  // 2. Por que acompañado
+  // 2. Confianza + trazabilidad (fusionada — Doc 06 V2 Ronda Visual Final,
+  //    seccion 0.2 PAGINA 2: antes eran 2 paginas separadas de la V1).
   doc.addPage(); w.y = MARGIN;
-  buildWhyPage(w, idx);
+  buildTrustTracePage(w, idx);
 
-  // 3. Trazabilidad
-  doc.addPage(); w.y = MARGIN;
-  buildTracePage(w, idx);
-
-  // 4. Selector de necesidad + banda unica de componentes comunes
+  // 3. Selector de necesidad + banda unica de componentes comunes
   doc.addPage(); w.y = MARGIN;
   const commonImages = resolveCommonComponentImages(idx, families);
   buildSelectorPage(w, idx, families, commonImages);
@@ -1412,26 +1822,35 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
     await identityRow(w, w.__pendingCommonItems);
     delete w.__pendingCommonItems;
   }
+  if (w.__pendingTrustBadge) {
+    drawTrustBadgeBand(w, idx);
+    delete w.__pendingTrustBadge;
+  }
 
-  // 5. Respaldo (comparativa por tier real)
+  // 4. Respaldo esencial 3K — SIEMPRE una sola solucion comercial a ancho
+  //    completo (Doc 06 V2 seccion 5, PAGINA 5: "NO presentar 3K y 3K Lite
+  //    como dos soluciones comparables... no generar dos tarjetas"). Si el
+  //    dataset trae mas de un registro/tier en esta Linea, el principal
+  //    (mas barato, ya viene ordenado asi por resolveActiveKits) se dibuja
+  //    completo y el resto se resume en una sola nota — nunca en una
+  //    segunda columna comparativa.
   const respaldoKits = byLinea.get("Respaldo") || [];
   if (respaldoKits.length) {
     doc.addPage(); w.y = MARGIN;
     const groups = tierGroups(respaldoKits);
-    const columns = groups.slice(0, 2).map((g) => ({
-      kit: g.representative,
-      idea: null,
-      siblingNote: g.siblings.length
-        ? `También disponible en esta potencia: ${g.siblings.map((s) => s.Nombre_Comercial).join(", ")}.`
-        : null,
-    }));
-    await buildComparativePage(w, idx, resolvedMarket, config, "Respaldo esencial", columns);
-    if (groups.length > 2) {
-      chipList(w, groups.slice(2).map((g) => g.representative.Nombre_Comercial));
-    }
+    const main = groups[0];
+    const others = [...main.siblings, ...groups.slice(1).flatMap((g) => [g.representative, ...g.siblings])];
+    const siblingNote = others.length
+      ? `Configuración de inversor disponible según necesidad y disponibilidad (${others.map((s) => s.Nombre_Comercial).join(", ")}).`
+      : null;
+    h1(w, "Respaldo esencial");
+    await buildFixedKitCard(w, idx, main.representative, resolvedMarket, config, {
+      siblingNote, badge: "Solución básica",
+    });
   }
 
-  // 6. Continuidad + Autonomia (una Linea por columna)
+  // 5. Continuidad + Autonomia (una Linea por columna, con banda de color
+  //    diferenciando Hibrido/naranja vs Off-Grid/teal — mockup aprobado).
   const continuidadKits = byLinea.get("Continuidad") || [];
   const autonomiaKits = byLinea.get("Autonomia") || [];
   if (continuidadKits.length || autonomiaKits.length) {
@@ -1442,6 +1861,8 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
       columns.push({
         kit: groups[0].representative,
         idea: "Genera y almacena energía con respaldo para reducir interrupciones y aprovechar mejor la energía disponible.",
+        badgeText: "Continuidad 5K Híbrido",
+        badgeColor: ACCENT,
         siblingNote: groups[0].siblings.length || groups.length > 1
           ? `También disponible: ${[...groups[0].siblings, ...groups.slice(1).map((g) => g.representative)].map((s) => s.Nombre_Comercial).join(", ")}.`
           : null,
@@ -1452,6 +1873,8 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
       columns.push({
         kit: groups[0].representative,
         idea: "Pensada para reducir la dependencia de una red inestable mediante producción y almacenamiento propios.",
+        badgeText: "Autonomía 5K Off-Grid",
+        badgeColor: TEAL,
         siblingNote: groups[0].siblings.length || groups.length > 1
           ? `También disponible: ${[...groups[0].siblings, ...groups.slice(1).map((g) => g.representative)].map((s) => s.Nombre_Comercial).join(", ")}.`
           : null,
@@ -1460,26 +1883,45 @@ export async function buildCommercialCatalog({ idx, data, market, seller, langua
     await buildComparativePage(w, idx, resolvedMarket, config, "Continuidad y autonomía 5K", columns);
   }
 
-  // 7. Operacion Critica 10K
+  // 6. Operacion Critica 10K
   const criticalKits = byLinea.get("Operacion Critica") || [];
   if (criticalKits.length) {
     doc.addPage(); w.y = MARGIN;
     await buildCriticalPage(w, idx, resolvedMarket, config, criticalKits);
   }
 
-  // 8-9. Portatiles (rejilla compacta, tantas paginas como haga falta)
+  // 7-8. Portatiles — nunca 6+1 (Doc 06 V2 seccion 0.3 Regla F): se
+  // reparten en lotes balanceados y el primer lote lleva la intro; si el
+  // ultimo lote de la ultima pagina queda con un cuadrante vacio, se
+  // rellena con el modulo "?Cual necesitas?" en vez de dejarlo en blanco.
   const portableKits = byLinea.get("Portatil") || [];
   if (portableKits.length) {
-    doc.addPage(); w.y = MARGIN;
-    buildPortableIntroBlock(w, idx);
-    await buildPortableGrid(w, idx, resolvedMarket, config, portableKits);
+    const batches = splitPortableBatches(portableKits);
+    const module = portableSelectorModule(config);
+    for (let bi = 0; bi < batches.length; bi++) {
+      doc.addPage(); w.y = MARGIN;
+      if (bi === 0) buildPortableIntroBlock(w, idx);
+      const isLastBatch = bi === batches.length - 1;
+      await buildPortableGrid(w, idx, resolvedMarket, config, batches[bi], isLastBatch ? module : null);
+      if (isLastBatch) {
+        w.gap(2);
+        const { doc: d } = w;
+        d.setFont("helvetica", "bold");
+        d.setFontSize(7.6);
+        d.setTextColor(...MUTED);
+        w.ensure(14);
+        d.text("ÚSALOS PARA:", MARGIN, w.y);
+        w.y += 14;
+        iconChipRow(w, ["Apagones", "Viajes", "Camping", "Eventos", "Trabajo móvil"], { color: TEAL });
+      }
+    }
   }
 
-  // 10. Red de suministro + alcance
+  // 9. Red de suministro + alcance
   doc.addPage(); w.y = MARGIN;
   buildSupplyPage(w, idx, config);
 
-  // 11. Confianza/identidad empresarial + CTA final + QR + legal
+  // 10. Confianza/identidad empresarial + CTA final + QR + legal
   buildTrustAndCtaPage(w, idx, config, sellerRecord);
 
   const label = sellerRecord ? "Asesor" : "Contacto";
