@@ -877,14 +877,17 @@ function serviceIcon(text) {
 function twoColumnBullets(w, leftTitle, leftItems, rightTitle, rightItems) {
   const { doc } = w;
   const gap = 16;
-  const pad = 14;
+  // Microajuste de escala (sin agregar texto): mas padding/interlineado
+  // e icono ligeramente mayor para que las cards de servicios respiren
+  // mejor dentro del mismo contenido real.
+  const pad = 17;
   const colW = (CONTENT_W - gap) / 2;
-  const lineH = 13;
+  const lineH = 14.5;
   function measure(items, width) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
-    let hh = 30;
-    items.forEach((it) => { hh += Math.max(1, doc.splitTextToSize(it, width - pad * 2 - 20).length) * lineH + 5; });
+    let hh = 34;
+    items.forEach((it) => { hh += Math.max(1, doc.splitTextToSize(it, width - pad * 2 - 20).length) * lineH + 6; });
     return hh + pad;
   }
   const leftH = measure(leftItems, colW);
@@ -911,11 +914,11 @@ function twoColumnBullets(w, leftTitle, leftItems, rightTitle, rightItems) {
       const lines = doc.splitTextToSize(it, colW - pad * 2 - 20);
       doc.setFillColor(255, 255, 255);
       doc.setDrawColor(...LINE);
-      doc.circle(x + pad + 7, y - 3.4, 8, "FD");
-      drawGlyph(doc, serviceIcon(it), x + pad + 7, y - 3.4, 5.4, accentColor);
+      doc.circle(x + pad + 7.5, y - 3.4, 8.6, "FD");
+      drawGlyph(doc, serviceIcon(it), x + pad + 7.5, y - 3.4, 5.8, accentColor);
       doc.setTextColor(...INK);
-      doc.text(lines, x + pad + 22, y);
-      y += lines.length * lineH + 5;
+      doc.text(lines, x + pad + 23, y);
+      y += lines.length * lineH + 6;
     });
   }
   drawCol(MARGIN, leftTitle, leftItems, TEAL);
@@ -955,11 +958,17 @@ function estimateFixedKitCardHeight(doc, { hasEv, description, feed, hasContext 
  *  (seccion 16) — el CTA usa el texto de reemplazo fijo. `badge` pinta un
  *  pill corto junto al titulo (ej. "SOLUCIÓN BÁSICA", Doc 06 V2 mockup
  *  aprobado, pagina 5). */
-async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, badge, excludeImg, skipContext } = {}) {
+async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, badge, excludeImg, skipContext, titleOverride } = {}) {
   const { doc } = w;
   const copy = resolveCommercialCopy(idx, kit.Kit_ID, market);
   if (!copy) return;
   const { vm, description, feed, autonomia } = copy;
+  // titleOverride: la familia 10K debe leerse como "Operacion Critica
+  // 10K" (Doc 06 V2 seccion 30.5) y no como si la variante concreta que
+  // se usa de referencia visual (normalmente Off-Grid) fuera la unica
+  // solucion — el nombre especifico del kit se conserva mas abajo, en la
+  // linea de configuracion y en el codigo Kit_ID, nunca se pierde.
+  const displayName = titleOverride || vm.name;
   const { items, evItem } = resolveThreeComponents(idx, kit.Kit_ID);
   // El EV NO se mezcla en la fila de 3 protagonistas: se dibuja aparte,
   // marcado como "ADICIONAL DESTACADO" (Doc 06 V2 seccion 5A/12.2-C: "no
@@ -980,10 +989,10 @@ async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, bad
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
   doc.setTextColor(...INK);
-  doc.text(vm.name, MARGIN, w.y);
+  doc.text(displayName, MARGIN, w.y);
   if (badge) {
     const bw = doc.getTextWidth(badge.toUpperCase()) + 16;
-    const bx = MARGIN + doc.getTextWidth(vm.name) + 12;
+    const bx = MARGIN + doc.getTextWidth(displayName) + 12;
     doc.setFillColor(...PANEL);
     doc.setDrawColor(...LINE);
     doc.roundedRect(bx, w.y - 11, bw, 16, 8, 8, "FD");
@@ -1483,7 +1492,9 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
   // ancho completo; sin esto la columna queda mayormente texto.
   const contextImg = kitContextImage(idx, kit.Kit_ID, market, excludeImg);
   if (contextImg) {
-    const ctxH = 110;
+    // Microajuste de escala (sin agregar texto): 110 -> 128pt para
+    // aprovechar mejor el alto de columna disponible.
+    const ctxH = 128;
     w.ensure(ctxH + 10);
     try {
       const { dataUrl } = await resizedDataURL(contextImg, colWidth * 1.6, ctxH * 1.6, { cover: true, quality: 0.78 });
@@ -1562,7 +1573,16 @@ async function buildCriticalPage(w, idx, market, config, kits) {
   const refGroup = groups[0];
   if (!refGroup) return;
 
-  await buildFixedKitCard(w, idx, refGroup.representative, market, config, { skipContext: true });
+  // Ajuste de jerarquia pedido por la propietaria: el titular de esta
+  // ficha debe ser la familia "Operacion Critica 10K", no el nombre de
+  // la variante concreta usada como ejemplo visual (antes decia
+  // "Operacion Critica 10K Off-Grid", como si esa fuera la unica
+  // solucion) — la variante mostrada se marca como referencia y sus
+  // datos tecnicos especificos (bateria/inversor/tipo) se conservan
+  // integros en la linea de configuracion, justo debajo del titulo.
+  await buildFixedKitCard(w, idx, refGroup.representative, market, config, {
+    skipContext: true, titleOverride: "Operación Crítica 10K", badge: "Configuración de referencia",
+  });
 
   // Ronda de pulido (Doc 06 V2 seccion 30.5): la familia 10K no debe
   // leerse como si la unica solucion fuera la variante Off-Grid que se
@@ -1597,7 +1617,9 @@ async function buildVariantCards(w, idx, market, kits) {
   const cols = 2;
   const gap = 12;
   const colW = (CONTENT_W - gap) / cols;
-  const cardH = 66;
+  // Microajuste de escala (sin agregar texto): 66 -> 72pt para que la
+  // miniatura del EV y el texto respiren mejor dentro de la tarjeta.
+  const cardH = 72;
   for (let i = 0; i < kits.length; i += cols) {
     const row = kits.slice(i, i + cols);
     w.ensure(cardH + gap);
@@ -1645,7 +1667,9 @@ async function buildVariantCards(w, idx, market, kits) {
       if (specLine) doc.text(doc.splitTextToSize(specLine, textW), tx, startY + 39);
 
       if (evItem) {
-        const label = "+ CARGADOR EV";
+        // Ajuste pedido por la propietaria: la potencia (7 kW) debe verse
+        // junto a la imagen del cargador, no solo el nombre.
+        const label = evItem.label ? `+ CARGADOR EV · ${evItem.label}` : "+ CARGADOR EV";
         const bw = doc.getTextWidth(label) * (6.2 / 7.8) + 14;
         doc.setFillColor(...ACCENT);
         doc.roundedRect(tx, startY + 46, bw, 14, 3, 3, "F");
@@ -2106,9 +2130,19 @@ function buildTrustAndCtaPage(w, idx, config, seller) {
    -------------------------------------------------------------------- */
 
 export async function buildCommercialCatalog({ idx, data, market, seller, language = "Español" } = {}) {
-  const config = (data && data.config) || {};
-  const resolvedMarket = market || config.Mercado_Default || null;
+  const baseConfig = (data && data.config) || {};
+  const resolvedMarket = market || baseConfig.Mercado_Default || null;
   const sellerRecord = sellerFor(idx, seller);
+  // QR/WhatsApp dinamico por vendedor en TODO el documento (no solo en el
+  // cierre): antes, los botones "Solicita una configuracion"/"Cotizar" de
+  // cada kit y el modulo de portatiles usaban siempre
+  // config.WhatsApp_Ventas (el corporativo) sin importar si habia un
+  // vendedor en la URL. Se resuelve una sola vez aca y se usa en todo el
+  // resto del documento para que un catalogo con ?seller=... atribuya
+  // cada CTA/QR al vendedor correcto de principio a fin.
+  const config = sellerRecord
+    ? { ...baseConfig, WhatsApp_Ventas: sellerRecord.whatsapp || baseConfig.WhatsApp_Ventas, Contacto_Nombre: sellerRecord.nombre || baseConfig.Contacto_Nombre }
+    : baseConfig;
   const families = resolveActiveKits(idx);
   const byLinea = familiesToMap(families);
   const generatedAt = new Date();
