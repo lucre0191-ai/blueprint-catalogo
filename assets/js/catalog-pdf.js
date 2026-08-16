@@ -1602,10 +1602,11 @@ async function buildVariantCards(w, idx, market, kits) {
     const row = kits.slice(i, i + cols);
     w.ensure(cardH + gap);
     const startY = w.y;
-    row.forEach((k, ci) => {
+    for (let ci = 0; ci < row.length; ci++) {
+      const k = row[ci];
       const x = MARGIN + ci * (colW + gap);
       const copy = resolveCommercialCopy(idx, k.Kit_ID, market);
-      if (!copy) return;
+      if (!copy) continue;
       const { vm } = copy;
       const { evItem } = resolveThreeComponents(idx, k.Kit_ID);
       const isHybrid = vm.tipoSistema === "Hibrido";
@@ -1618,10 +1619,15 @@ async function buildVariantCards(w, idx, market, kits) {
       doc.roundedRect(x, startY, 5, cardH, 2, 2, "F");
 
       const tx = x + 14;
+      // Reservar espacio a la derecha para la miniatura del cargador EV
+      // (mas abajo) evita que el nombre/specs largos se solapen con la
+      // foto en las variantes hibridas.
+      const evThumb = evItem && evItem.image ? cardH - 16 : 0;
+      const textW = colW - 24 - (evThumb ? evThumb + 10 : 0);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(...INK);
-      const nameLines = doc.splitTextToSize(vm.name, colW - 24).slice(0, 1);
+      const nameLines = doc.splitTextToSize(vm.name, textW).slice(0, 1);
       doc.text(nameLines, tx, startY + 15);
 
       doc.setFont("helvetica", "bold");
@@ -1636,7 +1642,7 @@ async function buildVariantCards(w, idx, market, kits) {
         vm.bateriaKwh > 0 ? `${vm.bateriaKwh} kWh batería` : null,
         vm.potenciaPanelKw > 0 ? `${vm.potenciaPanelKw} kWp FV` : null,
       ].filter(Boolean).join(" · ");
-      if (specLine) doc.text(specLine, tx, startY + 39);
+      if (specLine) doc.text(doc.splitTextToSize(specLine, textW), tx, startY + 39);
 
       if (evItem) {
         const label = "+ CARGADOR EV";
@@ -1647,8 +1653,27 @@ async function buildVariantCards(w, idx, market, kits) {
         doc.setFontSize(6.2);
         doc.setTextColor(35, 22, 0);
         doc.text(label, tx + 7, startY + 55);
+
+        // Miniatura real del cargador EV (Doc 06 V2 seccion 30.6: "mostrar
+        // imagen real del componente... debe ser visible comercialmente").
+        // El representante a ancho completo de esta pagina normalmente no
+        // incluye EV (suele ser la variante Off-Grid), asi que sin esto la
+        // foto del cargador nunca aparecia en el catalogo aunque 3 de las
+        // 4 variantes si lo incluyen — se agrega aca, en la mini-tarjeta
+        // de la variante que realmente lo tiene.
+        if (evItem.image) {
+          const thumb = cardH - 16;
+          const thumbX = x + colW - 14 - thumb;
+          const thumbY = startY + 8;
+          try {
+            const { dataUrl } = await resizedDataURL(evItem.image, thumb * 3, thumb * 3, { cover: false, quality: 0.8 });
+            doc.addImage(dataUrl, "JPEG", thumbX, thumbY, thumb, thumb);
+          } catch (err) {
+            console.warn("No se pudo incrustar imagen del cargador EV en variante:", evItem.image, err);
+          }
+        }
       }
-    });
+    }
     w.y = startY + cardH + gap;
   }
 }
