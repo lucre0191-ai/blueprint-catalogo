@@ -734,7 +734,7 @@ async function identityRow(w, items) {
     let drew = false;
     if (it.image) {
       try {
-        const { dataUrl } = await resizedDataURL(it.image, thumb * 3, thumb * 3, { cover: true, quality: 0.8 });
+        const { dataUrl } = await resizedDataURL(it.image, thumb * 3, thumb * 3, { cover: false, quality: 0.8 });
         doc.addImage(dataUrl, "JPEG", x, startY, thumb, thumb);
         drew = true;
       } catch (err) {
@@ -783,7 +783,7 @@ async function drawEvHighlight(w, evItem) {
   let drew = false;
   if (evItem.image) {
     try {
-      const { dataUrl } = await resizedDataURL(evItem.image, thumb * 3, thumb * 3, { cover: true, quality: 0.8 });
+      const { dataUrl } = await resizedDataURL(evItem.image, thumb * 3, thumb * 3, { cover: false, quality: 0.8 });
       doc.addImage(dataUrl, "JPEG", MARGIN + 6, y + 6, thumb, thumb);
       drew = true;
     } catch (err) { /* fallback abajo */ }
@@ -886,8 +886,9 @@ function twoColumnBullets(w, leftTitle, leftItems, rightTitle, rightItems) {
  *  completo). No es pixel-perfecto, pero usa el mismo splitTextToSize
  *  que despues dibuja el contenido real, asi que el margen de error es
  *  minimo. */
-function estimateFixedKitCardHeight(doc, { hasEv, description, feed }) {
+function estimateFixedKitCardHeight(doc, { hasEv, description, feed, hasContext }) {
   let hh = 20 + 16; // titulo + linea de configuracion
+  if (hasContext) hh += 150 + 12; // imagen de contexto/solucion
   const idColW = (CONTENT_W - 10 * 2) / 3;
   const idThumb = Math.min(172, idColW - 8);
   hh += idThumb + 22 + 22 + 14 + 6; // identityRow (bateria/inversor/panel, hasta 2 lineas de label)
@@ -922,9 +923,10 @@ async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, bad
   // se considera componente comun secundario... debe ser visible porque
   // cambia el valor de uso de la solucion").
   const allItems = items;
+  const contextImg = kitContextImage(idx, kit.Kit_ID, market);
 
   // KEEP_TOGETHER: reserva el bloque completo antes de dibujar nada.
-  w.ensure(estimateFixedKitCardHeight(doc, { hasEv: !!evItem, description, feed }) + (evItem ? 36 : 0));
+  w.ensure(estimateFixedKitCardHeight(doc, { hasEv: !!evItem, description, feed, hasContext: !!contextImg }) + (evItem ? 36 : 0));
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
@@ -958,6 +960,26 @@ async function buildFixedKitCard(w, idx, kit, market, config, { siblingNote, bad
     doc.setTextColor(...ACCENT);
     doc.text(configParts.join("  ·  "), MARGIN, w.y);
     w.y += 14;
+  }
+
+  // Imagen de contexto/solucion real (Doc 06 V2 seccion 12.3: "puede
+  // incorporar una imagen de contexto/solucion si aporta valor y no
+  // desplaza a los componentes principales"; seccion 0.4: hero/escena va
+  // en "cover", a diferencia de las fotos de producto de mas abajo que
+  // van en "contain"). Solo en paginas de un kit a ancho completo
+  // (Respaldo 3K, representante de Operacion Critica 10K) — nunca en las
+  // columnas angostas comparativas, donde no hay espacio para que
+  // respire.
+  if (contextImg) {
+    const ctxH = 150;
+    w.ensure(ctxH + 12);
+    try {
+      const { dataUrl } = await resizedDataURL(contextImg, CONTENT_W * 1.6, ctxH * 1.6, { cover: true, quality: 0.8 });
+      doc.addImage(dataUrl, "JPEG", MARGIN, w.y, CONTENT_W, ctxH);
+      w.y += ctxH + 12;
+    } catch (err) {
+      console.warn("No se pudo incrustar imagen de contexto:", contextImg, err);
+    }
   }
 
   await identityRow(w, allItems);
@@ -1053,6 +1075,17 @@ function drawQRCode(doc, text, x, y, sizePt) {
 /* ----------------------------------------------------------------------
    3. PAGINAS
    -------------------------------------------------------------------- */
+
+/** Imagen de contexto/solucion de UN kit puntual (Doc 06 V2 seccion 12.3)
+ *  — mismo orden de prioridad que la portada (Hero Scene primero, foto
+ *  principal como respaldo), pero acotado a un solo Kit_ID. Null si el
+ *  kit no tiene ninguna de las dos: nunca se inventa ni se toma prestada
+ *  la foto de otro kit. */
+function kitContextImage(idx, kitId, market) {
+  const catalog = resolveCatalogRecord(idx, kitId, market);
+  if (!catalog) return null;
+  return clean(catalog.Imagen_Hero_Scene) || clean(catalog.Imagen_Principal) || null;
+}
 
 function pickCoverImage(idx, market, families) {
   for (const group of families) {
@@ -1315,7 +1348,7 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
     let drew = false;
     if (it.image) {
       try {
-        const { dataUrl } = await resizedDataURL(it.image, thumb * 3, thumb * 3, { cover: true, quality: 0.78 });
+        const { dataUrl } = await resizedDataURL(it.image, thumb * 3, thumb * 3, { cover: false, quality: 0.78 });
         doc.addImage(dataUrl, "JPEG", xOffset, rowY, thumb, thumb);
         drew = true;
       } catch (err) { /* fallback abajo */ }
@@ -1339,6 +1372,21 @@ async function drawColumnCard(w, idx, market, config, column, xOffset, colWidth)
     const subLines = doc.splitTextToSize(it.sublabel || "", colWidth - thumb - 8);
     doc.text(subLines.slice(0, 1), xOffset + thumb + 8, rowY + 34);
     w.y = rowY + thumb + 8;
+  }
+
+  // Imagen de contexto/solucion (Doc 06 V2 seccion 12.3) — el mockup
+  // aprobado muestra una foto de escena tambien en la version columna
+  // (pagina "Continuidad y autonomia 5K"), no solo en las tarjetas a
+  // ancho completo; sin esto la columna queda mayormente texto.
+  const contextImg = kitContextImage(idx, kit.Kit_ID, market);
+  if (contextImg) {
+    const ctxH = 110;
+    w.ensure(ctxH + 10);
+    try {
+      const { dataUrl } = await resizedDataURL(contextImg, colWidth * 1.6, ctxH * 1.6, { cover: true, quality: 0.78 });
+      doc.addImage(dataUrl, "JPEG", xOffset, w.y, colWidth, ctxH);
+      w.y += ctxH + 10;
+    } catch (err) { console.warn("No se pudo incrustar imagen de contexto (columna):", contextImg, err); }
   }
 
   if (description) {
@@ -1440,7 +1488,14 @@ function buildPortableIntroBlock(w, idx) {
  *  separada de este calculo se desincronizaba de lo que en verdad se
  *  dibujaba y las tarjetas se pisaban entre filas). */
 function measurePortableCard(doc, kit, estacion, panelPlegable, usos, colW) {
-  const imgH = 70;
+  // Antes 70pt de alto contra ~247pt de ancho (aspect 3.5:1) forzaba un
+  // recorte "cover" muy agresivo -- las fotos de las estaciones portatiles
+  // (mas cuadradas/verticales) quedaban con la parte de arriba o abajo
+  // cortada. Doc 06 V2 seccion 0.4 exige "contain" para fotos de
+  // producto: subimos el alto para que la caja sea mas cuadrada y quepa
+  // la foto completa sin recortar, con aire neutro a los lados si hace
+  // falta (nunca deformada, nunca cortada).
+  const imgH = 148;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9.6);
   const nameLines = doc.splitTextToSize(kit.Nombre_Comercial || kit.Kit_ID, colW).slice(0, 2);
@@ -1473,7 +1528,7 @@ async function buildPortableCard(w, idx, kit, market, config, x, colW) {
   const img = estacion && estacion.Imagen;
   if (img) {
     try {
-      const { dataUrl } = await resizedDataURL(img, colW * 2, imgH * 2, { cover: true, quality: 0.8 });
+      const { dataUrl } = await resizedDataURL(img, colW * 2, imgH * 2, { cover: false, quality: 0.8 });
       doc.addImage(dataUrl, "JPEG", x, startY, colW, imgH);
       drew = true;
     } catch (err) { /* fallback abajo */ }
