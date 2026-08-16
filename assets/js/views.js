@@ -11,6 +11,7 @@ import {
   catalogFor, marketsFrom, includedComponents, optionalComponents,
   kitWarrantyYears, kitVisual, buildKitViewModel, resolveContentBlock, state,
   lineaLabel, categoriaLabel, tipoSistemaLabel, pricesEnabled,
+  sellerFor, hashQuery,
 } from "./core.js";
 import { ICONS, PLACEHOLDER_ICON } from "./icons.js";
 import { generateCommercialPDF, shareCommercialPDF } from "./pdfgen.js";
@@ -892,8 +893,12 @@ export function renderCotizacion(ctx, params) {
 
   const btnPdfComercial = ctx.container.querySelector("#btn-pdf-comercial");
   const btnShare = ctx.container.querySelector("#btn-share");
-  if (btnPdfComercial) btnPdfComercial.addEventListener("click", () => withBusyLabel(btnPdfComercial, "Generando…", () => generateCommercialPDF(idx, data, kit.Kit_ID, market)));
-  if (btnShare) btnShare.addEventListener("click", () => withBusyLabel(btnShare, "Preparando…", () => shareCommercialPDF(idx, data, kit.Kit_ID, market)));
+  // Mismo criterio que el catalogo PUB-06: si la URL trae ?seller=... y es
+  // un vendedor valido (sellers.json), la ficha comercial usa su nombre y
+  // WhatsApp; si no, cae al contacto corporativo (ver core.js:sellerFor).
+  const activeSeller = sellerFor(idx, hashQuery().seller);
+  if (btnPdfComercial) btnPdfComercial.addEventListener("click", () => withBusyLabel(btnPdfComercial, "Generando…", () => generateCommercialPDF(idx, data, kit.Kit_ID, market, activeSeller)));
+  if (btnShare) btnShare.addEventListener("click", () => withBusyLabel(btnShare, "Preparando…", () => shareCommercialPDF(idx, data, kit.Kit_ID, market, activeSeller)));
 }
 
 /* =======================================================================

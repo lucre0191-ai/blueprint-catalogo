@@ -19,16 +19,24 @@ export function fechaGeneracion(date = new Date()) {
   return `${date.getDate()} de ${MESES[date.getMonth()]} de ${date.getFullYear()}`;
 }
 
-function contactInfo(config) {
+/** `seller` (fila de 15_VENDEDORES/sellers.json, ya validada contra
+ *  ?seller= por sellerFor() en core.js) sustituye el WhatsApp/nombre
+ *  corporativo por el del vendedor cuando existe -- misma logica que ya
+ *  usa el catalogo PUB-06 (catalog-pdf.js), aplicada aca a la ficha
+ *  comercial individual para que el vendedor no pierda la atribucion
+ *  del lead cuando el cliente descarga la ficha de un kit puntual. */
+function contactInfo(config, seller) {
   return {
     brand: firstOf(config.Nombre_Comercial_Sistema) || "Blueprint",
     logo: firstOf(config.Logo_URL),
-    whatsapp: firstOf(config.WhatsApp_Ventas),
+    whatsapp: (seller && firstOf(seller.whatsapp)) || firstOf(config.WhatsApp_Ventas),
     // Nombre de la persona de contacto (SYSTEM_CONFIG!Contacto_Nombre,
     // categoria "Contacto") -- pedido directo de la propietaria, para
     // que la ficha descargable diga a quien contactar, no solo el
     // numero. Si no esta cargado en el Excel, simplemente no aparece.
-    contactName: firstOf(config.Contacto_Nombre),
+    contactName: (seller && firstOf(seller.nombre)) || firstOf(config.Contacto_Nombre),
+    sellerCode: seller ? firstOf(seller.seller_id) : null,
+    isSeller: !!seller,
   };
 }
 
@@ -47,7 +55,7 @@ function docsForSkus(idx, skus) {
 }
 
 /** Contenido base compartido por ambas fichas. */
-function baseContent(idx, data, kitId, market) {
+function baseContent(idx, data, kitId, market, seller) {
   const kit = idx.kitsById.get(kitId);
   if (!kit) return null;
   const config = data.config || {};
@@ -70,14 +78,14 @@ function baseContent(idx, data, kitId, market) {
   return {
     kitId, kit, catalog, included, optional, warranty, name, heroImage, heroMosaic,
     market: market || (catalog && catalog.Mercado) || null,
-    contact: contactInfo(config),
+    contact: contactInfo(config, seller),
     generatedAt: new Date(),
   };
 }
 
 /** Ficha comercial: pensada para vender. */
-export function commercialContent(idx, data, kitId, market) {
-  const base = baseContent(idx, data, kitId, market);
+export function commercialContent(idx, data, kitId, market, seller) {
+  const base = baseContent(idx, data, kitId, market, seller);
   if (!base) return null;
   const { kit, catalog, included, optional, warranty } = base;
 
@@ -118,8 +126,8 @@ export function commercialContent(idx, data, kitId, market) {
 }
 
 /** Especificacion tecnica: pensada para un ingeniero o cliente tecnico. */
-export function technicalContent(idx, data, kitId, market) {
-  const base = baseContent(idx, data, kitId, market);
+export function technicalContent(idx, data, kitId, market, seller) {
+  const base = baseContent(idx, data, kitId, market, seller);
   if (!base) return null;
   const { kit, included, optional, warranty } = base;
 

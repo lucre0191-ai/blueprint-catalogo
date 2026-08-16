@@ -514,8 +514,8 @@ export function newDoc() {
 /* ----------------------------------------------------------------------
    Ficha comercial — pensada para vender.
    -------------------------------------------------------------------- */
-export async function buildCommercialDoc(idx, data, kitId, market) {
-  const content = commercialContent(idx, data, kitId, market);
+export async function buildCommercialDoc(idx, data, kitId, market, seller) {
+  const content = commercialContent(idx, data, kitId, market, seller);
   if (!content) return null;
   const doc = newDoc();
   const w = new DocWriter(doc);
@@ -578,13 +578,16 @@ export async function buildCommercialDoc(idx, data, kitId, market) {
 
   w.ensure(90); // manda el bloque de contacto completo a la siguiente pagina si no cabe entero
   w.rule();
-  w.h2("Contacto");
+  w.h2(content.contact.isSeller ? "Asesor" : "Contacto");
   w.p(content.contact.brand, { bold: true, color: INK, size: 11, gap: 2 });
   if (content.contact.contactName) {
-    w.p(`Contacto: ${content.contact.contactName}`, { size: 10, gap: 2 });
+    w.p(`${content.contact.isSeller ? "Asesor" : "Contacto"}: ${content.contact.contactName}`, { size: 10, gap: 2 });
   }
   if (content.contact.whatsapp) {
     w.p(`WhatsApp: ${content.contact.whatsapp}`, { size: 10, gap: 2 });
+  }
+  if (content.contact.sellerCode) {
+    w.p(`Código: ${content.contact.sellerCode}`, { size: 10, gap: 2 });
   }
 
   drawFooters(doc, content.contact);
@@ -594,8 +597,8 @@ export async function buildCommercialDoc(idx, data, kitId, market) {
 /* ----------------------------------------------------------------------
    Especificacion tecnica — pensada para un ingeniero o cliente tecnico.
    -------------------------------------------------------------------- */
-export async function buildTechnicalDoc(idx, data, kitId, market) {
-  const content = technicalContent(idx, data, kitId, market);
+export async function buildTechnicalDoc(idx, data, kitId, market, seller) {
+  const content = technicalContent(idx, data, kitId, market, seller);
   if (!content) return null;
   const doc = newDoc();
   const w = new DocWriter(doc);
@@ -634,13 +637,16 @@ export async function buildTechnicalDoc(idx, data, kitId, market) {
 
   w.ensure(90);
   w.rule();
-  w.h2("Contacto tecnico");
+  w.h2(content.contact.isSeller ? "Asesor técnico" : "Contacto tecnico");
   w.p(content.contact.brand, { bold: true, color: INK, size: 11, gap: 2 });
   if (content.contact.contactName) {
-    w.p(`Contacto: ${content.contact.contactName}`, { size: 10, gap: 2 });
+    w.p(`${content.contact.isSeller ? "Asesor" : "Contacto"}: ${content.contact.contactName}`, { size: 10, gap: 2 });
   }
   if (content.contact.whatsapp) {
     w.p(`WhatsApp: ${content.contact.whatsapp}`, { size: 10, gap: 2 });
+  }
+  if (content.contact.sellerCode) {
+    w.p(`Código: ${content.contact.sellerCode}`, { size: 10, gap: 2 });
   }
 
   drawFooters(doc, content.contact);
@@ -651,10 +657,10 @@ export function ensureJsPDF() {
   if (!window.jspdf) throw new Error("jsPDF no cargo (revisa conexion / CDN bloqueado)");
 }
 
-export async function generateCommercialPDF(idx, data, kitId, market) {
+export async function generateCommercialPDF(idx, data, kitId, market, seller) {
   try {
     ensureJsPDF();
-    const result = await buildCommercialDoc(idx, data, kitId, market);
+    const result = await buildCommercialDoc(idx, data, kitId, market, seller);
     if (!result) throw new Error("No se encontro el kit");
     result.doc.save(`ficha-comercial-${slug(result.content.name)}.pdf`);
   } catch (err) {
@@ -662,10 +668,10 @@ export async function generateCommercialPDF(idx, data, kitId, market) {
   }
 }
 
-export async function generateTechnicalPDF(idx, data, kitId, market) {
+export async function generateTechnicalPDF(idx, data, kitId, market, seller) {
   try {
     ensureJsPDF();
-    const result = await buildTechnicalDoc(idx, data, kitId, market);
+    const result = await buildTechnicalDoc(idx, data, kitId, market, seller);
     if (!result) throw new Error("No se encontro el kit");
     result.doc.save(`especificacion-tecnica-${slug(result.content.name)}.pdf`);
   } catch (err) {
@@ -674,10 +680,10 @@ export async function generateTechnicalPDF(idx, data, kitId, market) {
 }
 
 /** Comparte la ficha comercial como archivo PDF real (no una captura). */
-export async function shareCommercialPDF(idx, data, kitId, market) {
+export async function shareCommercialPDF(idx, data, kitId, market, seller) {
   try {
     ensureJsPDF();
-    const result = await buildCommercialDoc(idx, data, kitId, market);
+    const result = await buildCommercialDoc(idx, data, kitId, market, seller);
     if (!result) throw new Error("No se encontro el kit");
     const blob = result.doc.output("blob");
     const filename = `ficha-comercial-${slug(result.content.name)}.pdf`;
